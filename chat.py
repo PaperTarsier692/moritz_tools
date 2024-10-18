@@ -51,8 +51,7 @@ except ModuleNotFoundError:
         printc("Beenden...", "red")
         nexit()
 
-# USER: str = input('User: ')[:32]
-USER: str = getuser()[0] + '.' + getuser().split('.')[1][0]
+USER: str = input('User: ')[:32]
 KEY: str = getpass('Key: ')
 PATH: str = input('Pfad (optional): ')
 if PATH.strip() == '':
