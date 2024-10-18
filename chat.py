@@ -1,7 +1,7 @@
 import os
 import json
 from datetime import datetime
-from getpass import getpass, getuser
+from getpass import getpass
 from time import sleep
 import threading
 import platform
@@ -55,7 +55,7 @@ USER: str = input('User: ')[:32]
 KEY: str = getpass('Key: ')
 PATH: str = input('Pfad (optional): ')
 if PATH.strip() == '':
-    PATH: str = f"Y:/2BHIT/moritz/{input('Chatraum:')}.json"
+    PATH: str = f"Y:/2BHIT/moritz/{input('Chatraum: ')}.json"
 DATE: str = f'{str(datetime.now().day)}_{str(datetime.now().month)}'
 WINDOWS: bool = True if platform.system() == 'Windows' else False
 if WINDOWS:
