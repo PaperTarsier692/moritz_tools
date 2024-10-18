@@ -2,3 +2,4 @@ papertools
 requests
 cryptography
 datetime
+pyperclip

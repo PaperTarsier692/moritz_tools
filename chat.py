@@ -7,6 +7,7 @@ import threading
 import platform
 import base64
 import ctypes
+import pyperclip
 
 
 def nexit() -> None:
