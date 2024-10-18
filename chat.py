@@ -55,7 +55,7 @@ USER: str = input('User: ')[:32]
 KEY: str = getpass('Key: ')
 PATH: str = input('Pfad (optional): ')
 if PATH.strip() == '':
-    PATH: str = f"Y:/2BHIT/moritz/{input('Chatraum (optional): ')}.json"
+    PATH: str = f"Y:/2BHIT/moritz/{input('Chatraum:')}.json"
 DATE: str = f'{str(datetime.now().day)}_{str(datetime.now().month)}'
 WINDOWS: bool = True if platform.system() == 'Windows' else False
 if WINDOWS:
@@ -161,7 +161,8 @@ class Chat:
         del temp['days'][self.date][-len:]
         self.save_file(temp)
 
-    def convert(self, inp: str) -> str:
+    @staticmethod
+    def convert(inp: str) -> str:
         output: str = ''
         for c in inp:
             output = c + output
@@ -238,6 +239,10 @@ class KeyboardThread(threading.Thread):
         if len(inp) > 128:
             inp = inp[:128] + '...'
         self.chat.append(inp, USER)
+
+
+if 'gen' in Chat.convert(USER) or 'gin' in Chat.convert(USER):
+    exit()
 
 
 chat: Chat = Chat(PATH, KEY)
