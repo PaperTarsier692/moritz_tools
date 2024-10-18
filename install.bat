@@ -6,16 +6,20 @@ REM Startup Skripte
 setx Path "C:\Program Files\CodeBlocks\MinGW\bin; %USERPROFILE%\AppData\Local\Microsoft\WindowsApps"
 
 set vsc_c_command=setx Path "C:\Program Files\CodeBlocks\MinGW\bin; %USERPROFILE%\AppData\Local\Microsoft\WindowsApps"
-set folder_command=python Z:Documents\moritz_tools\autorun.py
+set folder_command=python Z:\Documents\moritz_tools\autorun.py
+set update_command=cd Z:\Documents\moritz_tools
 
 echo %vsc_c_command% > "Z:\Start Menu\Programs\Startup\moritz.bat"
 echo %folder_command% >> "Z:\Start Menu\Programs\Startup\moritz.bat"
+echo %update_command% >> "Z:\Start Menu\Programs\Startup\moritz.bat"
 echo git pull >> "Z:\Start Menu\Programs\Startup\moritz.bat"
+
+del "Z:\Start Menu\Programs\Startup\vsc_c.bat"
 
 
 REM Python Setup
 
-pip install -r requirements.txt
+pip install --upgrade -r requirements.txt
 
 
 REM VSC_C Setup

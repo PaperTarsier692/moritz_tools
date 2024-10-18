@@ -10,4 +10,4 @@ call install.bat
 '''
 
 if not os.path.exists('Y:/2BHIT/moritz/install.bat'):
-    File('Y:/2BHIT/moritz/install.bat').write()
+    File('Y:/2BHIT/moritz/install.bat').write(install_cmd, create_path=True)
