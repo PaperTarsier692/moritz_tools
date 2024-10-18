@@ -56,7 +56,7 @@ USER: str = getuser()[0] + '.' + getuser().split('.')[1][0]
 KEY: str = getpass('Key: ')
 PATH: str = input('Pfad (optional): ')
 if PATH.strip() == '':
-    PATH: str = f"Y:/1BHIT/moritz/test{input('Chatraum (optional): ')}.json"
+    PATH: str = f"Y:/2BHIT/moritz/test{input('Chatraum (optional): ')}.json"
 DATE: str = f'{str(datetime.now().day)}_{str(datetime.now().month)}'
 WINDOWS: bool = True if platform.system() == 'Windows' else False
 if WINDOWS:
