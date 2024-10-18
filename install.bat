@@ -11,6 +11,7 @@ set update_command=cd Z:\Documents\moritz_tools
 
 echo %vsc_c_command% > "Z:\Start Menu\Programs\Startup\moritz.bat"
 echo %folder_command% >> "Z:\Start Menu\Programs\Startup\moritz.bat"
+echo Z: >> "Z:\Start Menu\Programs\Startup\moritz.bat"
 echo %update_command% >> "Z:\Start Menu\Programs\Startup\moritz.bat"
 echo git pull >> "Z:\Start Menu\Programs\Startup\moritz.bat"
 
