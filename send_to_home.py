@@ -1,4 +1,3 @@
-from requests import post, exceptions, Response
 from shutil import make_archive
 from json import dump, load
 import os
@@ -7,6 +6,26 @@ if os.name == 'nt':
     os.system("cls")
 else:
     os.system("clear")
+
+
+def y_n(inp: str = None) -> bool:
+    if not inp == None:
+        print(inp)
+    res: str = input().strip().lower()
+    if res == 'y' or res == 'j':
+        return True
+    return False
+
+
+try:
+    from requests import post, exceptions, Response
+except ModuleNotFoundError:
+    if y_n("Modul Requests nicht gefunden, soll es heruntergeladen werden? (Y/n)"):
+        os.system("pip install requests")
+        from requests import post, exceptions, Response
+    else:
+        print('Beenden')
+        exit()
 
 print("SEND TO HOME . PY von Moritz Harrer")
 PATH: os.PathLike = os.path.abspath(os.path.join(__file__, os.pardir))
