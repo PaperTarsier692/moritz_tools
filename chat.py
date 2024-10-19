@@ -8,10 +8,12 @@ import platform
 import base64
 import ctypes
 import pyperclip
+from papertools import Console, File
 
 
 def nexit() -> None:
-    printc("Drücken Sie enter um das Programm zu beenden.", "red")
+    Console.print_colour(
+        "Drücken Sie enter um das Programm zu beenden.", "red")
     input()
     exit()
 
@@ -25,23 +27,6 @@ def y_n(inp: str = None) -> bool:
     return False
 
 
-def printc(inp: str, col: str) -> None:
-    colors = {
-        "red": "91",
-        "green": "92",
-        "yellow": "93",
-        "pink": "94",
-        "purple": "95",
-        "cyan": "96",
-        "gray": "97",
-        "black": "98",
-        "blank": "00"
-    }
-    if col.lower() not in colors:
-        raise TypeError
-    print(f"\033[{colors[col.lower()]}m{inp}\033[{colors['blank']}m")
-
-
 try:
     from cryptography.fernet import Fernet
 except ModuleNotFoundError:
@@ -49,20 +34,27 @@ except ModuleNotFoundError:
         os.system("pip install cryptography")
         from cryptography.fernet import Fernet
     else:
-        printc("Beenden...", "red")
+        Console.print_colour("Beenden...", "red")
         nexit()
 
-USER: str = input('User: ')[:32]
-KEY: str = getpass('Key: ')
-PATH: str = input('Pfad (optional): ')
-if PATH.strip() == '':
-    PATH: str = f"Y:/2BHIT/moritz/{input('Chatraum: ')}.json"
+USER: str = input('User: ')[:32].strip()
+CHATROOM: str = input('Chatraum: ')[:10].strip()
+if CHATROOM == '':
+    PATH: str = input('Pfad: ').strip()
+else:
+    PATH: str = f"Y:/2BHIT/moritz/{CHATROOM}.json"
+KEY: str = getpass('Passwort: ').strip()
+while KEY.lower() == CHATROOM.lower():
+    Console.print_colour("Passwort und Chatraum dürfen nicht gleich sein.")
+    KEY = getpass('Passwort: ').strip()
+
+
 DATE: str = f'{str(datetime.now().day)}_{str(datetime.now().month)}'
 WINDOWS: bool = True if platform.system() == 'Windows' else False
 if WINDOWS:
-    printc("OS: Windows", "yellow")
+    Console.print_colour("OS: Windows", "yellow")
 else:
-    printc("OS: MacOS/Linux", "yellow")
+    Console.print_colour("OS: MacOS/Linux", "yellow")
 
 global RUNNING
 RUNNING: bool = True
@@ -71,10 +63,11 @@ RUNNING: bool = True
 class Chat:
     def __init__(self, path: str, key: str) -> None:
         self.path: str = path
+        self.file: File = File(path)
         self.key: str = base64.urlsafe_b64encode(
             key.encode("utf-8").ljust(32)[:32])
         self.fernet: Fernet = Fernet(self.key)
-        self.date = DATE
+        self.date: str = DATE
         self.nupdate: bool = False
         self.check_file()
         self.check_date()
@@ -95,14 +88,14 @@ class Chat:
 
     def check_file(self) -> None:
         def make_file(msg: str) -> None:
-            printc(msg, "red")
+            Console.print_colour(msg, "red")
             if y_n():
                 os.makedirs(os.path.dirname(self.path), exist_ok=True)
                 self.save_file({"days": {self.date: []}})
             else:
                 nexit()
 
-        if not os.path.exists(self.path):
+        if not File.exists(self.path):
             make_file(
                 f"Datei '{self.path}' nicht gefunden, soll sie generiert werden? (Y/n)")
 
@@ -173,12 +166,10 @@ class Chat:
         self.nupdate = True
 
     def get_file(self) -> dict:
-        with open(self.path, 'r') as f:
-            return json.load(f)
+        return self.file.json_r()
 
     def save_file(self, data: dict) -> None:
-        with open(self.path, 'w') as f:
-            json.dump(data, f, indent=4)
+        return self.file.json_w(data)
 
     def cmd(self, msg: str) -> bool:
         cmd: Cmd = Cmd(msg, "/")
@@ -251,18 +242,12 @@ KeyboardThread(chat)
 
 
 while RUNNING:
-    if WINDOWS:
-        os.system('cls')
-    else:
-        os.system('clear')
-    prev = chat.beatiful()
+    Console.clear()
+    prev: str = chat.beatiful()
     print(chat.beatiful() + '\n>>> ', end='')
     while chat.beatiful() == prev:
         sleep(0.5)
 
 
-if WINDOWS:
-    os.system('cls')
-else:
-    os.system('clear')
+Console.clear()
 os.system(f'python {os.path.abspath(__file__)}')
