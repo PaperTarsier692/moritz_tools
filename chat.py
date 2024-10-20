@@ -1,13 +1,13 @@
 import os
 import json
-from datetime import datetime
-from getpass import getpass
-from time import sleep
-import threading
-import platform
 import base64
 import ctypes
+import platform
+import threading
 import pyperclip
+from time import sleep
+from getpass import getpass
+from datetime import datetime
 from papertools import Console, File
 
 
@@ -219,7 +219,7 @@ class Cmd:
 
 class KeyboardThread(threading.Thread):
     def __init__(self, chat: Chat, name: str = 'keyboard-input-thread') -> None:
-        self.chat = chat
+        self.chat: Chat = chat
         super(KeyboardThread, self).__init__(name=name, daemon=True)
         self.start()
 
@@ -228,6 +228,8 @@ class KeyboardThread(threading.Thread):
             self.callback(input())
 
     def callback(self, inp: str) -> None:
+        if len(inp) > 10 and inp in pyperclip.paste() and '\n' in pyperclip.paste():
+            return
         if len(inp) > 128:
             inp = inp[:128] + '...'
         self.chat.append(inp, USER)
