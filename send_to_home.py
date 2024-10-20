@@ -1,11 +1,8 @@
+from papertools import File, Console
 from shutil import make_archive
-from json import dump, load
 import os
 
-if os.name == 'nt':
-    os.system("cls")
-else:
-    os.system("clear")
+Console.clear()
 
 
 def y_n(inp: str = None) -> bool:
@@ -31,16 +28,16 @@ print("SEND TO HOME . PY von Moritz Harrer")
 PATH: os.PathLike = os.path.abspath(os.path.join(__file__, os.pardir))
 print(f'Path: {PATH}')
 
-if os.path.isfile(f"{PATH}/settings.json"):
-    with open(f'{PATH}/settings.json', 'r') as f:
-        stgs: dict[str, str] = load(f)
+
+stgs_file: File = File(f"{PATH}/settings.json")
+if stgs_file.exists():
+    stgs: dict = stgs_file.json_r()
 else:
     print("settings.json wurde erstellt, bitte fülle die Felder aus.")
     username: str = input('Username: ')
     url: str = input('Webhook URL: ')
-    stgs: dict[str, str] = {"url": url, "username": username}
-    with open(f'{PATH}/settings.json', 'w') as f:
-        dump(stgs, f, indent=4)
+    stgs: dict = {"url": url, "username": username}
+    stgs_file.json_w(stgs)
 
 URL: str = stgs["url"]
 USERNAME: str = stgs["username"]
@@ -113,13 +110,11 @@ class SendToHome:
             self.wh.print_status(self.wh.send(inp))
 
     def bat(self) -> None:
-        if os.path.isfile(f"Z:/Desktop/send_to_home.bat"):
-            with open(f"Z:/Desktop/send_to_home.bat", "r") as f:
-                if f.read() == self.bat_content:
-                    return
+        shortcut: File = File("Z:/Desktop/send_to_home.bat")
+        if shortcut.exists() and shortcut.read() == self.bat_content:
+            return
         print("send_to_home.bat wird erstellt.")
-        with open(f"Z:/Desktop/send_to_home.bat", "w") as f:
-            f.write(self.bat_content)
+        shortcut.write(self.bat_content)
 
 
 sth: SendToHome = SendToHome(Webhook(URL, USERNAME))
