@@ -13,6 +13,7 @@ python autorun.py
 goto finish
 
 :update
+echo UPDATED>update.txt
 call install.bat
 
 :finish
