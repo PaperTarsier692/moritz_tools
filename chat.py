@@ -95,7 +95,7 @@ class Chat:
             else:
                 nexit()
 
-        if not File.exists(self.path):
+        if not File(self.path).exists():
             make_file(
                 f"Datei '{self.path}' nicht gefunden, soll sie generiert werden? (Y/n)")
 
