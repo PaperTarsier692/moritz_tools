@@ -229,9 +229,13 @@ class KeyboardThread(threading.Thread):
 
     def callback(self, inp: str) -> None:
         if len(inp) > 10 and inp in pyperclip.paste() and '\n' in pyperclip.paste():
+            self.chat.update()
             return
         if len(inp) > 128:
             inp = inp[:128] + '...'
+        if len(inp) == 0:
+            self.chat.update()
+            return
         self.chat.append(inp, USER)
 
 
