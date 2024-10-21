@@ -18,7 +18,7 @@ def nexit() -> None:
     exit()
 
 
-def y_n(inp: str = None) -> bool:
+def y_n(inp: str) -> bool:
     if not inp == None:
         print(inp)
     res: str = input().strip().lower()
@@ -65,7 +65,7 @@ class Chat:
     def __init__(self, path: str, key: str) -> None:
         self.path: str = path
         self.file: File = File(path)
-        self.key: str = base64.urlsafe_b64encode(
+        self.key: bytes = base64.urlsafe_b64encode(
             key.encode("utf-8").ljust(32)[:32])
         self.fernet: Fernet = Fernet(self.key)
         self.date: str = DATE
@@ -89,8 +89,7 @@ class Chat:
 
     def check_file(self) -> None:
         def make_file(msg: str) -> None:
-            Console.print_colour(msg, "red")
-            if y_n():
+            if y_n(msg):
                 os.makedirs(os.path.dirname(self.path), exist_ok=True)
                 self.save_file({"days": {self.date: []}})
             else:
@@ -132,8 +131,11 @@ class Chat:
             temp += f"\n{temp2}"
         try:
             if f'@{USER}' in self.decrypt(chat[-1]):
-                msgb = ctypes.windll.user32.MessageBoxW
-                msgb(None, temp2, 'Ping', 0)
+                try:
+                    msgb = ctypes.windll.user32.MessageBoxW  # type: ignore
+                    msgb(None, temp2, 'Ping', 0)
+                except AttributeError:
+                    pass
                 self.append('OK', USER)
         except IndexError:
             pass

@@ -5,9 +5,8 @@ import os
 Console.clear()
 
 
-def y_n(inp: str = None) -> bool:
-    if not inp == None:
-        print(inp)
+def y_n(inp: str) -> bool:
+    print(inp)
     res: str = input().strip().lower()
     if res == 'y' or res == 'j':
         return True
@@ -25,7 +24,7 @@ except ModuleNotFoundError or ImportError:
         exit()
 
 print("SEND TO HOME . PY von Moritz Harrer")
-PATH: os.PathLike = os.path.abspath(os.path.join(__file__, os.pardir))
+PATH: str = os.path.abspath(os.path.join(__file__, os.pardir))
 print(f'Path: {PATH}')
 
 
@@ -55,6 +54,7 @@ class Webhook:
                 self.url, json={"content": content, "username": self.username}).status_code
         except exceptions.MissingSchema or exceptions.InvalidURL:
             print("<<<Webhook URL ist ungültig.>>>")
+            return 0
 
     def send_file(self, content: bytes, file_name: str) -> int:
         response: Response = post(self.url, json={"username": self.username}, files={
@@ -83,7 +83,7 @@ class SendToHome:
         self.bat()
 
     def run(self, inp: str) -> None:
-        path: os.PathLike = os.path.abspath(inp.replace('"', ''))
+        path: str = os.path.abspath(inp.replace('"', ''))
         if os.path.isfile(path):
             file_name: str = os.path.basename(path)
             with open(path, "rb") as f:
@@ -96,7 +96,7 @@ class SendToHome:
                 print("Ordner erkannt, komprimiert Ordner...")
                 make_archive(path,
                              'zip', path)
-                zip_path: os.PathLike = f"{path}.zip"
+                zip_path: str = f"{path}.zip"
                 with open(zip_path, "rb") as f:
                     content: bytes = f.read()
                 print("Sendet Ordner")
