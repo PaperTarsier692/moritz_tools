@@ -45,7 +45,7 @@ else:
     PATH: str = f"Y:/2BHIT/moritz/{CHATROOM}.json"
 KEY: str = getpass('Passwort: ').strip()
 while KEY.lower() == CHATROOM.lower():
-    Console.print_colour("Passwort und Chatraum dürfen nicht gleich sein.")
+    Console.print_colour("Passwort und Chatraum dürfen nicht gleich sein.", "red")
     KEY = getpass('Passwort: ').strip()
 
 
