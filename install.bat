@@ -11,6 +11,7 @@ pause
 
 REM Setup
 cd Z:\Documents\moritz_tools
+git pull
 call autorun.bat
 
 del "Z:\Start Menu\Programs\Startup\vsc_c.bat"
