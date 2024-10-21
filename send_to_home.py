@@ -16,7 +16,7 @@ def y_n(inp: str = None) -> bool:
 
 try:
     from requests import post, exceptions, Response
-except ModuleNotFoundError:
+except ModuleNotFoundError or ImportError:
     if y_n("Modul Requests nicht gefunden, soll es heruntergeladen werden? (Y/n)"):
         os.system("pip install requests")
         from requests import post, exceptions, Response

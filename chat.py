@@ -29,7 +29,7 @@ def y_n(inp: str = None) -> bool:
 
 try:
     from cryptography.fernet import Fernet
-except ModuleNotFoundError:
+except ModuleNotFoundError or ImportError:
     if y_n("Modul Cryptography nicht gefunden, soll es heruntergeladen werden? (Y/n)"):
         os.system("pip install cryptography")
         from cryptography.fernet import Fernet
@@ -45,7 +45,8 @@ else:
     PATH: str = f"Y:/2BHIT/moritz/{CHATROOM}.json"
 KEY: str = getpass('Passwort: ').strip()
 while KEY.lower() == CHATROOM.lower():
-    Console.print_colour("Passwort und Chatraum dürfen nicht gleich sein.", "red")
+    Console.print_colour(
+        "Passwort und Chatraum dürfen nicht gleich sein.", "red")
     KEY = getpass('Passwort: ').strip()
 
 
