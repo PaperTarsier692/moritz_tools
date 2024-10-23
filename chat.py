@@ -42,7 +42,7 @@ CHATROOM: str = input('Chatraum: ')[:10].strip()
 if CHATROOM == '':
     PATH: str = input('Pfad: ').strip()
 else:
-    PATH: str = f"Y:/2BHIT/moritz/{CHATROOM}.json"
+    PATH: str = f"Y:/2BHIT/test/{CHATROOM}.json"
 KEY: str = getpass('Passwort: ').strip()
 while KEY.lower() == CHATROOM.lower():
     Console.print_colour(
