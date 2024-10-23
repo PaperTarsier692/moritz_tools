@@ -8,4 +8,3 @@ git pull
 call install.bat
 
 pip install --upgrade -r requirements.txt --quiet
-python autorun.py
