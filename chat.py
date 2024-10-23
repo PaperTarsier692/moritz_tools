@@ -193,7 +193,7 @@ class Chat:
             self.check_date()
         elif is_cmd('reset'):
             self.save_file({"days": {self.date: []}})
-        if cmd.exec or 'gen' in self.convert(msg) or 'gin' in self.convert(msg):
+        if cmd.exec or 'gen' in self.convert(msg).lower() or 'gin' in self.convert(msg).lower():
             return True
         return False
 
@@ -241,7 +241,7 @@ class KeyboardThread(threading.Thread):
         self.chat.append(inp, USER)
 
 
-if 'ggen' in Chat.convert(USER) or 'ggin' in Chat.convert(USER):
+if 'ggen' in Chat.convert(USER).lower() or 'ggin' in Chat.convert(USER).lower():
     exit()
 
 
