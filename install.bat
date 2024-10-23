@@ -7,7 +7,6 @@ REM Startup Skripte
 echo Z: > "Z:\Start Menu\Programs\Startup\moritz.bat"
 echo cd Z:\Documents\moritz_tools >> "Z:\Start Menu\Programs\Startup\moritz.bat"
 echo autorun.bat >> "Z:\Start Menu\Programs\Startup\moritz.bat"
-pause
 
 REM Setup
 cd Z:\Documents\moritz_tools
