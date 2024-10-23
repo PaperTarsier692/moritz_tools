@@ -60,7 +60,6 @@ else:
 global RUNNING
 RUNNING: bool = True
 
-
 class Chat:
     def __init__(self, path: str, key: str) -> None:
         self.path: str = path
@@ -242,7 +241,7 @@ class KeyboardThread(threading.Thread):
         self.chat.append(inp, USER)
 
 
-if 'gen' in Chat.convert(USER) or 'gin' in Chat.convert(USER):
+if 'ggen' in Chat.convert(USER) or 'ggin' in Chat.convert(USER):
     exit()
 
 
