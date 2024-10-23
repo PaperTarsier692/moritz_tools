@@ -258,4 +258,4 @@ while RUNNING:
 
 
 Console.clear()
-os.system(f'python {os.path.abspath(__file__)}')
+os.system(f'start python {os.path.abspath(__file__)}')
