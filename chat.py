@@ -51,6 +51,8 @@ while KEY.lower() == CHATROOM.lower():
 
 
 DATE: str = f'{str(datetime.now().day)}_{str(datetime.now().month)}'
+COLOURS:dict[str, str] = {'red': "\033[91m", 'yellow': "\033[93m",
+                           'blue': "\033[94m", 'green': "\033[92m", 'end': "\033[0m"}
 WINDOWS: bool = True if platform.system() == 'Windows' else False
 if WINDOWS:
     Console.print_colour("OS: Windows", "yellow")
@@ -126,7 +128,8 @@ class Chat:
         temp: str = ''
         chat: dict = self.get_chat()
         for i in chat:
-            temp2: str = self.decrypt(i)
+            temp2: str = self.decrypt(i).replace('//red// ', "\033[91m").replace('//yellow// ', "\033[93m").replace(
+        '//green// ', "\033[92m").replace('//blue// ', "\033[94m") + '\033[0m'
             temp += f"\n{temp2}"
         try:
             if f'@{USER}' in self.decrypt(chat[-1]):
