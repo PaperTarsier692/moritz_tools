@@ -6,9 +6,11 @@ import platform
 import threading
 import pyperclip
 from time import sleep
+from typing import Callable
 from getpass import getpass
 from datetime import datetime
 from papertools import Console, File
+
 
 colours: dict = {
     # Specials
@@ -55,7 +57,7 @@ def nexit() -> None:
 
 
 def y_n(inp: str) -> bool:
-    if not inp == None:
+    if inp is not None:
         print(inp)
     res: str = input().strip().lower()
     if res == 'y' or res == 'j':
@@ -66,7 +68,8 @@ def y_n(inp: str) -> bool:
 try:
     from cryptography.fernet import Fernet
 except ModuleNotFoundError or ImportError:
-    if y_n("Modul Cryptography nicht gefunden, soll es heruntergeladen werden? (Y/n)"):
+    if y_n("Modul Cryptography nicht gefunden,\
+            soll es heruntergeladen werden? (Y/n)"):
         os.system("pip install cryptography")
         from cryptography.fernet import Fernet
     else:
@@ -88,7 +91,8 @@ while KEY.lower() == CHATROOM.lower():
 
 DATE: str = f'{str(datetime.now().day)}_{str(datetime.now().month)}'
 COLOURS: dict[str, str] = {'red': "\033[91m", 'yellow': "\033[93m",
-                           'blue': "\033[94m", 'green': "\033[92m", 'end': "\033[0m"}
+                           'blue': "\033[94m", 'green': "\033[92m",
+                           'end': "\033[0m"}
 WINDOWS: bool = True if platform.system() == 'Windows' else False
 if WINDOWS:
     Console.print_colour("OS: Windows", "yellow")
@@ -135,14 +139,16 @@ class Chat:
 
         if not File(self.path).exists():
             make_file(
-                f"Datei '{self.path}' nicht gefunden, soll sie generiert werden? (Y/n)")
+                f"Datei '{self.path}' nicht gefunden,\
+                      soll sie generiert werden? (Y/n)")
 
         try:
             self.get_chat()
 
         except json.JSONDecodeError:
             make_file(
-                f"Datei '{self.path}' konnte nicht geladen werden, soll sie neu generiert werden? (Y/n)")
+                f"Datei '{self.path}' konnte nicht geladen werden, \
+                    soll sie neu generiert werden? (Y/n)")
 
     def get_chat(self) -> dict:
         try:
@@ -183,12 +189,13 @@ class Chat:
         return temp
 
     def encrypt(self, string: str) -> str:
-        return str(self.fernet.encrypt(string.encode())).replace("b'", "").replace("'", "")
+        return str(self.fernet.encrypt(string.encode())).replace("b'", "")\
+            .replace("'", "")
 
     def decrypt(self, string: str) -> str:
         try:
             return str(self.fernet.decrypt(string).decode())
-        except:
+        except ValueError:
             raise ValueError("Falscher Key")
 
     def delete(self, len: int) -> None:
@@ -214,7 +221,7 @@ class Chat:
 
     def cmd(self, msg: str) -> bool:
         cmd: Cmd = Cmd(msg, "/")
-        is_cmd: function = cmd.is_cmd
+        is_cmd: Callable = cmd.is_cmd
         if is_cmd('exit'):
             nexit()
         elif is_cmd('leave'):
@@ -226,13 +233,14 @@ class Chat:
             try:
                 len: int = int(msg.split('/del ')[1])
                 self.delete(len)
-            except:
+            except IndexError or ValueError:
                 pass
         elif is_cmd('check'):
             self.check_date()
         elif is_cmd('reset'):
             self.save_file({"days": {self.date: []}})
-        if cmd.exec or 'gen' in self.convert(msg).lower() or 'gin' in self.convert(msg).lower():
+        if cmd.exec or 'gen' in self.convert(msg).lower() \
+                or 'gin' in self.convert(msg).lower():
             return True
         return False
 
@@ -259,7 +267,8 @@ class Cmd:
 
 
 class KeyboardThread(threading.Thread):
-    def __init__(self, chat: Chat, name: str = 'keyboard-input-thread') -> None:
+    def __init__(self, chat: Chat,
+                 name: str = 'keyboard-input-thread') -> None:
         self.chat: Chat = chat
         super(KeyboardThread, self).__init__(name=name, daemon=True)
         self.start()
@@ -269,7 +278,8 @@ class KeyboardThread(threading.Thread):
             self.callback(input())
 
     def callback(self, inp: str) -> None:
-        if len(inp) > 10 and inp in pyperclip.paste() and '\n' in pyperclip.paste():
+        if len(inp) > 10 and inp in pyperclip.paste() \
+                and '\n' in pyperclip.paste():
             self.chat.update()
             return
         if len(inp) > 128:
@@ -280,7 +290,8 @@ class KeyboardThread(threading.Thread):
         self.chat.append(inp, USER)
 
 
-if 'ggen' in Chat.convert(USER).lower() or 'ggin' in Chat.convert(USER).lower():
+if 'gen' in Chat.convert(USER).lower() or \
+        'gin' in Chat.convert(USER).lower():
     exit()
 
 
