@@ -10,6 +10,42 @@ from getpass import getpass
 from datetime import datetime
 from papertools import Console, File
 
+colours: dict = {
+    # Specials
+    "//reset//": "\033[0m",
+    "\\**": "\033[22m",
+    "**": "\033[1m",
+    "\\*": "\033[23m",
+    "*": "\033[3m",
+    "\\__": "\033[24m",
+    "__": "\033[4m",
+    # Text Colours
+    "//black//": "\033[30m",
+    "//blue//": "\033[34m",
+    "//cyan//": "\033[36m",
+    "//green//": "\033[32m",
+    "//purple//": "\033[35m",
+    "//red//": "\033[31m",
+    "//white//": "\033[37m",
+    "//yellow//": "\033[33m",
+    # Bg Colours
+    "//bblack//": "\033[40m",
+    "//bred//": "\033[41m",
+    "//bgreen//": "\033[42m",
+    "//byellow//": "\033[43m",
+    "//bblue": "\033[44m",
+    "//bpurple//": "\033[45m",
+    "//bcyan//": "\033[46m",
+    "//bwhite//": "\033[47m"
+}
+
+
+def s_print_colour(inp: str) -> str:
+    for colour, value in colours.items():
+        inp = inp.replace(colour, value)
+    inp += '\033[0m'
+    return inp
+
 
 def nexit() -> None:
     Console.print_colour(
@@ -51,7 +87,7 @@ while KEY.lower() == CHATROOM.lower():
 
 
 DATE: str = f'{str(datetime.now().day)}_{str(datetime.now().month)}'
-COLOURS:dict[str, str] = {'red': "\033[91m", 'yellow': "\033[93m",
+COLOURS: dict[str, str] = {'red': "\033[91m", 'yellow': "\033[93m",
                            'blue': "\033[94m", 'green': "\033[92m", 'end': "\033[0m"}
 WINDOWS: bool = True if platform.system() == 'Windows' else False
 if WINDOWS:
@@ -61,6 +97,7 @@ else:
 
 global RUNNING
 RUNNING: bool = True
+
 
 class Chat:
     def __init__(self, path: str, key: str) -> None:
@@ -128,8 +165,7 @@ class Chat:
         temp: str = ''
         chat: dict = self.get_chat()
         for i in chat:
-            temp2: str = self.decrypt(i).replace('//red// ', "\033[91m").replace('//yellow// ', "\033[93m").replace(
-        '//green// ', "\033[92m").replace('//blue// ', "\033[94m") + '\033[0m'
+            temp2: str = s_print_colour(self.decrypt(i))
             temp += f"\n{temp2}"
         try:
             if f'@{USER}' in self.decrypt(chat[-1]):
@@ -261,4 +297,5 @@ while RUNNING:
 
 
 Console.clear()
-os.system(f'start python {os.path.abspath(__file__)}')
+if WINDOWS:
+    os.system(f'start python {os.path.abspath(__file__)}')
