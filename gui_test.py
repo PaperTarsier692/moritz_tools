@@ -22,6 +22,10 @@ class Chat:
         self.nupdate: bool = False
         self.check_file()
         self.check_date()
+        inp: dict = File(path).json_r()
+        inp['members'].append(USER)
+        File(path).json_w(inp)
+
 
     @staticmethod
     def s_print_colour(inp: str) -> str:
@@ -63,7 +67,7 @@ class Chat:
 
             if y_n(msg):
                 os.makedirs(os.path.dirname(self.path), exist_ok=True)
-                self.save_file({"days": {self.date: []}})
+                self.save_file({"days": {self.date: []}, "members": []})
             else:
                 self.nexit()
 
@@ -95,9 +99,10 @@ class Chat:
             str(self.encrypt(f"{user}: {msg}")))
         self.save_file(temp)
 
-    def beatiful(self) -> list[str]:
+    def beatiful(self) -> tuple[list[str], list[str]]:
         out: list[str] = []
-        chat: dict = self.get_chat()
+        inp: dict = self.get_file()
+        chat: dict = inp['days'][self.date]
         for i in chat:
             temp: str = self.decrypt(i)
             out.append(temp)
@@ -111,7 +116,8 @@ class Chat:
                 self.append('OK', USER)
         except IndexError:
             pass
-        return out
+        return out, inp['members']
+
 
     def encrypt(self, string: str) -> str:
         return str(self.fernet.encrypt(string.encode())).replace("b'", "")\
@@ -179,7 +185,7 @@ class GUI:
         self.root.configure()
 
         self.paned_window: PanedWindow = PanedWindow(
-            self.root, orient='horizontal', bg='black')
+            self.root, orient='horizontal')
         self.paned_window.pack(fill='both', expand=True)
 
         self.left_frame: Frame = Frame(self.paned_window)
@@ -188,7 +194,7 @@ class GUI:
         self.right_frame: Frame = Frame(self.paned_window, width=100)
         self.paned_window.add(self.right_frame)
 
-        self.chat_widget: Text = Text(self.left_frame, state='disabled',bg='black', fg='white')
+        self.chat_widget: Text = Text(self.left_frame, state='disabled')
         self.chat_widget.pack(side='top', fill='both', expand=True)
 
         self.chat_input: Text = Text(self.left_frame, height=1)
@@ -220,6 +226,13 @@ class GUI:
         self.chat_widget.insert("end", msg)
         self.chat_widget.config(state='disabled')
 
+    def add_members(self, members: list[str]) -> None:
+        self.right_tab.config(state='normal')
+        self.right_tab.delete("1.0", "end")
+        msg: str = '\n'.join(members)
+        self.right_tab.insert("end", msg)
+        self.right_tab.config(state='disabled')
+
     def on_enter(self, event: Event) -> None:
         def inner() -> None:
             content: str = self.chat_input.get("1.0", "end-1c").strip()
@@ -238,8 +251,10 @@ class GUI:
         self.chat_input.delete("1.0", "end")
 
     def update(self) -> None:
-        self.add_messages(self.chat.beatiful())
+        msgs, members = self.chat.beatiful()
+        self.add_messages(msgs)
         self.chat_widget.see('end')
+        self.add_members(members)
         self.root.after(1000, self.update)
 
     def add_colours(self) -> None:
@@ -344,5 +359,10 @@ RUNNING: bool = True
 chat: Chat = Chat(PATH, KEY)
 root: Tk = Tk()
 app: GUI = GUI(root, chat)
-windll.shcore.SetProcessDpiAwareness(0)
+windll.shcore.SetProcessDpiAwareness(1)
 root.mainloop()
+
+print('ENDE')
+inp: dict = File(PATH).json_r()
+inp['members'].remove(USER)
+File(PATH).json_w(inp)
