@@ -16,7 +16,8 @@ def y_n(inp: str) -> bool:
 try:
     from requests import post, exceptions, Response
 except ModuleNotFoundError or ImportError:
-    if y_n("Modul Requests nicht gefunden, soll es heruntergeladen werden? (Y/n)"):
+    if y_n("Modul Requests nicht gefunden, soll es heruntergeladen werden?\
+            (Y/n)"):
         os.system("pip install requests")
         from requests import post, exceptions, Response
     else:
@@ -51,13 +52,15 @@ class Webhook:
     def send(self, content: str) -> int:
         try:
             return post(
-                self.url, json={"content": content, "username": self.username}).status_code
+                self.url, json={"content": content, "username":
+                                self.username}).status_code
         except exceptions.MissingSchema or exceptions.InvalidURL:
             print("<<<Webhook URL ist ungültig.>>>")
             return 0
 
     def send_file(self, content: bytes, file_name: str) -> int:
-        response: Response = post(self.url, json={"username": self.username}, files={
+        response: Response = post(self.url, json={"username": self.username},
+                                  files={
             'file': (file_name, content)})
         try:
             if int(response.json().get('code')) == 40005:
@@ -72,7 +75,8 @@ class Webhook:
             print(f"<<<Erfolgreich versendet, Code {status_code}.>>>")
         elif status_code != 0:
             print(
-                f"<<<Fehler beim senden, Code {status_code}, ist die URL korrekt?>>>")
+                f"<<<Fehler beim senden, Code {status_code}, \
+                    ist die URL korrekt?>>>")
 
 
 class SendToHome:
@@ -105,7 +109,8 @@ class SendToHome:
                 os.remove(zip_path)
             except Exception as e:
                 print(
-                    "Fehler beim komprimieren des Ordners, gibt es noch genug Speicherplatz auf deinem Account?")
+                    "Fehler beim komprimieren des Ordners, gibt es noch genug \
+                        Speicherplatz auf deinem Account?")
                 print(e)
         else:
             self.wh.print_status(self.wh.send(inp))
