@@ -14,7 +14,7 @@ def ausgabe(game: list[list[int]]) -> None:
     x: int = 0
     y: int = 0
     for line in ui:
-        if not '-' in line:
+        if '-' not in line:
             print(line)
         else:
             for char in line:
@@ -45,7 +45,7 @@ def turn(game: list[list[int]]) -> tuple[int, int]:
             return turn(game)
 
         return x, y
-    except:
+    except Exception:
         return turn(game)
 
 
@@ -104,7 +104,10 @@ def won(char_inp: str, game: list[list[int]]) -> bool:
 
 
 def new_game() -> dict:
-    return {'p1': input('<<<Spieler 1: >>> '), 'p2': input('<<<Spieler 2: >>> '), 'game': [[0 for _ in range(COL)] for _ in range(ROW)], 'current': 1}
+    return {'p1': input('<<<Spieler 1: >>> '),
+            'p2': input('<<<Spieler 2: >>> '),
+            'game': [[0 for _ in range(COL)]
+                     for _ in range(ROW)], 'current': 1}
 
 
 File(PATH).json_w(new_game())
