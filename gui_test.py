@@ -12,142 +12,6 @@ import json
 import os
 
 
-class GUI:
-    def __init__(self, root: Tk) -> None:
-        self.root: Tk = root
-        self.root.title("Chat")
-
-        self.paned_window: PanedWindow = PanedWindow(
-            self.root, orient='horizontal')
-        self.paned_window.pack(fill='both', expand=True)
-
-        self.left_frame: Frame = Frame(self.paned_window)
-        self.paned_window.add(self.left_frame)
-
-        self.right_frame: Frame = Frame(self.paned_window, width=100)
-        self.paned_window.add(self.right_frame)
-
-        self.chat_widget: Text = Text(self.left_frame, state='disabled')
-        self.chat_widget.pack(side='top', fill='both', expand=True)
-
-        self.chat_input: Text = Text(self.left_frame, height=1)
-        self.chat_input.pack(side='bottom', fill='x', expand=False)
-        self.chat_input.bind("<Return>", self.on_enter)
-
-        self.right_tab: Text = Text(self.right_frame, height=1)
-        self.right_tab.pack(side='top', fill='both', expand=True)
-
-        self.button_frame: Frame = Frame(self.right_frame)
-        self.button_frame.pack(side='bottom', fill='x')
-
-        self.button1: Button = Button(self.button_frame, text="Button 1")
-        self.button1.pack(side='left', fill='x', expand=True)
-
-        self.button2: Button = Button(self.button_frame, text="Button 2")
-        self.button2.pack(side='left', fill='x', expand=True)
-
-    def clear_input(self) -> None:
-        self.chat_input.delete("1.0", "end")
-
-    def add_messages(self, messages: list[str]) -> None:
-        self.chat_widget.config(state='normal')
-        for msg in messages:
-            self.chat_widget.insert("end", msg)
-        self.chat_widget.config(state='disabled')
-
-    def on_enter(self, event: Event) -> None:
-        def inner() -> None:
-            content: str = self.chat_input.get("1.0", "end-1c").strip()
-            if len(content) > 128:
-                content = content[:128] + '...'
-            if Chat.convert('gen') in content.lower() or Chat.convert('gin')\
-                    in content.lower():
-                return
-            if len(content) == 0:
-                return
-            if len(content) > 10 and content in pyperclip.paste() \
-                    and '\n' in pyperclip.paste():
-                return
-        inner()
-        self.chat_input.delete("1.0", "end")
-
-
-class Cmd:
-    def __init__(self, msg: str, prefix: str = '/') -> None:
-        self.prefix: str = prefix
-        self.msg: str = msg
-        self.exec: bool = False
-
-    def is_cmd(self, cmd: str, mode: int = 0) -> bool:
-        temp: bool = self._is_cmd(cmd, mode)
-        if temp:
-            self.exec = True
-        return temp
-
-    def _is_cmd(self, cmd: str, mode: int = 0) -> bool:
-        cmd = self.prefix + cmd
-        if mode == 0:
-            return self.msg == cmd
-        elif mode == 1:
-            return self.msg.startswith(cmd + ' ')
-        return False
-
-
-colours: dict = {
-    # Specials
-    "//reset//": "\033[0m",
-    "\\**": "\033[22m",
-    "**": "\033[1m",
-    "\\*": "\033[23m",
-    "*": "\033[3m",
-    "\\__": "\033[24m",
-    "__": "\033[4m",
-    # Text Colours
-    "//black//": "\033[30m",
-    "//blue//": "\033[34m",
-    "//cyan//": "\033[36m",
-    "//green//": "\033[32m",
-    "//purple//": "\033[35m",
-    "//red//": "\033[31m",
-    "//white//": "\033[37m",
-    "//yellow//": "\033[33m",
-    # Bg Colours
-    "//bblack//": "\033[40m",
-    "//bred//": "\033[41m",
-    "//bgreen//": "\033[42m",
-    "//byellow//": "\033[43m",
-    "//bblue": "\033[44m",
-    "//bpurple//": "\033[45m",
-    "//bcyan//": "\033[46m",
-    "//bwhite//": "\033[47m"
-}
-
-
-USER: str = input('User: ')[:32].strip()
-CHATROOM: str = input('Chatraum: ')[:10].strip()
-if CHATROOM == '':
-    PATH: str = input('Pfad: ').strip()
-else:
-    PATH: str = f"Y:/2BHIT/test/{CHATROOM}.json"
-
-KEY: str = getpass('Passwort: ').strip()
-while KEY.lower() == CHATROOM.lower():
-    Console.print_colour(
-        "Passwort und Chatraum dürfen nicht gleich sein.", "red")
-    KEY = getpass('Passwort: ').strip()
-
-
-DATE: str = f'{str(datetime.now().day)}_{str(datetime.now().month)}'
-WINDOWS: bool = os.name == 'nt'
-if WINDOWS:
-    Console.print_colour("OS: Windows", "yellow")
-else:
-    Console.print_colour("OS: MacOS/Linux", "yellow")
-
-global RUNNING
-RUNNING: bool = True
-
-
 class Chat:
     def __init__(self, path: str, key: str) -> None:
         self.path: str = path
@@ -233,26 +97,23 @@ class Chat:
             str(self.encrypt(f"{user}: {msg}")))
         self.save_file(temp)
 
-    def beatiful(self) -> str:
-        temp: str = ''
+    def beatiful(self) -> list[str]:
+        out: list[str] = []
         chat: dict = self.get_chat()
         for i in chat:
-            temp2: str = self.s_print_colour(self.decrypt(i))
-            temp += f"\n{temp2}"
+            temp: str = self.s_print_colour(self.decrypt(i))
+            out.append(temp)
         try:
             if f'@{USER}' in self.decrypt(chat[-1]):
                 try:
                     msgb = ctypes.windll.user32.MessageBoxW  # type: ignore
-                    msgb(None, temp2, 'Ping', 0)
+                    msgb(None, temp, 'Ping', 0)
                 except AttributeError:
                     pass
                 self.append('OK', USER)
         except IndexError:
             pass
-        if self.nupdate:
-            temp += ' '
-            self.nupdate = False
-        return temp
+        return out
 
     def encrypt(self, string: str) -> str:
         return str(self.fernet.encrypt(string.encode())).replace("b'", "")\
@@ -311,8 +172,178 @@ class Chat:
         return False
 
 
+class GUI:
+    def __init__(self, root: Tk, chat: Chat) -> None:
+        self.root: Tk = root
+        self.chat: Chat = chat
+
+        self.root.title("Chat")
+
+        self.paned_window: PanedWindow = PanedWindow(
+            self.root, orient='horizontal')
+        self.paned_window.pack(fill='both', expand=True)
+
+        self.left_frame: Frame = Frame(self.paned_window)
+        self.paned_window.add(self.left_frame)
+
+        self.right_frame: Frame = Frame(self.paned_window, width=100)
+        self.paned_window.add(self.right_frame)
+
+        self.chat_widget: Text = Text(self.left_frame, state='disabled')
+        self.chat_widget.pack(side='top', fill='both', expand=True)
+
+        self.chat_input: Text = Text(self.left_frame, height=1)
+        self.chat_input.pack(side='bottom', fill='x', expand=False)
+        self.chat_input.bind("<Return>", self.on_enter)
+
+        self.right_tab: Text = Text(
+            self.right_frame, height=1, state='disabled')
+        self.right_tab.pack(side='top', fill='both', expand=True)
+
+        self.button_frame: Frame = Frame(self.right_frame)
+        self.button_frame.pack(side='bottom', fill='x')
+
+        self.button1: Button = Button(self.button_frame, text="Button 1")
+        self.button1.pack(side='left', fill='x', expand=True)
+
+        self.button2: Button = Button(self.button_frame, text="Button 2")
+        self.button2.pack(side='left', fill='x', expand=True)
+
+        self.update()
+
+    def clear_input(self) -> None:
+        self.chat_input.delete("1.0", "end")
+
+    def add_messages(self, messages: list[str]) -> None:
+        self.chat_widget.config(state='normal')
+        self.chat_widget.delete("1.0", "end")
+        msg: str = '\n'.join(messages)
+        self.chat_widget.insert("end", msg)
+        self.chat_widget.config(state='disabled')
+
+    def on_enter(self, event: Event) -> None:
+        def inner() -> None:
+            content: str = self.chat_input.get("1.0", "end-1c").strip()
+            if len(content) > 128:
+                content = content[:128] + '...'
+            if Chat.convert('gen') in content.lower() or Chat.convert('gin')\
+                    in content.lower():
+                return
+            if len(content) == 0:
+                return
+            if len(content) > 10 and content in pyperclip.paste() \
+                    and '\n' in pyperclip.paste():
+                return
+        inner()
+        self.chat.append(self.chat_input.get("1.0", "end-1c").strip(), USER)
+        self.chat_input.delete("1.0", "end")
+
+    def update(self) -> None:
+        self.add_messages(self.chat.beatiful())
+        self.root.after(1000, self.update)
+
+    def add_colours(self) -> None:
+        self.chat_widget.tag_config('red', foreground='red')
+        self.chat_widget.tag_config('green', foreground='green')
+        self.chat_widget.tag_config('blue', foreground='blue')
+        self.chat_widget.tag_config('yellow', foreground='yellow')
+        self.chat_widget.tag_config('purple', foreground='purple')
+        self.chat_widget.tag_config('cyan', foreground='cyan')
+        self.chat_widget.tag_config('black', foreground='black')
+        self.chat_widget.tag_config('white', foreground='white')
+        self.chat_widget.tag_config('bblack', background='black')
+        self.chat_widget.tag_config('bred', background='red')
+        self.chat_widget.tag_config('bgreen', background='green')
+        self.chat_widget.tag_config('bblue', background='blue')
+        self.chat_widget.tag_config('byellow', background='yellow')
+        self.chat_widget.tag_config('bpurple', background='purple')
+        self.chat_widget.tag_config('bcyan', background='cyan')
+        self.chat_widget.tag_config('bwhite', background='white')
+        self.chat_widget.tag_config('**', font='bold')
+        self.chat_widget.tag_config('*', font='italic')
+        self.chat_widget.tag_config('__', underline=True)
+        self.chat_widget.tag_config('//reset//', font='normal')
+
+
+class Cmd:
+    def __init__(self, msg: str, prefix: str = '/') -> None:
+        self.prefix: str = prefix
+        self.msg: str = msg
+        self.exec: bool = False
+
+    def is_cmd(self, cmd: str, mode: int = 0) -> bool:
+        temp: bool = self._is_cmd(cmd, mode)
+        if temp:
+            self.exec = True
+        return temp
+
+    def _is_cmd(self, cmd: str, mode: int = 0) -> bool:
+        cmd = self.prefix + cmd
+        if mode == 0:
+            return self.msg == cmd
+        elif mode == 1:
+            return self.msg.startswith(cmd + ' ')
+        return False
+
+
+colours: dict = {
+    # Specials
+    "//reset//": "\033[0m",
+    "\\**": "\033[22m",
+    "**": "\033[1m",
+    "\\*": "\033[23m",
+    "*": "\033[3m",
+    "\\__": "\033[24m",
+    "__": "\033[4m",
+    # Text Colours
+    "//black//": "\033[30m",
+    "//blue//": "\033[34m",
+    "//cyan//": "\033[36m",
+    "//green//": "\033[32m",
+    "//purple//": "\033[35m",
+    "//red//": "\033[31m",
+    "//white//": "\033[37m",
+    "//yellow//": "\033[33m",
+    # Bg Colours
+    "//bblack//": "\033[40m",
+    "//bred//": "\033[41m",
+    "//bgreen//": "\033[42m",
+    "//byellow//": "\033[43m",
+    "//bblue": "\033[44m",
+    "//bpurple//": "\033[45m",
+    "//bcyan//": "\033[46m",
+    "//bwhite//": "\033[47m"
+}
+
+
+USER: str = input('User: ')[:32].strip()
+CHATROOM: str = input('Chatraum: ')[:10].strip()
+if CHATROOM == '':
+    PATH: str = input('Pfad: ').strip()
+else:
+    PATH: str = f"Y:/2BHIT/test/{CHATROOM}.json"
+
+KEY: str = getpass('Passwort: ').strip()
+while KEY.lower() == CHATROOM.lower():
+    Console.print_colour(
+        "Passwort und Chatraum dürfen nicht gleich sein.", "red")
+    KEY = getpass('Passwort: ').strip()
+
+
+DATE: str = f'{str(datetime.now().day)}_{str(datetime.now().month)}'
+WINDOWS: bool = os.name == 'nt'
+if WINDOWS:
+    Console.print_colour("OS: Windows", "yellow")
+else:
+    Console.print_colour("OS: MacOS/Linux", "yellow")
+
+global RUNNING
+RUNNING: bool = True
+
+
+chat: Chat = Chat(PATH, KEY)
 root: Tk = Tk()
-app: GUI = GUI(root)
+app: GUI = GUI(root, chat)
 root.mainloop()
 
 
