@@ -69,16 +69,14 @@ class Chat:
 
         if not File(self.path).exists():
             make_file(
-                f"Datei '{self.path}' nicht gefunden,\
-                      soll sie generiert werden? (Y/n)")
+                f"Datei '{self.path}' nicht gefunden, soll sie generiert werden? (Y/n)")
 
         try:
             self.get_chat()
 
         except json.JSONDecodeError:
             make_file(
-                f"Datei '{self.path}' konnte nicht geladen werden, \
-                    soll sie neu generiert werden? (Y/n)")
+                f"Datei '{self.path}' konnte nicht geladen werden, soll sie neu generiert werden? (Y/n)")
 
     def get_chat(self) -> dict:
         try:
@@ -101,7 +99,7 @@ class Chat:
         out: list[str] = []
         chat: dict = self.get_chat()
         for i in chat:
-            temp: str = self.s_print_colour(self.decrypt(i))
+            temp: str = self.decrypt(i)
             out.append(temp)
         try:
             if f'@{USER}' in self.decrypt(chat[-1]):
@@ -240,6 +238,7 @@ class GUI:
 
     def update(self) -> None:
         self.add_messages(self.chat.beatiful())
+        self.chat_widget.see('end')
         self.root.after(1000, self.update)
 
     def add_colours(self) -> None:
@@ -345,9 +344,3 @@ chat: Chat = Chat(PATH, KEY)
 root: Tk = Tk()
 app: GUI = GUI(root, chat)
 root.mainloop()
-
-
-# Restart
-Console.clear()
-if WINDOWS:
-    os.system(f'start python {os.path.abspath(__file__)}')
