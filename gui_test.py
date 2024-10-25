@@ -4,13 +4,13 @@ from papertools import Console, File
 from datetime import datetime
 from getpass import getpass
 from typing import Callable
+from ctypes import windll
 from time import sleep
 import pyperclip
 import ctypes
 import base64
 import json
 import os
-
 
 class Chat:
     def __init__(self, path: str, key: str) -> None:
@@ -176,9 +176,10 @@ class GUI:
         self.chat: Chat = chat
 
         self.root.title("Chat")
+        self.root.configure()
 
         self.paned_window: PanedWindow = PanedWindow(
-            self.root, orient='horizontal')
+            self.root, orient='horizontal', bg='black')
         self.paned_window.pack(fill='both', expand=True)
 
         self.left_frame: Frame = Frame(self.paned_window)
@@ -187,7 +188,7 @@ class GUI:
         self.right_frame: Frame = Frame(self.paned_window, width=100)
         self.paned_window.add(self.right_frame)
 
-        self.chat_widget: Text = Text(self.left_frame, state='disabled')
+        self.chat_widget: Text = Text(self.left_frame, state='disabled',bg='black', fg='white')
         self.chat_widget.pack(side='top', fill='both', expand=True)
 
         self.chat_input: Text = Text(self.left_frame, height=1)
@@ -343,4 +344,5 @@ RUNNING: bool = True
 chat: Chat = Chat(PATH, KEY)
 root: Tk = Tk()
 app: GUI = GUI(root, chat)
+windll.shcore.SetProcessDpiAwareness(0)
 root.mainloop()
