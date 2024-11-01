@@ -156,8 +156,7 @@ class Chat:
         if is_cmd('exit'):
             self.nexit()
         elif is_cmd('leave'):
-            global RUNNING
-            RUNNING = False
+            pass
         elif is_cmd('del'):
             self.delete(1)
         elif is_cmd('del', 1):
@@ -355,9 +354,6 @@ if WINDOWS:
     Console.print_colour("OS: Windows", "yellow")
 else:
     Console.print_colour("OS: MacOS/Linux", "yellow")
-
-global RUNNING
-RUNNING: bool = True
 
 
 chat: Chat = Chat(PATH, KEY)
