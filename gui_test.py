@@ -12,6 +12,7 @@ import base64
 import json
 import os
 
+
 class Chat:
     def __init__(self, path: str, key: str) -> None:
         self.path: str = path
@@ -25,7 +26,6 @@ class Chat:
         inp: dict = File(path).json_r()
         inp['members'].append(USER)
         File(path).json_w(inp)
-
 
     @staticmethod
     def s_print_colour(inp: str) -> str:
@@ -117,7 +117,6 @@ class Chat:
         except IndexError:
             pass
         return out, inp['members']
-
 
     def encrypt(self, string: str) -> str:
         return str(self.fernet.encrypt(string.encode())).replace("b'", "")\
@@ -334,7 +333,13 @@ colours: dict = {
 USER: str = input('User: ')[:32].strip()
 CHATROOM: str = input('Chatraum: ')[:10].strip()
 if CHATROOM == '':
-    PATH: str = input('Pfad: ').strip()
+    if os.path.exists('Z:'):
+        PATH: str = input('Pfad: ').strip()
+    else:
+        Console.print_colour(
+            'Kein Schul PC erkannt, benutzt Test Datei', 'yellow')
+        PATH: str = os.path.abspath(os.path.join(
+            __file__, os.pardir, 'chat_test.json'))
 else:
     PATH: str = f"Y:/2BHIT/test/{CHATROOM}.json"
 
