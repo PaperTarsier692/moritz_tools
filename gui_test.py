@@ -4,7 +4,8 @@ from papertools import Console, File
 from datetime import datetime
 from getpass import getpass
 from typing import Callable
-from ctypes import windll
+# from ctypes import windll
+from mt import test_env
 from time import sleep
 import pyperclip
 import ctypes
@@ -333,11 +334,9 @@ colours: dict = {
 USER: str = input('User: ')[:32].strip()
 CHATROOM: str = input('Chatraum: ')[:10].strip()
 if CHATROOM == '':
-    if os.path.exists('Z:'):
+    if not test_env:
         PATH: str = input('Pfad: ').strip()
     else:
-        Console.print_colour(
-            'Kein Schul PC erkannt, benutzt Test Datei', 'yellow')
         PATH: str = os.path.abspath(os.path.join(
             __file__, os.pardir, 'chat_test.json'))
 else:
