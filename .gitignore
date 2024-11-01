@@ -11,6 +11,7 @@ Thumbs.db
 # Cached files #
 ################
 *.pyc
+__pycache__/
 
 # Test files #
 ##############
