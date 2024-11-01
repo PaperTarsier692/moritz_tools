@@ -364,7 +364,7 @@ RUNNING: bool = True
 chat: Chat = Chat(PATH, KEY)
 root: Tk = Tk()
 app: GUI = GUI(root, chat)
-windll.shcore.SetProcessDpiAwareness(1)
+# windll.shcore.SetProcessDpiAwareness(1)
 root.mainloop()
 
 print('ENDE')
