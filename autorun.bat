@@ -3,6 +3,7 @@
 Z:
 cd Z:\Documents\moritz_tools
 
+git reset --hard HEAD
 git pull | findstr /C:"Updating"
 if %errorlevel% equ 0 goto update
 
