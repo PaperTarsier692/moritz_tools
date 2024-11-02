@@ -19,7 +19,6 @@ class Chat:
         self.file: File = File(path)
         self.fernet: Fernet = Fernet(base64.urlsafe_b64encode(
             key.encode("utf-8").ljust(32)[:32]))
-        self.nupdate: bool = False
         self.check_file()
         inp: dict = File(path).json_r()
         inp['members'].append(USER)
@@ -61,7 +60,6 @@ class Chat:
 
     def append(self, msg: str, user: str) -> None:
         if self.cmd(msg):
-            self.update()
             return
         temp: dict = self.get_file()
         temp['msgs'].append(
@@ -108,9 +106,6 @@ class Chat:
         for c in inp:
             output = c + output
         return output
-
-    def update(self) -> None:
-        self.nupdate = True
 
     def get_file(self) -> dict:
         return self.file.json_r()
