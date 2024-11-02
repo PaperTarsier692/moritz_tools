@@ -185,6 +185,7 @@ class GUI:
         self.button2: Button = Button(self.button_frame, text="Button 2")
         self.button2.pack(side='left', fill='x', expand=True)
 
+        self.add_colours()
         self.update()
 
     def clear_input(self) -> None:
@@ -193,8 +194,13 @@ class GUI:
     def add_messages(self, messages: list[str]) -> None:
         self.chat_widget.config(state='normal')
         self.chat_widget.delete("1.0", "end")
-        msg: str = '\n'.join(messages)
-        self.chat_widget.insert("end", msg)
+        for msg in messages:
+            msg = msg + '\n'
+            if any(colour in msg for colour in colours.keys()):
+                self.chat_widget.insert(
+                    "end", msg, [colour for colour in colours.keys() if colour in msg][0])
+            else:
+                self.chat_widget.insert("end", msg)
         self.chat_widget.config(state='disabled')
 
     def add_members(self, members: list[str]) -> None:
