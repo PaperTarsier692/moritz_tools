@@ -155,8 +155,6 @@ class Chat:
         is_cmd: Callable = cmd.is_cmd
         if is_cmd('exit'):
             self.nexit()
-        elif is_cmd('leave'):
-            pass
         elif is_cmd('del'):
             self.delete(1)
         elif is_cmd('del', 1):
