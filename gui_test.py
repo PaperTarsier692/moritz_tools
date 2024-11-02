@@ -1,7 +1,6 @@
 from tkinter import Tk, Frame, Text, Event, PanedWindow, Button
 from cryptography.fernet import Fernet
 from papertools import Console, File
-from datetime import datetime
 from getpass import getpass
 from typing import Callable
 # from ctypes import windll
@@ -20,10 +19,8 @@ class Chat:
         self.file: File = File(path)
         self.fernet: Fernet = Fernet(base64.urlsafe_b64encode(
             key.encode("utf-8").ljust(32)[:32]))
-        self.date: str = DATE
         self.nupdate: bool = False
         self.check_file()
-        self.check_date()
         inp: dict = File(path).json_r()
         inp['members'].append(USER)
         File(path).json_w(inp)
@@ -42,20 +39,6 @@ class Chat:
         input()
         exit()
 
-    def check_date(self) -> None:
-        data: dict = self.get_file()
-        temp: list = []
-        for day in data['days']:
-            if day != self.date:
-                temp.append(day)
-        for day in temp:
-            del data['days'][day]
-        try:
-            data['days'][self.date]
-        except KeyError:
-            data['days'][self.date] = []
-        self.save_file(data)
-
     def check_file(self) -> None:
         def make_file(msg: str) -> None:
             def y_n(inp: str) -> bool:
@@ -68,7 +51,7 @@ class Chat:
 
             if y_n(msg):
                 os.makedirs(os.path.dirname(self.path), exist_ok=True)
-                self.save_file({"days": {self.date: []}, "members": []})
+                self.save_file({"msgs": [], "members": []})
             else:
                 self.nexit()
 
@@ -85,7 +68,7 @@ class Chat:
 
     def get_chat(self) -> dict:
         try:
-            return self.get_file()['days'][self.date]
+            return self.get_file()['msgs']
         except Exception as e:
             print("Fehler beim Laden: ", e)
             sleep(0.5)
@@ -96,14 +79,14 @@ class Chat:
             self.update()
             return
         temp: dict = self.get_file()
-        temp['days'][self.date].append(
+        temp['msgs'].append(
             str(self.encrypt(f"{user}: {msg}")))
         self.save_file(temp)
 
     def beatiful(self) -> tuple[list[str], list[str]]:
         out: list[str] = []
         inp: dict = self.get_file()
-        chat: dict = inp['days'][self.date]
+        chat: dict = inp['msgs']
         for i in chat:
             temp: str = self.decrypt(i)
             out.append(temp)
@@ -131,7 +114,7 @@ class Chat:
 
     def delete(self, len: int) -> None:
         temp: dict = self.get_file()
-        del temp['days'][self.date][-len:]
+        del temp['msgs'][-len:]
         self.save_file(temp)
 
     @staticmethod
@@ -163,10 +146,8 @@ class Chat:
                 self.delete(len)
             except IndexError or ValueError:
                 pass
-        elif is_cmd('check'):
-            self.check_date()
         elif is_cmd('reset'):
-            self.save_file({"days": {self.date: []}})
+            self.save_file({"msgs": [], "members": []})
         if cmd.exec or 'gen' in self.convert(msg).lower() \
                 or 'gin' in self.convert(msg).lower():
             return True
@@ -346,7 +327,6 @@ while KEY.lower() == CHATROOM.lower():
     KEY = getpass('Passwort: ').strip()
 
 
-DATE: str = f'{str(datetime.now().day)}_{str(datetime.now().month)}'
 WINDOWS: bool = os.name == 'nt'
 if WINDOWS:
     Console.print_colour("OS: Windows", "yellow")
