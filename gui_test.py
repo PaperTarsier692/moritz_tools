@@ -26,13 +26,6 @@ class Chat:
         File(path).json_w(inp)
 
     @staticmethod
-    def s_print_colour(inp: str) -> str:
-        for colour, value in colours.items():
-            inp = inp.replace(colour, value)
-        inp += '\033[0m'
-        return inp
-
-    @staticmethod
     def nexit() -> None:
         Console.print_colour(
             "Drücken Sie enter um das Programm zu beenden.", "red")
