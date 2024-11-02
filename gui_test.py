@@ -198,7 +198,7 @@ class GUI:
             msg = msg + '\n'
             if any(colour in msg for colour in colours.keys()):
                 self.chat_widget.insert(
-                    "end", msg, [colour for colour in colours.keys() if colour in msg][0])
+                    "end", msg, [colour for colour in colours.keys() if colour in msg])
             else:
                 self.chat_widget.insert("end", msg)
         self.chat_widget.config(state='disabled')
