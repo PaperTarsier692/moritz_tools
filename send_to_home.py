@@ -1,17 +1,9 @@
 from papertools import File, Console
 from shutil import make_archive
 import os
+from mt import y_n
 
 Console.clear()
-
-
-def y_n(inp: str) -> bool:
-    print(inp)
-    res: str = input().strip().lower()
-    if res == 'y' or res == 'j':
-        return True
-    return False
-
 
 try:
     from requests import post, exceptions, Response

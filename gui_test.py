@@ -4,7 +4,7 @@ from papertools import Console, File
 from getpass import getpass
 from typing import Callable
 # from ctypes import windll
-from mt import test_env
+from mt import test_env, y_n
 from time import sleep
 import pyperclip
 import ctypes
@@ -34,14 +34,6 @@ class Chat:
 
     def check_file(self) -> None:
         def make_file(msg: str) -> None:
-            def y_n(inp: str) -> bool:
-                if inp is not None:
-                    print(inp)
-                res: str = input().strip().lower()
-                if res == 'y' or res == 'j':
-                    return True
-                return False
-
             if y_n(msg):
                 os.makedirs(os.path.dirname(self.path), exist_ok=True)
                 self.save_file({"msgs": [], "members": []})
