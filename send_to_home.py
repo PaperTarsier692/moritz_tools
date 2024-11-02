@@ -26,9 +26,9 @@ if stgs_file.exists():
     stgs: dict = stgs_file.json_r()
 else:
     print("settings.json wurde erstellt, bitte fülle die Felder aus.")
-    username: str = input('Username: ')
+    username: str = input('Username: ').strip()
     url: str = 'https://discord.com/api/webhooks/' + \
-        input('Webhook URL: https://discord.com/api/webhooks/')
+        input('Webhook URL: https://discord.com/api/webhooks/').strip()
     stgs: dict = {"url": url, "username": username}
     stgs_file.json_w(stgs)
 
