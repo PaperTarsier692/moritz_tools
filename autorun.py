@@ -1,7 +1,7 @@
-import os
+from papertools import File, Webhook
 from socket import gethostname
 from getpass import getuser
-from papertools import File, Webhook
+import os
 
 install_cmd: str = '''@echo off
 Z:

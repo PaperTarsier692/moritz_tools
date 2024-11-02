@@ -1,10 +1,10 @@
 from tkinter import Tk, Frame, Text, Event, PanedWindow, Button
 from cryptography.fernet import Fernet
 from papertools import Console, File
+from mt import test_env, y_n
 from getpass import getpass
 from typing import Callable
 # from ctypes import windll
-from mt import test_env, y_n
 from time import sleep
 import pyperclip
 import ctypes
