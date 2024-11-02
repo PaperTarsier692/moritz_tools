@@ -195,12 +195,20 @@ class GUI:
         self.chat_widget.config(state='normal')
         self.chat_widget.delete("1.0", "end")
         for msg in messages:
-            msg = msg + '\n'
             if any(colour in msg for colour in colours.keys()):
-                self.chat_widget.insert(
-                    "end", msg, [colour for colour in colours.keys() if colour in msg])
+                colour_list: list[str] = [
+                    colour for colour in colours.keys() if colour in msg]
+                indexes: list[int] = []
+                for colour in colour_list:
+                    indexes.append(msg.index(colour))
+                indexes.append(len(msg))
+                self.chat_widget.insert("end", msg[:indexes[0]])
+                for i, colour in enumerate(colour_list):
+                    self.chat_widget.insert(
+                        "end", msg[msg.index(colour)+len(colour):indexes[i+1]], colour)
             else:
                 self.chat_widget.insert("end", msg)
+            self.chat_widget.insert("end", '\n')
         self.chat_widget.config(state='disabled')
 
     def add_members(self, members: list[str]) -> None:
