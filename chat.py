@@ -175,9 +175,6 @@ class GUI:
         self.add_colours()
         self.update()
 
-    def clear_input(self) -> None:
-        self.chat_input.delete("1.0", "end")
-
     def add_messages(self, messages: list[str]) -> None:
         self.chat_widget.config(state='normal')
         self.chat_widget.delete("1.0", "end")
@@ -197,6 +194,7 @@ class GUI:
                 self.chat_widget.insert("end", msg)
             self.chat_widget.insert("end", '\n')
         self.chat_widget.config(state='disabled')
+        self.chat_widget.see("end")
 
     def add_members(self, members: list[str]) -> None:
         self.right_tab.config(state='normal')
@@ -225,7 +223,6 @@ class GUI:
     def update(self) -> None:
         msgs, members = self.chat.beatiful()
         self.add_messages(msgs)
-        self.chat_widget.see('end')
         self.add_members(members)
         self.root.after(1000, self.update)
 
