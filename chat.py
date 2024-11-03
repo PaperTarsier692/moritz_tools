@@ -6,7 +6,6 @@ from getpass import getpass
 from typing import Callable
 # from ctypes import windll
 from time import sleep
-import pyperclip
 import ctypes
 import base64
 import json
