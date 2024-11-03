@@ -213,11 +213,10 @@ class GUI:
                 return
             if len(content) == 0:
                 return
-            if len(content) > 10 and content in pyperclip.paste() \
-                    and '\n' in pyperclip.paste():
+            if '\n' in content:
                 return
+            self.chat.append(content, USER)
         inner()
-        self.chat.append(self.chat_input.get("1.0", "end-1c").strip(), USER)
         self.chat_input.delete("1.0", "end")
 
     def update(self) -> None:
