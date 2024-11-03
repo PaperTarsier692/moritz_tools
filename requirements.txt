@@ -1,6 +1,5 @@
 datetime
 requests
-pyperclip
 ttkthemes
 papertools
 context_menu
