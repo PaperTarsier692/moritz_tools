@@ -19,9 +19,15 @@ class Chat:
         self.fernet: Fernet = Fernet(base64.urlsafe_b64encode(
             key.encode("utf-8").ljust(32)[:32]))
         self.check_file()
-        inp: dict = File(path).json_r()
-        inp['members'].append(USER)
-        File(path).json_w(inp)
+        self.load_file()
+        self.inp['members'].append(USER)
+        self.save_file()
+
+    def load_file(self) -> None:
+        self.inp: dict = self.file.json_r()
+
+    def save_file(self) -> None:
+        self.file.json_w(self.inp)
 
     @staticmethod
     def nexit() -> None:
@@ -34,7 +40,7 @@ class Chat:
         def make_file(msg: str) -> None:
             if y_n(msg):
                 os.makedirs(os.path.dirname(self.path), exist_ok=True)
-                self.save_file({"msgs": [], "members": []})
+                self.file.json_w({"msgs": [], "members": []})
             else:
                 self.nexit()
 
@@ -43,46 +49,34 @@ class Chat:
                 f"Datei '{self.path}' nicht gefunden, soll sie generiert werden? (Y/n)")
 
         try:
-            self.get_chat()
-
-        except json.JSONDecodeError:
+            self.load_file()
+            self.inp['msgs']
+            self.inp['members']
+        except:
             make_file(
                 f"Datei '{self.path}' konnte nicht geladen werden, soll sie neu generiert werden? (Y/n)")
 
-    def get_chat(self) -> dict:
-        try:
-            return self.get_file()['msgs']
-        except Exception as e:
-            print("Fehler beim Laden: ", e)
-            sleep(0.5)
-            return self.get_chat()
-
-    def append(self, msg: str, user: str) -> None:
+    def append(self, msg: str) -> None:
         if self.cmd(msg):
+            print('CMD')
             return
-        temp: dict = self.get_file()
-        temp['msgs'].append(
-            str(self.encrypt(f"{user}: {msg}")))
-        self.save_file(temp)
+        self.inp['msgs'].append(self.encrypt(f"{USER}: {msg}"))
 
-    def beatiful(self) -> tuple[list[str], list[str]]:
+    def chat_to_list(self) -> tuple[list[str], list[str]]:
         out: list[str] = []
-        inp: dict = self.get_file()
-        chat: dict = inp['msgs']
-        for i in chat:
-            temp: str = self.decrypt(i)
-            out.append(temp)
+        for i in self.inp['msgs']:
+            out.append(self.decrypt(i))
         try:
-            if f'@{USER}' in self.decrypt(chat[-1]):
+            if f'@{USER}' in out[-1]:
                 try:
                     msgb = ctypes.windll.user32.MessageBoxW  # type: ignore
-                    msgb(None, temp, 'Ping', 0)
+                    msgb(None, out[-1], 'Ping', 0)
                 except AttributeError:
                     pass
-                self.append('OK', USER)
+                self.append('OK')
         except IndexError:
             pass
-        return out, inp['members']
+        return out, self.inp['members']
 
     def encrypt(self, string: str) -> str:
         return str(self.fernet.encrypt(string.encode())).replace("b'", "")\
@@ -95,9 +89,7 @@ class Chat:
             raise ValueError("Falscher Key")
 
     def delete(self, len: int) -> None:
-        temp: dict = self.get_file()
-        del temp['msgs'][-len:]
-        self.save_file(temp)
+        del self.inp['msgs'][-len:]
 
     @staticmethod
     def convert(inp: str) -> str:
@@ -105,12 +97,6 @@ class Chat:
         for c in inp:
             output = c + output
         return output
-
-    def get_file(self) -> dict:
-        return self.file.json_r()
-
-    def save_file(self, data: dict) -> None:
-        return self.file.json_w(data)
 
     def cmd(self, msg: str) -> bool:
         cmd: Cmd = Cmd(msg, "/")
@@ -126,7 +112,7 @@ class Chat:
             except IndexError or ValueError:
                 pass
         elif is_cmd('reset'):
-            self.save_file({"msgs": [], "members": []})
+            self.inp = {"msgs": [], "members": []}
         if cmd.exec or 'gen' in self.convert(msg).lower() \
                 or 'gin' in self.convert(msg).lower():
             return True
@@ -135,11 +121,12 @@ class Chat:
 
 class GUI:
     def __init__(self, root: Tk, chat: Chat) -> None:
+        self.messages: list[str] = []
+
         self.root: Tk = root
         self.chat: Chat = chat
 
-        self.root.title("Chat")
-        self.root.configure()
+        self.root.title("Chat Test")
 
         self.paned_window: PanedWindow = PanedWindow(
             self.root, orient='horizontal')
@@ -214,14 +201,21 @@ class GUI:
                 return
             if '\n' in content:
                 return
-            self.chat.append(content, USER)
+            self.messages.append(content)
         inner()
         self.chat_input.delete("1.0", "end")
 
     def update(self) -> None:
-        msgs, members = self.chat.beatiful()
+        self.chat.load_file()
+        before: dict = self.chat.inp.copy()
+        for msg in self.messages:
+            self.chat.append(msg)
+        msgs, members = self.chat.chat_to_list()
         self.add_messages(msgs)
         self.add_members(members)
+        if self.chat.inp != before:
+            print('Changes')
+            self.chat.save_file()
         self.root.after(1000, self.update)
 
     def add_colours(self) -> None:
@@ -330,6 +324,6 @@ app: GUI = GUI(root, chat)
 root.mainloop()
 
 print('ENDE')
-inp: dict = File(PATH).json_r()
-inp['members'].remove(USER)
-File(PATH).json_w(inp)
+_inp: dict = File(PATH).json_r()
+_inp['members'].remove(USER)
+File(PATH).json_w(_inp)
