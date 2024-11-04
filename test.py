@@ -1,4 +1,5 @@
 from context_menu import menus
-
-fc = menus.FastCommand('Send To Home', type='FILES', command='Z: && cd Z:\\Documents\\moritz_tools && python send_to_home_sc.py')
+from sys import executable
+fc = menus.FastCommand('Send To Home', type='FILES', command=f'"{executable}" "Z:\\Documents\\moritz_tools\\send_to_home_sc.py" ? ', command_vars=['FILENAME'])
 fc.compile()
+
