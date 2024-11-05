@@ -17,5 +17,8 @@ __pycache__/
 ##############
 chat_test.json
 ttt.json
+
+# Settings #
+############
 settings.json
 .test_env
