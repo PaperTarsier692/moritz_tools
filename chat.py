@@ -1,17 +1,17 @@
 from mt import ensure_venv
 ensure_venv(__file__)
 
-import os
-import json
-import base64
-import ctypes
-from time import sleep
-from typing import Callable
-from getpass import getpass
-from mt import test_env, y_n
-from papertools import Console, File
-from cryptography.fernet import Fernet
 from tkinter import Tk, Frame, Text, Event, PanedWindow, Button
+from cryptography.fernet import Fernet
+from papertools import Console, File
+from mt import test_env, y_n
+from getpass import getpass
+from typing import Callable
+from time import sleep
+import ctypes
+import base64
+import json
+import os
 
 
 class Chat:
