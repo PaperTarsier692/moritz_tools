@@ -11,10 +11,10 @@ def y_n(inp: str) -> bool:
     return res == 'y' or res == 'j'
 
 
-def ensure_venv(file: str, args: str = '') -> bool:
+def ensure_venv(file: str, args: list[str] = []) -> None:
     if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
-        return False  # venv aktiv
+        pass
     else:
         os.system(
-            f'Z: && cd Documents\\moritz_tools && .\\.venv\\bin\\activate.bat && python {file} {args}')
-        return True
+            f'Z: && cd Documents\\moritz_tools && .\\.venv\\bin\\activate.bat && python {file} {' '.join(args)}')
+        exit()

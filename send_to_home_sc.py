@@ -1,5 +1,9 @@
-from papertools import File
+from mt import ensure_venv
 from sys import argv
+ensure_venv(__file__, argv)
+
+from papertools import File
+
 
 print(argv)
 

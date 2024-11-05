@@ -1,3 +1,6 @@
+from mt import ensure_venv
+ensure_venv(__file__)
+
 from papertools import File, Webhook
 from socket import gethostname
 from getpass import getuser
