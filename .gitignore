@@ -22,3 +22,7 @@ ttt.json
 ############
 settings.json
 .test_env
+
+# Downloaded Files #
+####################
+.venv/
