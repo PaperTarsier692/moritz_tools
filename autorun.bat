@@ -7,7 +7,7 @@ if %errorlevel% equ 0 goto update
 
 setx Path "C:\Program Files\CodeBlocks\MinGW\bin; %USERPROFILE%\AppData\Local\Microsoft\WindowsApps"
 
-call .venv\bin\activate.bat
+call .venv\Scripts\activate.bat
 pip install -r requirements.txt
 python autorun.py
 
