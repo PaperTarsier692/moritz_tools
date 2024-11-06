@@ -18,5 +18,8 @@ del "Z:\Start Menu\Programs\Startup\vsc_c.bat"
 
 REM Python Setup
 
+python -m venv .venv
+call .venv\bin\activate.bat
+pip install --upgrade pip
 pip install --upgrade -r requirements.txt
 
