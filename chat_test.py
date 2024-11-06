@@ -120,6 +120,10 @@ class Chat:
         def reset() -> None:
             self.inp = {"msgs": [], "members": []}
 
+        @_cmd()
+        def reset_names() -> None:
+            self.inp = {"msgs": self.inp['msgs'], "members": []}
+
         @_cmd(display='rem [int]')
         def rem(*args) -> None:
             try:
