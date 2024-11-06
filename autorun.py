@@ -6,7 +6,7 @@ from socket import gethostname
 from getpass import getuser
 import os
 
-install_cmd: str = '''@echo on
+install_cmd: str = '''
 Z:
 cd Documents
 git clone --branch dev https://github.com/PaperTarsier692/moritz_tools.git
