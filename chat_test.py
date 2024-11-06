@@ -7,6 +7,7 @@ from papertools import Console, File
 from mt import test_env, y_n
 from getpass import getpass
 from typing import Any, Callable
+from inspect import signature
 import ctypes
 import base64
 import os
@@ -102,21 +103,24 @@ class Chat:
     def pre_cmd(self) -> None:
         self.cmds: dict = {}
 
-        def _cmd() -> Callable:
+        def _cmd(name: str = '', display: str = '') -> Callable:
             def inner(func: Callable) -> Callable:
-                self.cmds[func.__name__] = func
+                cmd_name = name or func.__name__
+                display_name = display or cmd_name
+                self.cmds[cmd_name] = {
+                    'func': func, 'args': len(signature(func).parameters) > 0, 'name': display_name}
                 return func
             return inner
 
-        @_cmd()
-        def exit(*args) -> None:
-            self.nexit()
+        @_cmd(name='exit')
+        def _exit() -> None:
+            exit()
 
         @_cmd()
-        def reset(*args) -> None:
+        def reset() -> None:
             self.inp = {"msgs": [], "members": []}
 
-        @_cmd()
+        @_cmd(display='rem [int]')
         def rem(*args) -> None:
             try:
                 if args[0] == []:
@@ -130,7 +134,6 @@ class Chat:
     def cmd(self, msg: str) -> bool:
         msg = msg.strip().lower()
         if not msg.startswith('/'):
-            print('Kein /')
             return False
 
         cmd_name: str = msg.split(' ')[0].replace('/', '', 1)
@@ -138,10 +141,12 @@ class Chat:
         if self.cmds.get(cmd_name) is None:
             print('CMD nicht gefunden')
             return False
-        cmd: Callable = self.cmds[cmd_name]
+        cmd: dict = self.cmds[cmd_name]
         cmd_args: list[str] = msg.split(' ')[1:] or []
-        print(f'<<<{'|'.join(cmd_args)}>>>')
-        cmd(cmd_args)
+        if cmd['args']:
+            cmd['func'](cmd_args)
+        else:
+            cmd['func']()
         return True
 
 
@@ -178,14 +183,41 @@ class GUI:
         self.button_frame: Frame = Frame(self.right_frame)
         self.button_frame.pack(side='bottom', fill='x')
 
-        self.button1: Button = Button(self.button_frame, text="Button 1")
+        self.cmds_open: bool = False
+        self.button1: Button = Button(
+            self.button_frame, text="Commands", command=self.toggle_cmds)
         self.button1.pack(side='left', fill='x', expand=True)
 
-        self.button2: Button = Button(self.button_frame, text="Button 2")
+        self.button2: Button = Button(self.button_frame, text="Textstil")
         self.button2.pack(side='left', fill='x', expand=True)
 
+        self.add_cmds()
         self.add_colours()
         self.update()
+
+    def write_cmd(self, cmd: str, args: bool) -> None:
+        self.chat_input.delete("1.0", "end")
+        self.chat_input.insert("end", f'/{cmd} ')
+        if not args:
+            self.on_enter()
+        self.chat_input.focus()
+
+    def add_cmds(self) -> None:
+        self.cmds: list[Button] = []
+        for name, values in self.chat.cmds.items():
+            self.cmds.append(
+                Button(self.button_frame, text=values['name'], command=lambda n=name, a=values['args']: self.write_cmd(n, a)))
+
+    def toggle_cmds(self) -> None:
+        if self.cmds_open:
+            for cmd in self.cmds:
+                cmd.pack_forget()
+            self.cmds_open = False
+            return
+        else:
+            for cmd in self.cmds:
+                cmd.pack(side='top', fill='x', expand=True)
+            self.cmds_open = True
 
     def add_messages(self, messages: list[str]) -> None:
         self.chat_widget.config(state='normal')
@@ -217,7 +249,7 @@ class GUI:
         self.right_tab.insert("end", msg)
         self.right_tab.config(state='disabled')
 
-    def on_enter(self, event: Event) -> None:
+    def on_enter(self, event=None) -> None:
         def inner() -> None:
             content: str = self.chat_input.get("1.0", "end-1c").strip()
             if len(content) > 128:
