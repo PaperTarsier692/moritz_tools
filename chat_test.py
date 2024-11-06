@@ -7,7 +7,6 @@ from papertools import Console, File
 from mt import test_env, y_n
 from getpass import getpass
 from typing import Callable
-# from ctypes import windll
 import ctypes
 import base64
 
@@ -264,36 +263,6 @@ class Cmd:
         return False
 
 
-colours: dict = {
-    # Specials
-    "//reset//": "\033[0m",
-    "\\**": "\033[22m",
-    "**": "\033[1m",
-    "\\*": "\033[23m",
-    "*": "\033[3m",
-    "\\__": "\033[24m",
-    "__": "\033[4m",
-    # Text Colours
-    "//black//": "\033[30m",
-    "//blue//": "\033[34m",
-    "//cyan//": "\033[36m",
-    "//green//": "\033[32m",
-    "//purple//": "\033[35m",
-    "//red//": "\033[31m",
-    "//white//": "\033[37m",
-    "//yellow//": "\033[33m",
-    # Bg Colours
-    "//bblack//": "\033[40m",
-    "//bred//": "\033[41m",
-    "//bgreen//": "\033[42m",
-    "//byellow//": "\033[43m",
-    "//bblue": "\033[44m",
-    "//bpurple//": "\033[45m",
-    "//bcyan//": "\033[46m",
-    "//bwhite//": "\033[47m"
-}
-
-
 USER: str = input('User: ')[:32].strip()
 CHATROOM: str = input('Chatraum: ')[:10].strip()
 if CHATROOM == '':
@@ -322,7 +291,6 @@ else:
 chat: Chat = Chat(PATH, KEY)
 root: Tk = Tk()
 app: GUI = GUI(root, chat)
-# windll.shcore.SetProcessDpiAwareness(1)
 root.mainloop()
 
 print('ENDE')
