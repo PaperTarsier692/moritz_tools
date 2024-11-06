@@ -166,9 +166,9 @@ class GUI:
         self.chat_widget.config(state='normal')
         self.chat_widget.delete("1.0", "end")
         for msg in messages:
-            if any(colour in msg for colour in colours.keys()):
+            if any(colour in msg for colour in colours):
                 colour_list: list[str] = [
-                    colour for colour in colours.keys() if colour in msg]
+                    colour for colour in colours if colour in msg]
                 indexes: list[int] = []
                 for colour in colour_list:
                     indexes.append(msg.index(colour))
@@ -261,6 +261,10 @@ class Cmd:
         elif mode == 1:
             return self.msg.startswith(cmd + ' ')
         return False
+
+
+colours: list[str] = ['//reset//', '#', '*', '__', '//black//', '//blue//', '//cyan//', '//green//', '//purple//', '//red//',
+                      '//white//', '//yellow//', '//bblack//', '//bred//', '//bgreen//', '//byellow//', '//bblue', '//bpurple//', '//bcyan//', '//bwhite//']
 
 
 USER: str = input('User: ')[:32].strip()
