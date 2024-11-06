@@ -1,3 +1,6 @@
+from mt import ensure_venv
+ensure_venv(__file__)
+
 from papertools import Console, File
 
 PATH: str = 'ttt.json'
@@ -38,8 +41,8 @@ def turn(game: list[list[int]]) -> tuple[int, int]:
         if inp[1].isalpha():  # A1
             inp = f'{inp[1]}{inp[0]}'
 
-        x: int = ord(inp[0])-97
-        y: int = int(inp[1])-1
+        x: int = ord(inp[0]) - 97
+        y: int = int(inp[1]) - 1
 
         if game[x][y] != 0:
             return turn(game)
@@ -80,19 +83,19 @@ def won(char_inp: str, game: list[list[int]]) -> bool:
     def diagonal() -> bool:
         for i in range(ROW):
             for j in range(COL):
-                if i+NEEDED <= ROW and j+NEEDED <= COL:
+                if i + NEEDED <= ROW and j + NEEDED <= COL:
                     count: int = 0
                     for k in range(NEEDED):
-                        if game[i+k][j+k] == char:
+                        if game[i + k][j + k] == char:
                             count += 1
                             if count == NEEDED:
                                 return True
                         else:
                             count = 0
-                if i+NEEDED <= ROW and j-NEEDED >= -1:
+                if i + NEEDED <= ROW and j - NEEDED >= -1:
                     count: int = 0
                     for k in range(NEEDED):
-                        if game[i+k][j-k] == char:
+                        if game[i + k][j - k] == char:
                             count += 1
                             if count == NEEDED:
                                 return True

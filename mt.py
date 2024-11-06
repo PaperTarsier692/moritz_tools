@@ -1,4 +1,5 @@
 import os
+import sys
 
 test_env: bool = os.path.exists('.test_env')
 
@@ -8,3 +9,12 @@ def y_n(inp: str) -> bool:
         print(inp)
     res: str = input().strip().lower()
     return res == 'y' or res == 'j'
+
+
+def ensure_venv(file: str, args: list[str] = []) -> None:
+    if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
+        pass
+    else:
+        os.system(
+            f"Z: && cd Z:\\Documents\\moritz_tools && .\\.venv\\Scripts\\activate.bat && python {file} {' '.join(args)}")
+        exit()

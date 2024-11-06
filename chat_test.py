@@ -1,3 +1,6 @@
+from mt import ensure_venv
+ensure_venv(__file__)
+
 from tkinter import Tk, Frame, Text, Event, PanedWindow, Button
 from cryptography.fernet import Fernet
 from papertools import Console, File
@@ -5,10 +8,9 @@ from mt import test_env, y_n
 from getpass import getpass
 from typing import Callable
 # from ctypes import windll
-from time import sleep
 import ctypes
 import base64
-import json
+
 import os
 
 
@@ -175,7 +177,7 @@ class GUI:
                 self.chat_widget.insert("end", msg[:indexes[0]])
                 for i, colour in enumerate(colour_list):
                     self.chat_widget.insert(
-                        "end", msg[msg.index(colour)+len(colour):indexes[i+1]], colour)
+                        "end", msg[msg.index(colour) + len(colour):indexes[i + 1]], colour)
             else:
                 self.chat_widget.insert("end", msg)
             self.chat_widget.insert("end", '\n')

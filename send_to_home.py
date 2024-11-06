@@ -1,3 +1,6 @@
+from mt import ensure_venv
+ensure_venv(__file__)
+
 from papertools import File, Console
 from shutil import make_archive
 from mt import y_n

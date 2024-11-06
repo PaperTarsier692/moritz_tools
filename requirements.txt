@@ -1,6 +1,4 @@
-datetime
 requests
-ttkthemes
 papertools
 context_menu
 cryptography
