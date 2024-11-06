@@ -107,8 +107,8 @@ class Chat:
             self.delete(1)
         elif is_cmd('del', 1):
             try:
-                len: int = int(msg.split('/del ', 1)[1])
-                self.delete(len)
+                length: int = int(msg.split('/del ', 1)[1])
+                self.delete(length)
             except IndexError or ValueError:
                 pass
         elif is_cmd('reset'):
