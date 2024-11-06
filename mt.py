@@ -16,5 +16,5 @@ def ensure_venv(file: str, args: list[str] = []) -> None:
         pass
     else:
         os.system(
-            f"Z: && cd Documents\\moritz_tools && .\\.venv\\bin\\activate.bat && python {file} {' '.join(args)}")
+            f"Z: && cd Documents\\moritz_tools && .\\.venv\\Scripts\\activate.bat && python {file} {' '.join(args)}")
         exit()
