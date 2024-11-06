@@ -236,7 +236,7 @@ class GUI:
         self.chat_widget.tag_config('//bpurple//', background='purple')
         self.chat_widget.tag_config('//bcyan//', background='cyan')
         self.chat_widget.tag_config('//bwhite//', background='white')
-        self.chat_widget.tag_config('**', font='bold')
+        self.chat_widget.tag_config('#', font='bold')
         self.chat_widget.tag_config('*', font='italic')
         self.chat_widget.tag_config('__', underline=True)
         self.chat_widget.tag_config('//reset//', font='normal')
