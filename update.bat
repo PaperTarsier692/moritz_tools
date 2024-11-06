@@ -1,5 +1,3 @@
-@echo off
-
 Z:
 cd Z:\Documents\moritz_tools
 
