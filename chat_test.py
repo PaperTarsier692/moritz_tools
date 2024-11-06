@@ -6,7 +6,7 @@ from cryptography.fernet import Fernet
 from papertools import Console, File
 from mt import test_env, y_n
 from getpass import getpass
-from typing import Callable
+from typing import Any, Callable
 import ctypes
 import base64
 import os
@@ -22,6 +22,7 @@ class Chat:
         self.load_file()
         self.inp['members'].append(USER)
         self.save_file()
+        self.pre_cmd()
 
     def load_file(self) -> None:
         self.inp: dict = self.file.json_r()
@@ -88,8 +89,8 @@ class Chat:
         except ValueError:
             raise ValueError("Falscher Key")
 
-    def delete(self, len: int) -> None:
-        del self.inp['msgs'][-len:]
+    def delete(self, length: int) -> None:
+        del self.inp['msgs'][-length:]
 
     @staticmethod
     def convert(inp: str) -> str:
@@ -98,25 +99,50 @@ class Chat:
             output = c + output
         return output
 
-    def cmd(self, msg: str) -> bool:
-        cmd: Cmd = Cmd(msg, "/")
-        is_cmd: Callable = cmd.is_cmd
-        if is_cmd('exit'):
+    def pre_cmd(self) -> None:
+        self.cmds: dict = {}
+
+        def _cmd() -> Callable:
+            def inner(func: Callable) -> Callable:
+                self.cmds[func.__name__] = func
+                return func
+            return inner
+
+        @_cmd()
+        def exit(*args) -> None:
             self.nexit()
-        elif is_cmd('del'):
-            self.delete(1)
-        elif is_cmd('del', 1):
-            try:
-                length: int = int(msg.split('/del ', 1)[1])
-                self.delete(length)
-            except IndexError or ValueError:
-                pass
-        elif is_cmd('reset'):
+
+        @_cmd()
+        def reset(*args) -> None:
             self.inp = {"msgs": [], "members": []}
-        if cmd.exec or 'gen' in self.convert(msg).lower() \
-                or 'gin' in self.convert(msg).lower():
-            return True
-        return False
+
+        @_cmd()
+        def rem(*args) -> None:
+            try:
+                if args[0] == []:
+                    length: int = 1
+                else:
+                    length: int = int(args[0][0])
+                self.delete(length)
+            except Exception as e:
+                pass
+
+    def cmd(self, msg: str) -> bool:
+        msg = msg.strip().lower()
+        if not msg.startswith('/'):
+            print('Kein /')
+            return False
+
+        cmd_name: str = msg.split(' ')[0].replace('/', '', 1)
+        print(f'CMD Name: <<<{cmd_name}>>>')
+        if self.cmds.get(cmd_name) is None:
+            print('CMD nicht gefunden')
+            return False
+        cmd: Callable = self.cmds[cmd_name]
+        cmd_args: list[str] = msg.split(' ')[1:] or []
+        print(f'<<<{'|'.join(cmd_args)}>>>')
+        cmd(cmd_args)
+        return True
 
 
 class GUI:
@@ -255,27 +281,6 @@ class GUI:
         self.chat_widget.tag_config('*', font='italic')
         self.chat_widget.tag_config('__', underline=True)
         self.chat_widget.tag_config('//reset//', font='normal')
-
-
-class Cmd:
-    def __init__(self, msg: str, prefix: str = '/') -> None:
-        self.prefix: str = prefix
-        self.msg: str = msg
-        self.exec: bool = False
-
-    def is_cmd(self, cmd: str, mode: int = 0) -> bool:
-        temp: bool = self._is_cmd(cmd, mode)
-        if temp:
-            self.exec = True
-        return temp
-
-    def _is_cmd(self, cmd: str, mode: int = 0) -> bool:
-        cmd = self.prefix + cmd
-        if mode == 0:
-            return self.msg == cmd
-        elif mode == 1:
-            return self.msg.startswith(cmd + ' ')
-        return False
 
 
 colours: list[str] = ['//reset//', '#', '*', '__', '//black//', '//blue//', '//cyan//', '//green//', '//purple//', '//red//',
