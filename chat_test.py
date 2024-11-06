@@ -173,10 +173,12 @@ class GUI:
                 for colour in colour_list:
                     indexes.append(msg.index(colour))
                 indexes.append(len(msg))
+                indexes.sort()
                 self.chat_widget.insert("end", msg[:indexes[0]])
+                colour_list.sort(key=msg.index)
                 for i, colour in enumerate(colour_list):
                     self.chat_widget.insert(
-                        "end", msg[msg.index(colour) + len(colour):indexes[i + 1]], colour)
+                        "end", msg[msg.index(colour) + len(colour): indexes[i + 1]], colour)
             else:
                 self.chat_widget.insert("end", msg)
             self.chat_widget.insert("end", '\n')
@@ -214,6 +216,7 @@ class GUI:
         msgs, members = self.chat.chat_to_list()
         self.add_messages(msgs)
         self.add_members(members)
+        File('temp.json').json_w(self.chat.inp)
         if self.chat.inp != before:
             print('Changes')
             self.chat.save_file()
