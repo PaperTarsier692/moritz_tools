@@ -9,7 +9,6 @@ from getpass import getpass
 from typing import Callable
 import ctypes
 import base64
-
 import os
 
 
@@ -208,18 +207,31 @@ class GUI:
         inner()
         self.chat_input.delete("1.0", "end")
 
+    def check_members(self) -> bool:
+        if USER in self.chat.inp['members']:
+            return False
+        self.chat.inp['members'].append(USER)
+        return True
+
     def update(self) -> None:
+        changes: bool = False
         self.chat.load_file()
-        before: dict = self.chat.inp.copy()
         for msg in self.messages:
+            changes = True
+            print('Message')
             self.chat.append(msg)
+        self.messages = []
+        if self.check_members():
+            changes = True
+
         msgs, members = self.chat.chat_to_list()
         self.add_messages(msgs)
         self.add_members(members)
-        File('temp.json').json_w(self.chat.inp)
-        if self.chat.inp != before:
+
+        if changes:
             print('Changes')
             self.chat.save_file()
+
         self.root.after(1000, self.update)
 
     def add_colours(self) -> None:
