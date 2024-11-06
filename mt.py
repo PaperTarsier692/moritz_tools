@@ -15,8 +15,6 @@ def ensure_venv(file: str, args: list[str] = []) -> None:
     if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
         pass
     else:
-        print(f"Z: && cd Z:\\Documents\\moritz_tools && .\\.\
-              venv\\Scripts\\activate.bat && python {file} {' '.join(args)}")
         os.system(
             f"Z: && cd Z:\\Documents\\moritz_tools && .\\.venv\\Scripts\\activate.bat && python {file} {' '.join(args)}")
         exit()
