@@ -1,5 +1,3 @@
-@echo off
-
 Z:
 
 REM Startup Skripte
@@ -22,4 +20,6 @@ python -m venv .venv
 call .venv\bin\activate.bat
 pip install --upgrade pip
 pip install --upgrade -r requirements.txt
+
+pause
 
