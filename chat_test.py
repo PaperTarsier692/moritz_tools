@@ -1,7 +1,7 @@
 from mt import ensure_venv
 ensure_venv(__file__)
 
-from tkinter import Tk, Frame, Text, Event, PanedWindow, Button
+from tkinter import Tk, Frame, Text, PanedWindow, Button
 from cryptography.fernet import Fernet
 from papertools import Console, File
 from mt import test_env, y_n
