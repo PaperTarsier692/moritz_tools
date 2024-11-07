@@ -7,7 +7,7 @@ from time import sleep
 import ctypes
 import os
 
-PATH: str = ''
+PATH: str = 'Y:/2BHIT/test/'
 USER: str = getuser()
 
 while True:
