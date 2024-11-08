@@ -12,10 +12,10 @@ USER: str = getuser()
 
 while True:
     for file in Dir.listfiles(PATH):
-        sleep(5)
         file = os.path.join(PATH, file)
         if os.path.basename(file).endswith(USER):
             content: str = File(file).read()
             msgb = ctypes.windll.user32.MessageBoxW  # type: ignore
             msgb(None, content, 'Pinger', 0)
             os.remove(file)
+        sleep(5)
