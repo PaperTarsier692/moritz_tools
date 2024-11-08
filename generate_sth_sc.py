@@ -8,5 +8,5 @@ fc = menus.FastCommand('Send To Home', type='FILES',
 fc.compile()
 
 fc2 = menus.FastCommand('Send To Home', type='DIRECTORY',
-                        command=f'Z: && cd Z:\\Documents\\moritz_tools && "{executable}" "Z:\\Documents\\moritz_tools\\send_to_home_sc.py" ?', command_vars=['DIRECTORY'])
+                        command=f'Z: && cd Z:\\Documents\\moritz_tools && "{executable}" "Z:\\Documents\\moritz_tools\\send_to_home_sc.py" ?', command_vars=['FILENAME'])
 fc2.compile()
