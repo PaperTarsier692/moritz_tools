@@ -61,7 +61,6 @@ class Chat:
 
     def append(self, msg: str) -> None:
         if self.cmd(msg):
-            print('CMD')
             return
         self.inp['msgs'].append(self.encrypt(f"{USER}: {msg}"))
 
@@ -132,9 +131,7 @@ class Chat:
             return False
 
         cmd_name: str = msg.split(' ')[0].replace('/', '', 1)
-        print(f'CMD Name: <<<{cmd_name}>>>')
         if self.cmds.get(cmd_name) is None:
-            print('CMD nicht gefunden')
             return False
         cmd: dict = self.cmds[cmd_name]
         cmd_args: list[str] = msg.split(' ')[1:] or []
@@ -271,7 +268,6 @@ class GUI:
         self.chat.load_file()
         for msg in self.messages:
             changes = True
-            print('Message')
             self.chat.append(msg)
         self.messages = []
         if self.check_members():
@@ -293,7 +289,6 @@ class GUI:
         self.add_members(members)
 
         if changes:
-            print('Changes')
             self.chat.save_file()
 
         self.root.after(1000, self.update)
