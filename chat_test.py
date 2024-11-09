@@ -1,13 +1,13 @@
 from mt import ensure_venv
 ensure_venv(__file__)
 
+from mt import test_env, y_n, better_input, better_getpass
 from tkinter.ttk import Frame, PanedWindow, Button
 from ttkthemes import ThemedTk, ThemedStyle
 from tkinter import Text
 from cryptography.fernet import Fernet
 from papertools import Console, File
 from inspect import signature
-from mt import test_env, y_n
 from getpass import getpass
 from typing import Callable
 import ctypes
@@ -338,24 +338,22 @@ class GUI:
 
 colours: list[str] = ['//reset//', '#', '*', '__', '//black//', '//blue//', '//cyan//', '//green//', '//purple//', '//red//',
                       '//white//', '//yellow//', '//bblack//', '//bred//', '//bgreen//', '//byellow//', '//bblue', '//bpurple//', '//bcyan//', '//bwhite//']
-
-
-USER: str = input('User: ')[:32].strip()
-CHATROOM: str = input('Chatraum: ')[:10].strip()
+USER: str = better_input('User: ', 2, 10, False)
+CHATROOM: str = better_input('Chatraum: ', 0, 10, False)
 if CHATROOM == '':
-    if not test_env:
-        PATH: str = input('Pfad: ').strip()
-    else:
+    if test_env:
         PATH: str = os.path.abspath(os.path.join(
             __file__, os.pardir, 'chat_test.json'))
+    else:
+        PATH: str = better_input('Pfad: ')
 else:
     PATH: str = f"Y:/2BHIT/test/{CHATROOM}.json"
 
-KEY: str = getpass('Passwort: ').strip()
+KEY: str = better_getpass('Passwort: ', 5, 32, False)
 while KEY.lower() == CHATROOM.lower():
     Console.print_colour(
         "Passwort und Chatraum dürfen nicht gleich sein.", "red")
-    KEY = getpass('Passwort: ').strip()
+    KEY = better_getpass('Passwort: ', 5, 32, False)
 
 
 WINDOWS: bool = os.name == 'nt'
