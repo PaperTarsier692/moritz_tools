@@ -2,6 +2,7 @@ import os
 import sys
 
 test_env: bool = os.path.exists('.test_env')
+current_path: str = os.path.join(os.path.abspath(__file__), os.pardir)
 
 
 def y_n(inp: str) -> bool:
