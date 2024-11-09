@@ -1,4 +1,4 @@
-from mt import ensure_venv, test_env, current_path
+from mt import ensure_venv, test_env, current_path, popup
 ensure_venv(__file__)
 
 from papertools import File, Dir
@@ -15,7 +15,6 @@ while True:
         file = os.path.join(PATH, file)
         if os.path.basename(file).endswith(USER):
             content: str = File(file).read()
-            msgb = ctypes.windll.user32.MessageBoxW  # type: ignore
-            msgb(None, content, 'Pinger', 0)
+            popup('Pinger', content)
             os.remove(file)
     sleep(5)

@@ -1,4 +1,4 @@
-from mt import ensure_venv, test_env, y_n, better_input, better_getpass, windows
+from mt import ensure_venv, test_env, y_n, better_input, better_getpass, windows, current_path, popup
 ensure_venv(__file__)
 
 from tkinter.ttk import Frame, PanedWindow, Button
@@ -94,6 +94,7 @@ class Chat:
 
     def pre_cmd(self) -> None:
         self.cmds: dict = {}
+        self.theme: int = 0
 
         def _cmd(name: str = '', display: str = '') -> Callable:
             def inner(func: Callable) -> Callable:
@@ -115,6 +116,31 @@ class Chat:
         @_cmd()
         def reset_names() -> None:
             self.inp = {"msgs": self.inp['msgs'], "members": []}
+
+        @_cmd()
+        def theme_cycle() -> None:
+            self.theme += 1
+            theme: str = gui.root.get_themes()[self.theme]
+            print(f'Applying Theme {theme}')
+            gui.apply_theme(theme)
+
+        @_cmd(display='theme <str>')
+        def theme(*args) -> None:
+            theme: str = args[0]
+            themes: list[str] = gui.root.get_themes()
+            if theme in themes:
+                print(f'Applying Theme {theme}')
+                gui.apply_theme(*args)
+                self.theme = themes.index(theme)
+            else:
+                print(f'Theme {theme} not found')
+
+        @_cmd()
+        def save_theme() -> None:
+            cfg: File = File('config.json')
+            inp: dict = cfg.json_r()
+            inp['chat']['theme'] = gui.root.get_themes()[self.theme]
+            cfg.json_w(inp)
 
         @_cmd(display='rem [int]')
         def rem(*args) -> None:
@@ -188,7 +214,7 @@ class GUI:
         self.button2: Button = Button(self.button_frame, text="Textstil")
         self.button2.pack(side='left', fill='x', expand=True)
 
-        self.apply_theme('equilux')
+        self.apply_theme(stgs['theme'])
         self.add_cmds()
         self.add_colours()
         self.update()
@@ -196,8 +222,8 @@ class GUI:
     def apply_theme(self, theme: str) -> None:
         self.root.set_theme(theme)
         self.style.theme_use(theme)
-        bg_color = self.style.lookup('TFrame', 'background')
-        fg_color = self.style.lookup('TLabel', 'foreground')
+        bg_color = self.style.lookup('TFrame', 'background') or '#000'
+        fg_color = self.style.lookup('TLabel', 'foreground') or '#FFF'
         self.chat_widget.config(bg=bg_color, fg=fg_color)
         self.chat_input.config(bg=bg_color, fg=fg_color)
         self.right_tab.config(bg=bg_color, fg=fg_color)
@@ -292,8 +318,7 @@ class GUI:
         try:
             if f'@{USER}' in msgs[-1]:
                 if windows:
-                    msgb = ctypes.windll.user32.MessageBoxW  # type: ignore
-                    msgb(None, msgs[-1], 'Ping', 0)
+                    popup('Ping', msgs[-1])
                 self.chat.append('OK')
                 changes = True
         except IndexError:
@@ -331,12 +356,37 @@ class GUI:
 
 colours: list[str] = ['//reset//', '#', '*', '__', '//black//', '//blue//', '//cyan//', '//green//', '//purple//', '//red//',
                       '//white//', '//yellow//', '//bblack//', '//bred//', '//bgreen//', '//byellow//', '//bblue', '//bpurple//', '//bcyan//', '//bwhite//']
-USER: str = better_input('User: ', 2, 10, False)
-CHATROOM: str = better_input('Chatraum: ', 0, 10, False)
+
+global USER, stgs
+
+
+def generate_config() -> None:
+    global USER, stgs
+    print('config.json wurde erstellt')
+    inp: dict = stgs_file.json_r()
+    USER = better_input('User: ', 2, 10, False)
+    inp['chat'] = {"user": USER, "theme": "equilux"}
+    stgs = inp['chat']
+    stgs_file.json_w(inp)
+
+
+stgs_file: File = File('config.json')
+if stgs_file.exists():
+    stgs: dict = stgs_file.json_r()['chat']
+    try:
+        theme: str = stgs['theme']
+        USER = better_input('User: ', 2, 10, False,
+                            allow_empty=True) or stgs['user']
+    except:
+        generate_config()
+else:
+    stgs_file.json_w({})
+    generate_config()
+
+CHATROOM: str = better_input('Chatraum: ', 3, 10, False, allow_empty=True)
 if CHATROOM == '':
     if test_env:
-        PATH: str = os.path.abspath(os.path.join(
-            __file__, os.pardir, 'chat_test.json'))
+        PATH: str = os.path.join(current_path, 'chat_test.json')
     else:
         PATH: str = better_input('Pfad: ')
 else:
@@ -357,7 +407,7 @@ else:
 
 chat: Chat = Chat(PATH, KEY)
 root: ThemedTk = ThemedTk()
-app: GUI = GUI(root, chat)
+gui: GUI = GUI(root, chat)
 root.mainloop()
 
 print('ENDE')
