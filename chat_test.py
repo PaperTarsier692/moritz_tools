@@ -105,20 +105,38 @@ class Chat:
                 return func
             return inner
 
+        @_cmd(display='help <str>')
+        def help(*args) -> None:
+            '''Zeigt Informationen zu einen Befehl an
+            Argumente:
+            <str>: Befehl (benötigt)'''
+            cmd_name: str = args[0][0]
+            if cmd_name not in self.cmds.keys():
+                Console.print_colour(
+                    f'Help: Command {cmd_name} nicht gefunden', 'red')
+                return
+            cmd: dict = self.cmds[cmd_name]
+            Console.print_colour(
+                f'Command /{cmd_name}:\n{cmd["func"].__doc__}', 'green')
+
         @_cmd(name='exit')
         def _exit() -> None:
+            '''Beendet das Programm'''
             exit()
 
         @_cmd()
         def reset() -> None:
+            '''Setzt alle Nachrichten und die Mitgliederliste zurück'''
             self.inp = {"msgs": [], "members": []}
 
         @_cmd()
         def reset_names() -> None:
+            '''Setzt die Mitgliederliste zurück'''
             self.inp = {"msgs": self.inp['msgs'], "members": []}
 
         @_cmd()
         def theme_cycle() -> None:
+            '''Wechselt zum nächsten Theme'''
             self.theme += 1
             theme: str = gui.root.get_themes()[self.theme]
             Console.print_colour(f'Applying Theme {theme}', 'yellow')
@@ -126,6 +144,9 @@ class Chat:
 
         @_cmd(display='theme <str>')
         def theme(*args) -> None:
+            '''Wechselt zum angegebenen Theme
+            Argumente:
+            <str>: theme (benötigt)'''
             theme: str = args[0][0]
             themes: list[str] = gui.root.get_themes()
             if theme in themes:
@@ -137,6 +158,7 @@ class Chat:
 
         @_cmd()
         def save_theme() -> None:
+            '''Speichert das aktuelle Theme als Einstellung'''
             cfg: File = File('config.json')
             inp: dict = cfg.json_r()
             theme: str = gui.root.get_themes()[self.theme]
@@ -146,6 +168,10 @@ class Chat:
 
         @_cmd(display='del [int]', name='del')
         def rem(*args) -> None:
+            '''Löscht 1 / die angegebene Anzahl an Nachrichten
+            Argumente:
+            [int]: Anzahl (optional)
+            '''
             try:
                 if args[0] == []:
                     length: int = 1
