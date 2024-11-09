@@ -1,16 +1,19 @@
-from mt import ensure_venv, y_n, better_input
+from mt import ensure_venv, y_n, better_input, type_input, test_env
 ensure_venv(__file__)
 
 from copy import deepcopy
 from typing import Literal
 from papertools import Console, File
 
-PATH: str = 'ttt.json'
+PATH: str = better_input('Pfad: ', allow_empty=True)
+if PATH == '' and test_env:
+    PATH = 'ttt.json'
 
-ROW: int = 4
-COL: int = 5
-NEEDED: int = 4
-GRAVITY: bool = True
+ROW: int = type_input('Reihen: ', int, True) or 3
+COL: int = type_input('Spalten: ', int, True) or 3
+NEEDED: int = type_input('Benötigte Verbundene: ', int, True) or 3
+GRAVITY: bool = y_n('Schwerkraft? (Y/n)', True) or False
+USER: str = better_input('Name: ', 3, 10, False, True, True)
 
 
 def ausgabe(game: list[list[int]], mode: Literal['xy', 'y'] = 'xy') -> None:
