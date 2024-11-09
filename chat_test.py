@@ -1,17 +1,24 @@
 from mt import ensure_venv
 ensure_venv(__file__)
 
-from tkinter import Tk, Frame, Text, PanedWindow, Button
-from ttkthemes import ThemedTk
+from tkinter.ttk import Frame, PanedWindow, Button
+from ttkthemes import ThemedTk, ThemedStyle
+from tkinter import Text
 from cryptography.fernet import Fernet
 from papertools import Console, File
+from inspect import signature
 from mt import test_env, y_n
 from getpass import getpass
-from typing import Any, Callable
-from inspect import signature
+from typing import Callable
 import ctypes
 import base64
 import os
+
+try:
+    import ctypes
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)
+except:
+    pass
 
 
 class Chat:
@@ -143,11 +150,15 @@ class Chat:
 
 
 class GUI:
-    def __init__(self, root: Tk, chat: Chat) -> None:
+    def __init__(self, root: ThemedTk, chat: Chat) -> None:
         self.messages: list[str] = []
-
-        self.root: Tk = root
+        self.root: ThemedTk = root
         self.chat: Chat = chat
+
+        style: ThemedStyle = ThemedStyle()
+        style.theme_use('equilux')
+        bg_color = style.lookup('TFrame', 'background')
+        fg_color = style.lookup('TLabel', 'foreground')
 
         self.root.title("Chat Test")
 
@@ -161,15 +172,17 @@ class GUI:
         self.right_frame: Frame = Frame(self.paned_window, width=100)
         self.paned_window.add(self.right_frame)
 
-        self.chat_widget: Text = Text(self.left_frame, state='disabled')
+        self.chat_widget: Text = Text(
+            self.left_frame, state='disabled', bg=bg_color, fg=fg_color)
         self.chat_widget.pack(side='top', fill='both', expand=True)
 
-        self.chat_input: Text = Text(self.left_frame, height=1)
+        self.chat_input: Text = Text(
+            self.left_frame, height=1, bg=bg_color, fg=fg_color)
         self.chat_input.pack(side='bottom', fill='x', expand=False)
         self.chat_input.bind("<Return>", self.on_enter)
 
         self.right_tab: Text = Text(
-            self.right_frame, height=1, state='disabled')
+            self.right_frame, height=1, state='disabled', bg=bg_color, fg=fg_color)
         self.right_tab.pack(side='top', fill='both', expand=True)
 
         self.button_frame: Frame = Frame(self.right_frame)
@@ -346,7 +359,8 @@ else:
 
 
 chat: Chat = Chat(PATH, KEY)
-root: Tk = ThemedTk(theme="Equilux")
+root: ThemedTk = ThemedTk()
+root.set_theme('equilux')
 app: GUI = GUI(root, chat)
 root.mainloop()
 
