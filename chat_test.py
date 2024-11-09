@@ -8,11 +8,11 @@ from cryptography.fernet import Fernet
 from papertools import Console, File
 from inspect import signature
 from typing import Callable
-import ctypes
 import base64
 import os
 
 if windows:
+    import ctypes
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
 
