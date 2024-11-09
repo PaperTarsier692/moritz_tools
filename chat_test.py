@@ -155,10 +155,7 @@ class GUI:
         self.root: ThemedTk = root
         self.chat: Chat = chat
 
-        style: ThemedStyle = ThemedStyle()
-        style.theme_use('equilux')
-        bg_color = style.lookup('TFrame', 'background')
-        fg_color = style.lookup('TLabel', 'foreground')
+        self.style: ThemedStyle = ThemedStyle()
 
         self.root.title("Chat Test")
 
@@ -173,16 +170,16 @@ class GUI:
         self.paned_window.add(self.right_frame)
 
         self.chat_widget: Text = Text(
-            self.left_frame, state='disabled', bg=bg_color, fg=fg_color)
+            self.left_frame, state='disabled')
         self.chat_widget.pack(side='top', fill='both', expand=True)
 
         self.chat_input: Text = Text(
-            self.left_frame, height=1, bg=bg_color, fg=fg_color)
+            self.left_frame, height=1)
         self.chat_input.pack(side='bottom', fill='x', expand=False)
         self.chat_input.bind("<Return>", self.on_enter)
 
         self.right_tab: Text = Text(
-            self.right_frame, height=1, state='disabled', bg=bg_color, fg=fg_color)
+            self.right_frame, height=1, state='disabled')
         self.right_tab.pack(side='top', fill='both', expand=True)
 
         self.button_frame: Frame = Frame(self.right_frame)
@@ -196,9 +193,19 @@ class GUI:
         self.button2: Button = Button(self.button_frame, text="Textstil")
         self.button2.pack(side='left', fill='x', expand=True)
 
+        self.apply_theme('equilux')
         self.add_cmds()
         self.add_colours()
         self.update()
+
+    def apply_theme(self, theme: str) -> None:
+        self.root.set_theme(theme)
+        self.style.theme_use(theme)
+        bg_color = self.style.lookup('TFrame', 'background')
+        fg_color = self.style.lookup('TLabel', 'foreground')
+        self.chat_widget.config(bg=bg_color, fg=fg_color)
+        self.chat_input.config(bg=bg_color, fg=fg_color)
+        self.right_tab.config(bg=bg_color, fg=fg_color)
 
     def write_cmd(self, cmd: str, args: bool) -> None:
         self.chat_input.delete("1.0", "end")
@@ -360,7 +367,6 @@ else:
 
 chat: Chat = Chat(PATH, KEY)
 root: ThemedTk = ThemedTk()
-root.set_theme('equilux')
 app: GUI = GUI(root, chat)
 root.mainloop()
 
