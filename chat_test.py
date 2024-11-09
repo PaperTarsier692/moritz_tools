@@ -250,7 +250,7 @@ class GUI:
         self.update()
 
     def apply_theme(self, theme: str) -> None:
-        self.root.title(f'Chat Test {theme}')
+        self.root.title(f'Chat Test: {CHATROOM} - {theme.capitalize()}')
         self.root.set_theme(theme)
         self.style.theme_use(theme)
         bg_color = self.style.lookup('TFrame', 'background') or '#000'
@@ -414,7 +414,7 @@ else:
     stgs_file.json_w({})
     generate_config()
 
-CHATROOM: str = better_input('Chatraum: ', 3, 10, False, allow_empty=True)
+CHATROOM = better_input('Chatraum: ', 3, 10, False, allow_empty=True)
 if CHATROOM == '':
     if test_env:
         PATH: str = os.path.join(current_path, 'chat_test.json')
