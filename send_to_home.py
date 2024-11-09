@@ -1,10 +1,9 @@
-from mt import ensure_venv
+from mt import ensure_venv, y_n
 ensure_venv(__file__)
 
 from requests import post, exceptions, Response
 from papertools import File, Console
 from shutil import make_archive
-from mt import y_n
 import os
 
 Console.clear()

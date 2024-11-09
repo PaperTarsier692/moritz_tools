@@ -1,14 +1,12 @@
-from mt import ensure_venv
+from mt import ensure_venv,test_env, y_n, better_input, better_getpass
 ensure_venv(__file__)
 
-from mt import test_env, y_n, better_input, better_getpass
 from tkinter.ttk import Frame, PanedWindow, Button
 from ttkthemes import ThemedTk, ThemedStyle
 from tkinter import Text
 from cryptography.fernet import Fernet
 from papertools import Console, File
 from inspect import signature
-from getpass import getpass
 from typing import Callable
 import ctypes
 import base64
