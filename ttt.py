@@ -144,13 +144,17 @@ def won(char_inp: str, game: list[list[int]]) -> bool:
 
 
 def new_game() -> dict:
-    return {'p1': 'SP1', 'p2': "SP2",
-            'game': [[0 for _ in range(COL)]
-                     for _ in range(ROW)], 'current': 1}
-    return {'p1': input('<<<Spieler 1: >>> '),
-            'p2': input('<<<Spieler 2: >>> '),
-            'game': [[0 for _ in range(COL)]
-                     for _ in range(ROW)], 'current': 1}
+    settings: dict = {'p1': 'SP1',
+                      'p2': 'SP2',
+                      'game': [[0 for _ in range(COL)]
+                               for _ in range(ROW)],
+                      'current': 1,
+                      'row': ROW,
+                      'col': COL,
+                      'needed': NEEDED,
+                      'gravity': GRAVITY
+                      }
+    return settings
 
 
 def add_w_gravity(game: list[list[int]], x: int, turn: int) -> None:
