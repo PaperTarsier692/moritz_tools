@@ -19,7 +19,7 @@ def generate_config() -> None:
     URL: str = input('Webhook URL: ').strip()
     inp: dict = stgs_file.json_r()
     inp['sth'] = {"url": URL, "username": USERNAME, "shortcut": SHORTCUT}
-    stgs_file.json_w(stgs)
+    stgs_file.json_w(inp)
 
 
 print("SEND TO HOME . PY von Moritz Harrer")
