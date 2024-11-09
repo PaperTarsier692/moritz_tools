@@ -403,8 +403,8 @@ def generate_config() -> None:
 
 stgs_file: File = File('config.json')
 if stgs_file.exists():
-    stgs: dict = stgs_file.json_r()['chat']
     try:
+        stgs: dict = stgs_file.json_r()['chat']
         theme: str = stgs['theme']
         USER = better_input('User (Enter für Standard): ', 2, 10, False,
                             allow_empty=True) or stgs['user']

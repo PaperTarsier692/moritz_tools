@@ -29,8 +29,8 @@ print(f'Path: {PATH}')
 
 stgs_file: File = File(f"{PATH}/config.json")
 if stgs_file.exists():
-    stgs: dict = stgs_file.json_r()['sth']
     try:
+        stgs: dict = stgs_file.json_r()['sth']
         URL: str = stgs["url"]
         USERNAME: str = stgs["username"]
         SHORTCUT: bool = stgs["shortcut"]
