@@ -1,4 +1,4 @@
-from mt import ensure_venv,test_env, y_n, better_input, better_getpass
+from mt import ensure_venv, test_env, y_n, better_input, better_getpass
 ensure_venv(__file__)
 
 from tkinter.ttk import Frame, PanedWindow, Button
