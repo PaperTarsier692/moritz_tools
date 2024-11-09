@@ -24,11 +24,11 @@ print("SEND TO HOME . PY von Moritz Harrer")
 PATH: str = os.path.abspath(os.path.join(__file__, os.pardir))
 print(f'Path: {PATH}')
 
-stgs_file: File = File(f"{PATH}/settings.json")
+stgs_file: File = File(f"{PATH}/config.json")
 if stgs_file.exists():
     stgs: dict = stgs_file.json_r()
 else:
-    print("settings.json wurde erstellt, bitte fülle die Felder aus.")
+    print("config.json wurde erstellt, bitte fülle die Felder aus.")
     username: str = input('Username: ').strip()
     url: str = 'https://discord.com/api/webhooks/' + \
         input('Webhook URL: https://discord.com/api/webhooks/').strip()

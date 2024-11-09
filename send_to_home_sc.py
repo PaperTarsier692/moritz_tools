@@ -8,12 +8,12 @@ from papertools import File, Webhook
 path: str = argv[1]
 print(path)
 
-if not File('settings.json').exists():
-    print('settings.json nicht gefunden, erstelle sie und führ das Programm erneut aus.')
+if not File('config.json').exists():
+    print('config.json nicht gefunden, erstelle sie und führ das Programm erneut aus.')
     input()
     exit()
 
-settings: dict = File('settings.json').json_r()
+settings: dict = File('config.json').json_r()
 wh: Webhook = Webhook(settings['url'], settings['username'])
 
 if os.path.isdir(path):

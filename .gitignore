@@ -21,7 +21,7 @@ ttt.json
 
 # Settings #
 ############
-settings.json
+config.json
 .test_env
 
 # Downloaded Files #
