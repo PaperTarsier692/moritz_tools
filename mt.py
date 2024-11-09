@@ -10,7 +10,7 @@ windows: bool = os.name == 'nt'
 
 def y_n(inp: str) -> bool:
     if inp is not None:
-        print(inp)
+        print(inp, end=' ')
     res: str = input().strip().lower()
     return res == 'y' or res == 'j'
 
