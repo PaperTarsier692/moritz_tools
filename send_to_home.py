@@ -18,7 +18,8 @@ def generate_config() -> None:
     SHORTCUT: bool = y_n(
         'Soll ein Desktop Shortcut für sth erstellt werden? (Y/n)')
     URL: str = input('Webhook URL: ').strip()
-    stgs: dict = {"url": URL, "username": USERNAME, "shortcut": SHORTCUT}
+    inp: dict = stgs_file.json_r()
+    inp['sth'] = {"url": URL, "username": USERNAME, "shortcut": SHORTCUT}
     stgs_file.json_w(stgs)
 
 
@@ -29,14 +30,15 @@ print(f'Path: {PATH}')
 
 stgs_file: File = File(f"{PATH}/config.json")
 if stgs_file.exists():
-    stgs: dict = stgs_file.json_r()
+    stgs: dict = stgs_file.json_r()['sth']
     try:
-        USERNAME: str = stgs["username"]
         URL: str = stgs["url"]
+        USERNAME: str = stgs["username"]
         SHORTCUT: bool = stgs["shortcut"]
     except:
         generate_config()
 else:
+    stgs_file.json_w({})
     generate_config()
 
 Console.print_colour(
