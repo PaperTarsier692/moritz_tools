@@ -9,6 +9,7 @@ setx Path "C:\Program Files\CodeBlocks\MinGW\bin; %USERPROFILE%\AppData\Local\Mi
 
 call .venv\Scripts\activate.bat
 pip install -r requirements.txt
+pip install --upgrade papertools
 python autorun.py
 
 goto finish
