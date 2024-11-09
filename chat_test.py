@@ -69,16 +69,6 @@ class Chat:
         out: list[str] = []
         for i in self.inp['msgs']:
             out.append(self.decrypt(i))
-        try:
-            if f'@{USER}' in out[-1]:
-                try:
-                    msgb = ctypes.windll.user32.MessageBoxW  # type: ignore
-                    msgb(None, out[-1], 'Ping', 0)
-                except AttributeError:
-                    pass
-                self.append('OK')
-        except IndexError:
-            pass
         return out, self.inp['members']
 
     def encrypt(self, string: str) -> str:
@@ -288,6 +278,17 @@ class GUI:
             changes = True
 
         msgs, members = self.chat.chat_to_list()
+        try:
+            if f'@{USER}' in msgs[-1]:
+                try:
+                    msgb = ctypes.windll.user32.MessageBoxW  # type: ignore
+                    msgb(None, msgs[-1], 'Ping', 0)
+                except AttributeError:
+                    pass
+                self.chat.append('OK')
+                changes = True
+        except IndexError:
+            pass
         self.add_messages(msgs)
         self.add_members(members)
 
