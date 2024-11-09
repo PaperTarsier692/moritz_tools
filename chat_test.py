@@ -140,7 +140,8 @@ class Chat:
             '''Wechselt zum nächsten Theme'''
             self.theme += 1
             theme: str = gui.themes[self.theme]
-            Console.print_colour(f'Applying Theme {theme}', 'yellow')
+            Console.print_colour(
+                f'Applying Theme {theme} {self.theme}/{len(gui.themes)}', 'yellow')
             gui.apply_theme(theme)
 
         @_cmd(display='theme <str>')
