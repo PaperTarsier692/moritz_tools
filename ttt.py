@@ -6,9 +6,10 @@ from papertools import Console, File
 
 PATH: str = 'ttt.json'
 
-ROW: int = 3
-COL: int = 4
-NEEDED: int = 3
+ROW: int = 4
+COL: int = 5
+NEEDED: int = 4
+GRAVITY: bool = True
 
 
 def ausgabe(game: list[list[int]]) -> None:
@@ -52,8 +53,9 @@ def turn(game: list[list[int]], second_pass: tuple[int, int] = (-1, -1)) -> tupl
                 return second_pass
         else:
             inp: str = input('>>> ')
-            if len(inp) != 2:
-                return turn(game)
+
+        if len(inp) != 2:
+            return turn(game)
 
         if inp[1].isalpha():  # A1
             inp = f'{inp[1]}{inp[0]}'
@@ -67,6 +69,28 @@ def turn(game: list[list[int]], second_pass: tuple[int, int] = (-1, -1)) -> tupl
         return x, y
     except Exception:
         return turn(game)
+
+
+def turn_x(game: list[list[int]], second_pass: int = -1) -> int:
+    try:
+        if second_pass != -1:
+            inp: str = input('... ')
+            if inp == '':
+                return second_pass
+        else:
+            inp: str = input('>>> ')
+
+        if len(inp) != 1:
+            return turn_x(game)
+
+        x = ord(inp) - 97
+
+        if game[0][x] != 0:
+            return turn_x(game)
+
+        return x
+    except Exception:
+        return turn_x(game, second_pass)
 
 
 def won(char_inp: str, game: list[list[int]]) -> bool:
@@ -133,6 +157,14 @@ def new_game() -> dict:
                      for _ in range(ROW)], 'current': 1}
 
 
+def add_w_gravity(game: list[list[int]], x: int, turn: int) -> None:
+    for y in range(ROW):
+        if game[y][x] != 0:
+            game[y - 1][x] = turn + 1
+            return
+    game[ROW - 1][x] = turn + 1
+
+
 global CONFIRM
 
 
@@ -174,10 +206,17 @@ while True:
         print(f'{p1} hat gewonnen!!!')
     elif won('O', game):
         print(f'{p2} hat gewonnen!!!')
-    x, y = turn(game)
-    if CONFIRM:
-        x, y = turn(game, (x, y))
-    game[x][y] = current + 1
+    if GRAVITY:
+        x = turn_x(game)
+        if CONFIRM:
+            x = turn_x(game, x)
+        print(f'{x=}')
+        add_w_gravity(game, x, current)
+    else:
+        x, y = turn(game)
+        if CONFIRM:
+            x, y = turn(game, (x, y))
+        game[x][y] = current + 1
     current += 1
     current %= 2
     File(PATH).json_w(file)
