@@ -5,16 +5,6 @@ from copy import deepcopy
 from typing import Literal
 from papertools import Console, File
 
-PATH: str = better_input('Pfad: ', allow_empty=True)
-if PATH == '' and test_env:
-    PATH = 'ttt.json'
-
-ROW: int = type_input('Reihen: ', int, True) or 3
-COL: int = type_input('Spalten: ', int, True) or 3
-NEEDED: int = type_input('Benötigte Verbundene: ', int, True) or 3
-GRAVITY: bool = y_n('Schwerkraft? (Y/n)', True) or False
-USER: str = better_input('Name: ', 3, 10, False, True, True)
-
 
 def ausgabe(game: list[list[int]], mode: Literal['xy', 'y'] = 'xy') -> None:
     symbols: list[str] = [' ', 'X', 'O', '?']
@@ -168,15 +158,16 @@ def add_w_gravity(game: list[list[int]], x: int, turn: int) -> None:
     game[ROW - 1][x] = turn + 1
 
 
-global CONFIRM
+global CONFIRM, USER
 
 
 def generate_config() -> None:
-    global CONFIRM
+    global CONFIRM, USER
     print("config.json wurde erstellt, bitte fülle die Felder aus.")
     inp: dict = stgs_file.json_r()
     CONFIRM = y_n('Bestätigungsmodus an? (Y/n)')
-    inp['ttt'] = {"confirm": CONFIRM}
+    USER = better_input('Name: ', 3, 10, False)
+    inp['ttt'] = {"confirm": CONFIRM, "user": USER}
     stgs_file.json_w(inp)
 
 
@@ -185,11 +176,22 @@ if stgs_file.exists():
     try:
         stgs: dict = stgs_file.json_r()['ttt']
         CONFIRM = stgs['confirm']
+        USER = stgs['user']
     except:
         generate_config()
 else:
     stgs_file.json_w({})
     generate_config()
+
+PATH: str = better_input('Pfad: ', allow_empty=True)
+if PATH == '' and test_env:
+    PATH = 'ttt.json'
+
+ROW: int = type_input('Reihen: ', int, True) or 3
+COL: int = type_input('Spalten: ', int, True) or 3
+NEEDED: int = type_input('Benötigte Verbundene: ', int, True) or 3
+GRAVITY: bool = y_n('Schwerkraft? (Y/n)', True) or False
+USER = better_input('Name: ', 3, 10, False, True, True) or USER
 
 File(PATH).json_w(new_game())
 
