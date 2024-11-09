@@ -1,23 +1,26 @@
 from mt import ensure_venv
 ensure_venv(__file__)
 
+from requests import post, exceptions, Response
 from papertools import File, Console
 from shutil import make_archive
 from mt import y_n
 import os
 
 Console.clear()
+global USERNAME, SHORTCUT, URL
 
-try:
-    from requests import post, exceptions, Response
-except ModuleNotFoundError or ImportError:
-    if y_n("Modul Requests nicht gefunden, soll es heruntergeladen werden?\
-            (Y/n)"):
-        os.system("pip install requests")
-        from requests import post, exceptions, Response
-    else:
-        print('Beenden')
-        exit()
+
+def generate_config() -> None:
+    global USERNAME, SHORTCUT, URL
+    print("config.json wurde erstellt, bitte fülle die Felder aus.")
+    USERNAME: str = input('Username: ').strip()
+    SHORTCUT: bool = y_n(
+        'Soll ein Desktop Shortcut für sth erstellt werden? (Y/n)')
+    URL: str = input('Webhook URL: ').strip()
+    stgs: dict = {"url": URL, "username": USERNAME, "shortcut": SHORTCUT}
+    stgs_file.json_w(stgs)
+
 
 print("SEND TO HOME . PY von Moritz Harrer")
 
@@ -27,16 +30,14 @@ print(f'Path: {PATH}')
 stgs_file: File = File(f"{PATH}/config.json")
 if stgs_file.exists():
     stgs: dict = stgs_file.json_r()
+    try:
+        USERNAME: str = stgs["username"]
+        URL: str = stgs["url"]
+        SHORTCUT: bool = stgs["shortcut"]
+    except:
+        generate_config()
 else:
-    print("config.json wurde erstellt, bitte fülle die Felder aus.")
-    username: str = input('Username: ').strip()
-    url: str = 'https://discord.com/api/webhooks/' + \
-        input('Webhook URL: https://discord.com/api/webhooks/').strip()
-    stgs: dict = {"url": url, "username": username}
-    stgs_file.json_w(stgs)
-
-URL: str = stgs["url"]
-USERNAME: str = stgs["username"]
+    generate_config()
 
 Console.print_colour(
     '"/shortcut_on" / "/shortcut_off" für das einstellen des Kontextmenü Shortcuts', 'yellow')
@@ -80,9 +81,8 @@ class Webhook:
 class SendToHome:
     def __init__(self, wh: Webhook) -> None:
         self.wh: Webhook = wh
-        self.bat_content: str = f'''@echo off
-        python {os.path.abspath(__file__)}'''
-        self.bat()
+        if SHORTCUT:
+            self.bat()
 
     def run(self, inp: str) -> None:
         if inp == '/shortcut_on':
@@ -100,8 +100,7 @@ class SendToHome:
         elif os.path.isdir(path):
             try:
                 print("Ordner erkannt, komprimiert Ordner...")
-                make_archive(path,
-                             'zip', path)
+                make_archive(path, 'zip', path)
                 zip_path: str = f"{path}.zip"
                 with open(zip_path, "rb") as f:
                     content: bytes = f.read()
@@ -111,18 +110,20 @@ class SendToHome:
                 os.remove(zip_path)
             except Exception as e:
                 print(
-                    "Fehler beim komprimieren des Ordners, gibt es noch genug \
-                        Speicherplatz auf deinem Account?")
+                    "Fehler beim komprimieren des Ordners, gibt es noch genug Speicherplatz auf deinem Account?")
                 print(e)
         else:
             self.wh.print_status(self.wh.send(inp))
 
-    def bat(self) -> None:
+    @staticmethod
+    def bat() -> None:
+        bat_content: str = f'''@echo off
+            python {os.path.abspath(__file__)}'''
         shortcut: File = File("Z:/Desktop/send_to_home.bat")
-        if shortcut.exists() and shortcut.read() == self.bat_content:
+        if shortcut.exists() and shortcut.read() == bat_content:
             return
         print("send_to_home.bat wird erstellt.")
-        shortcut.write(self.bat_content)
+        shortcut.write(bat_content)
 
     def create_sc(self) -> None:
         from context_menu import menus

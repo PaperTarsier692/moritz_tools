@@ -25,8 +25,14 @@ if os.path.isdir(path):
             exit()
     from shutil import make_archive
     print("Ordner erkannt, komprimiert Ordner...")
-    make_archive(path,
-                 'zip', path)
+    try:
+        make_archive(path,
+                     'zip', path)
+    except Exception as e:
+        print(
+            "Fehler beim komprimieren des Ordners, gibt es noch genug \
+                Speicherplatz auf deinem Account?")
+        print(e)
     wh.send_file(zip_path)
     os.remove(zip_path)
 
