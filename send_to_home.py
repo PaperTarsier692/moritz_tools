@@ -13,10 +13,10 @@ global USERNAME, SHORTCUT, URL
 def generate_config() -> None:
     global USERNAME, SHORTCUT, URL
     print("config.json wurde erstellt, bitte fülle die Felder aus.")
-    USERNAME: str = input('Username: ').strip()
-    SHORTCUT: bool = y_n(
+    USERNAME = input('Username: ').strip()
+    SHORTCUT = y_n(
         'Soll ein Desktop Shortcut für sth erstellt werden? (Y/n)')
-    URL: str = input('Webhook URL: ').strip()
+    URL = input('Webhook URL: ').strip()
     inp: dict = stgs_file.json_r()
     inp['sth'] = {"url": URL, "username": USERNAME, "shortcut": SHORTCUT}
     stgs_file.json_w(inp)
