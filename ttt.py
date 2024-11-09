@@ -1,4 +1,4 @@
-from mt import ensure_venv, y_n
+from mt import ensure_venv, y_n, better_input
 ensure_venv(__file__)
 
 import copy
@@ -48,14 +48,11 @@ def turn(game: list[list[int]], second_pass: tuple[int, int] = (-1, -1)) -> tupl
             game2: list[list[int]] = copy.deepcopy(game)
             game2[second_pass[0]][second_pass[1]] = 3
             ausgabe(game2)
-            inp: str = input('... ')
+            inp: str = better_input('... ', 2, 2, False, True, True)
             if inp == '':
                 return second_pass
         else:
-            inp: str = input('>>> ')
-
-        if len(inp) != 2:
-            return turn(game)
+            inp: str = better_input('>>> ', 2, 2, False, True)
 
         if inp[1].isalpha():  # A1
             inp = f'{inp[1]}{inp[0]}'
@@ -74,14 +71,11 @@ def turn(game: list[list[int]], second_pass: tuple[int, int] = (-1, -1)) -> tupl
 def turn_x(game: list[list[int]], second_pass: int = -1) -> int:
     try:
         if second_pass != -1:
-            inp: str = input('... ')
+            inp: str = better_input('... ', 1, 1, False, True, True)
             if inp == '':
                 return second_pass
         else:
-            inp: str = input('>>> ')
-
-        if len(inp) != 1:
-            return turn_x(game)
+            inp: str = better_input('>>> ', 1, 1, False, True)
 
         x = ord(inp) - 97
 
