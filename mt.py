@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import Any
 
 test_env: bool = os.path.exists('.test_env')
 current_path: str = os.path.abspath(
@@ -64,6 +65,16 @@ def better_getpass(prompt: str, min_len: int = 0, max_len: int = 0, allow_spaces
             print('Eingabe enthält Abstände')
         return better_getpass(prompt, min_len, max_len, allow_spaces, silent, allow_empty)
     return inp
+
+
+def type_input(prompt: str, type: type, allow_empty: bool = False) -> Any:
+    inp: str = input(prompt).strip()
+    if allow_empty and inp == '':
+        return False
+    try:
+        return type(inp)
+    except ValueError:
+        return type_input(prompt, type)
 
 
 def popup(title: str, prompt: str) -> None:
