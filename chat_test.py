@@ -2,6 +2,7 @@ from mt import ensure_venv
 ensure_venv(__file__)
 
 from tkinter import Tk, Frame, Text, PanedWindow, Button
+from ttkthemes import ThemedTk
 from cryptography.fernet import Fernet
 from papertools import Console, File
 from mt import test_env, y_n
@@ -349,7 +350,7 @@ else:
 
 
 chat: Chat = Chat(PATH, KEY)
-root: Tk = Tk()
+root: Tk = ThemedTk(theme="Equilux")
 app: GUI = GUI(root, chat)
 root.mainloop()
 
