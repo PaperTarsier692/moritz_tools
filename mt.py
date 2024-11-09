@@ -8,10 +8,12 @@ current_path: str = os.path.abspath(
 windows: bool = os.name == 'nt'
 
 
-def y_n(inp: str) -> bool:
+def y_n(inp: str, allow_empty: bool = False) -> bool:
     if inp is not None:
         print(inp, end=' ')
     res: str = input().strip().lower()
+    if allow_empty and res == '':
+        return False
     return res == 'y' or res == 'j'
 
 
