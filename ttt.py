@@ -7,7 +7,7 @@ from papertools import Console, File
 PATH: str = 'ttt.json'
 
 ROW: int = 3
-COL: int = 3
+COL: int = 4
 NEEDED: int = 3
 
 
@@ -25,11 +25,11 @@ def ausgabe(game: list[list[int]]) -> None:
             print('     |', end='')
         print(f'\n{x + 1}  ', end='')
         Console.print_colour(
-            f'{symbols[game[0][x]]}  ', colours[game[0][x]], end='')
+            f'{symbols[game[x][0]]}  ', colours[game[x][0]], end='')
         for y in range(COL - 1):
             print(f'|  ', end='')
             Console.print_colour(
-                f'{symbols[game[y + 1][x]]}  ', colours[game[y + 1][x]], end='')
+                f'{symbols[game[x][y + 1]]}  ', colours[game[x][y + 1]], end='')
         print('\n ', end='')
 
         if x != ROW - 1:
@@ -58,8 +58,8 @@ def turn(game: list[list[int]], second_pass: tuple[int, int] = (-1, -1)) -> tupl
         if inp[1].isalpha():  # A1
             inp = f'{inp[1]}{inp[0]}'
 
-        x: int = ord(inp[0]) - 97
-        y: int = int(inp[1]) - 1
+        y: int = ord(inp[0]) - 97
+        x: int = int(inp[1]) - 1
 
         if game[x][y] != 0:
             return turn(game)
