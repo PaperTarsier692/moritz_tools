@@ -1,6 +1,7 @@
-from mt import ensure_venv
+from mt import ensure_venv, y_n
 ensure_venv(__file__)
 
+import copy
 from papertools import Console, File
 
 PATH: str = 'ttt.json'
@@ -11,8 +12,8 @@ NEEDED: int = 3
 
 
 def ausgabe(game: list[list[int]]) -> None:
-    symbols: list[str] = [' ', 'X', 'O']
-    colours: list = ['red', 'red', 'green']
+    symbols: list[str] = [' ', 'X', 'O', '?']
+    colours: list = ['red', 'red', 'green', 'yellow']
     x: int = 0
     y: int = 0
     for y in range(COL):
@@ -40,11 +41,19 @@ def ausgabe(game: list[list[int]]) -> None:
         print()
 
 
-def turn(game: list[list[int]]) -> tuple[int, int]:
+def turn(game: list[list[int]], second_pass: tuple[int, int] = (-1, -1)) -> tuple[int, int]:
     try:
-        inp: str = input('>>> ')
-        if len(inp) != 2:
-            return turn(game)
+        if second_pass != (-1, -1):
+            game2: list[list[int]] = copy.deepcopy(game)
+            game2[second_pass[0]][second_pass[1]] = 3
+            ausgabe(game2)
+            inp: str = input('... ')
+            if inp == '':
+                return second_pass
+        else:
+            inp: str = input('>>> ')
+            if len(inp) != 2:
+                return turn(game)
 
         if inp[1].isalpha():  # A1
             inp = f'{inp[1]}{inp[0]}'
@@ -124,6 +133,29 @@ def new_game() -> dict:
                      for _ in range(ROW)], 'current': 1}
 
 
+global CONFIRM
+
+
+def generate_config() -> None:
+    global CONFIRM
+    print("config.json wurde erstellt, bitte fülle die Felder aus.")
+    inp: dict = stgs_file.json_r()
+    CONFIRM = y_n('Bestätigungsmodus an? (Y/n)')
+    inp['ttt'] = {"confirm": CONFIRM}
+    stgs_file.json_w(inp)
+
+
+stgs_file: File = File("config.json")
+if stgs_file.exists():
+    try:
+        stgs: dict = stgs_file.json_r()['ttt']
+        CONFIRM = stgs['confirm']
+    except:
+        generate_config()
+else:
+    stgs_file.json_w({})
+    generate_config()
+
 File(PATH).json_w(new_game())
 
 current = 0
@@ -143,6 +175,8 @@ while True:
     elif won('O', game):
         print(f'{p2} hat gewonnen!!!')
     x, y = turn(game)
+    if CONFIRM:
+        x, y = turn(game, (x, y))
     game[x][y] = current + 1
     current += 1
     current %= 2
