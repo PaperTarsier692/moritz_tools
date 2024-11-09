@@ -1,7 +1,7 @@
 from mt import ensure_venv, y_n, better_input
 ensure_venv(__file__)
 
-import copy
+from copy import deepcopy
 from typing import Literal
 from papertools import Console, File
 
@@ -44,7 +44,7 @@ def ausgabe(game: list[list[int]], mode: Literal['xy', 'y'] = 'xy') -> None:
 def turn(game: list[list[int]], second_pass: tuple[int, int] = (-1, -1)) -> tuple[int, int]:
     try:
         if second_pass != (-1, -1):
-            game2: list[list[int]] = copy.deepcopy(game)
+            game2: list[list[int]] = deepcopy(game)
             game2[second_pass[0]][second_pass[1]] = 3
             ausgabe(game2)
             inp: str = better_input('... ', 2, 2, False, True, True)
@@ -70,7 +70,7 @@ def turn(game: list[list[int]], second_pass: tuple[int, int] = (-1, -1)) -> tupl
 def turn_x(game: list[list[int]], second_pass: int = -1) -> int:
     try:
         if second_pass != -1:
-            game2: list[list[int]] = copy.deepcopy(game)
+            game2: list[list[int]] = deepcopy(game)
             game2[0][second_pass] = 3
             ausgabe(game2, 'y')
             inp: str = better_input('... ', 1, 1, False, True, True)
