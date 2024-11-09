@@ -11,6 +11,7 @@ from typing import Callable
 import base64
 import os
 
+
 if windows:
     import ctypes
     ctypes.windll.shcore.SetProcessDpiAwareness(1)  # type: ignore
@@ -138,7 +139,7 @@ class Chat:
         def theme_cycle() -> None:
             '''Wechselt zum nächsten Theme'''
             self.theme += 1
-            theme: str = gui.root.get_themes()[self.theme]
+            theme: str = gui.themes[self.theme]
             Console.print_colour(f'Applying Theme {theme}', 'yellow')
             gui.apply_theme(theme)
 
@@ -148,11 +149,10 @@ class Chat:
             Argumente:
             <str>: theme (benötigt)'''
             theme: str = args[0][0]
-            themes: list[str] = gui.root.get_themes()
-            if theme in themes:
+            if theme in gui.themes:
                 Console.print_colour(f'Applying Theme {theme}', 'yellow')
                 gui.apply_theme(theme)
-                self.theme = themes.index(theme)
+                self.theme = gui.themes.index(theme)
             else:
                 Console.print_colour(f'Theme {theme} not found', 'red')
 
@@ -161,7 +161,7 @@ class Chat:
             '''Speichert das aktuelle Theme als Einstellung'''
             cfg: File = File('config.json')
             inp: dict = cfg.json_r()
-            theme: str = gui.root.get_themes()[self.theme]
+            theme: str = gui.themes[self.theme]
             inp['chat']['theme'] = theme
             Console.print_colour(f'Theme {theme} saved', 'green')
             cfg.json_w(inp)
@@ -203,6 +203,7 @@ class GUI:
         self.messages: list[str] = []
         self.root: ThemedTk = root
         self.chat: Chat = chat
+        self.themes: list[str] = self.root.get_themes()
 
         self.style: ThemedStyle = ThemedStyle()
 
