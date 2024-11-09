@@ -121,28 +121,30 @@ class Chat:
         def theme_cycle() -> None:
             self.theme += 1
             theme: str = gui.root.get_themes()[self.theme]
-            print(f'Applying Theme {theme}')
+            Console.print_colour(f'Applying Theme {theme}', 'yellow')
             gui.apply_theme(theme)
 
         @_cmd(display='theme <str>')
         def theme(*args) -> None:
-            theme: str = args[0]
+            theme: str = args[0][0]
             themes: list[str] = gui.root.get_themes()
             if theme in themes:
-                print(f'Applying Theme {theme}')
-                gui.apply_theme(*args)
+                Console.print_colour(f'Applying Theme {theme}', 'yellow')
+                gui.apply_theme(theme)
                 self.theme = themes.index(theme)
             else:
-                print(f'Theme {theme} not found')
+                Console.print_colour(f'Theme {theme} not found', 'red')
 
         @_cmd()
         def save_theme() -> None:
             cfg: File = File('config.json')
             inp: dict = cfg.json_r()
-            inp['chat']['theme'] = gui.root.get_themes()[self.theme]
+            theme: str = gui.root.get_themes()[self.theme]
+            inp['chat']['theme'] = theme
+            Console.print_colour(f'Theme {theme} saved', 'green')
             cfg.json_w(inp)
 
-        @_cmd(display='rem [int]')
+        @_cmd(display='del [int]', name='del')
         def rem(*args) -> None:
             try:
                 if args[0] == []:
@@ -220,6 +222,7 @@ class GUI:
         self.update()
 
     def apply_theme(self, theme: str) -> None:
+        self.root.title(f'Chat Test {theme}')
         self.root.set_theme(theme)
         self.style.theme_use(theme)
         bg_color = self.style.lookup('TFrame', 'background') or '#000'
