@@ -406,7 +406,7 @@ if stgs_file.exists():
     stgs: dict = stgs_file.json_r()['chat']
     try:
         theme: str = stgs['theme']
-        USER = better_input('User: ', 2, 10, False,
+        USER = better_input('User (Enter für Standard): ', 2, 10, False,
                             allow_empty=True) or stgs['user']
     except:
         generate_config()
