@@ -13,7 +13,7 @@ import os
 
 if windows:
     import ctypes
-    ctypes.windll.shcore.SetProcessDpiAwareness(1)
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)  # type: ignore
 
 
 class Chat:
