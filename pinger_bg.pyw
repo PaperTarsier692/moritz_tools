@@ -9,13 +9,10 @@ import os
 
 PATH: str = 'Y:/2BHIT/test/' if not test_env else current_path
 USER: str = getuser()
-print(USER)
-print(current_path)
 
 while True:
     for file in Dir.listfiles(PATH):
         file = os.path.join(PATH, file)
-        print(file, os.path.basename(file))
         if os.path.basename(file).endswith(USER):
             content: str = File(file).read()
             msgb = ctypes.windll.user32.MessageBoxW  # type: ignore
