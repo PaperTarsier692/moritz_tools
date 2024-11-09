@@ -69,3 +69,9 @@ def better_getpass(prompt: str, min_len: int = 0, max_len: int = 0, allow_spaces
 def popup(title: str, prompt: str) -> None:
     import ctypes
     ctypes.windll.user32.MessageBoxW(None, prompt, title, 0)  # type: ignore
+
+
+def fix_res() -> None:
+    import ctypes
+    if windows:
+        ctypes.windll.shcore.SetProcessDpiAwareness(1)  # type: ignore

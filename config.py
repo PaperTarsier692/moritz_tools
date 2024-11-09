@@ -1,4 +1,4 @@
-from mt import ensure_venv, windows
+from mt import ensure_venv, windows, fix_res
 ensure_venv(__file__)
 
 from tkinter.ttk import Button, Label, Radiobutton
@@ -6,9 +6,7 @@ from tkinter import Text, Frame, BooleanVar
 from ttkthemes import ThemedTk, ThemedStyle
 from papertools import File
 
-if windows:
-    import ctypes
-    ctypes.windll.shcore.SetProcessDpiAwareness(1)  # type: ignore
+fix_res()
 
 
 class GUI:
