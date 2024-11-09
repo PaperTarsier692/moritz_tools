@@ -2,6 +2,7 @@ from mt import ensure_venv, y_n, better_input
 ensure_venv(__file__)
 
 import copy
+from typing import Literal
 from papertools import Console, File
 
 PATH: str = 'ttt.json'
@@ -12,11 +13,9 @@ NEEDED: int = 4
 GRAVITY: bool = True
 
 
-def ausgabe(game: list[list[int]]) -> None:
+def ausgabe(game: list[list[int]], mode: Literal['xy', 'y'] = 'xy') -> None:
     symbols: list[str] = [' ', 'X', 'O', '?']
     colours: list = ['red', 'red', 'green', 'yellow']
-    x: int = 0
-    y: int = 0
     for y in range(COL):
         print(f'   {chr(y + 97)}  ', end='')
     print()
@@ -24,7 +23,7 @@ def ausgabe(game: list[list[int]]) -> None:
         print(' ', end='')
         for y in range(COL - 1):
             print('     |', end='')
-        print(f'\n{x + 1}  ', end='')
+        print(f'\n{x + 1}  ' if mode == 'xy' else '\n   ', end='')
         Console.print_colour(
             f'{symbols[game[x][0]]}  ', colours[game[x][0]], end='')
         for y in range(COL - 1):
@@ -71,6 +70,9 @@ def turn(game: list[list[int]], second_pass: tuple[int, int] = (-1, -1)) -> tupl
 def turn_x(game: list[list[int]], second_pass: int = -1) -> int:
     try:
         if second_pass != -1:
+            game2: list[list[int]] = copy.deepcopy(game)
+            game2[0][second_pass] = 3
+            ausgabe(game2, 'y')
             inp: str = better_input('... ', 1, 1, False, True, True)
             if inp == '':
                 return second_pass
@@ -195,7 +197,7 @@ p2: str = file['p2']
 while True:
     file = File(PATH).json_r()
     game: list[list[int]] = file['game']
-    ausgabe(game)
+    ausgabe(game, 'y' if GRAVITY else 'xy')
     if won('X', game):
         print(f'{p1} hat gewonnen!!!')
     elif won('O', game):
