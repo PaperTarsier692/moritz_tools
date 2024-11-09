@@ -1,4 +1,4 @@
-from mt import ensure_venv, test_env, y_n, better_input, better_getpass
+from mt import ensure_venv, test_env, y_n, better_input, better_getpass, windows
 ensure_venv(__file__)
 
 from tkinter.ttk import Frame, PanedWindow, Button
@@ -12,11 +12,8 @@ import ctypes
 import base64
 import os
 
-try:
-    import ctypes
+if windows:
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
-except:
-    pass
 
 
 class Chat:
@@ -294,11 +291,9 @@ class GUI:
         msgs, members = self.chat.chat_to_list()
         try:
             if f'@{USER}' in msgs[-1]:
-                try:
+                if windows:
                     msgb = ctypes.windll.user32.MessageBoxW  # type: ignore
                     msgb(None, msgs[-1], 'Ping', 0)
-                except AttributeError:
-                    pass
                 self.chat.append('OK')
                 changes = True
         except IndexError:
@@ -354,8 +349,7 @@ while KEY.lower() == CHATROOM.lower():
     KEY = better_getpass('Passwort: ', 5, 32, False)
 
 
-WINDOWS: bool = os.name == 'nt'
-if WINDOWS:
+if windows:
     Console.print_colour("OS: Windows", "yellow")
 else:
     Console.print_colour("OS: MacOS/Linux", "yellow")
