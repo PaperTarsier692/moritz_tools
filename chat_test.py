@@ -4,8 +4,8 @@ ensure_venv(__file__)
 from tkinter.ttk import Frame, PanedWindow, Button
 from ttkthemes import ThemedTk, ThemedStyle
 from tkinter import Text
+from papertools import Console, File, Dir
 from cryptography.fernet import Fernet
-from papertools import Console, File
 from inspect import signature
 from typing import Callable
 import base64
@@ -411,6 +411,9 @@ else:
     stgs_file.json_w({})
     generate_config()
 
+if not test_env:
+    print(f'Verfügbare Chaträume: {", ".join(
+        Dir.listfiles("Y:/2BHIT/test/", False))}')
 CHATROOM = better_input('Chatraum: ', 3, 10, False, allow_empty=True)
 if CHATROOM == '':
     if test_env:
