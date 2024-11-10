@@ -136,9 +136,10 @@ class Chat:
         def theme_cycle() -> None:
             '''Wechselt zum nächsten Theme'''
             self.theme += 1
+            self.theme %= len(gui.themes)
             theme: str = gui.themes[self.theme]
             Console.print_colour(
-                f'Applying Theme {theme} {self.theme}/{len(gui.themes)}', 'yellow')
+                f'Applying Theme {theme} {self.theme + 1}/{len(gui.themes)}', 'yellow')
             gui.apply_theme(theme)
 
         @_cmd(display='theme <str>')
