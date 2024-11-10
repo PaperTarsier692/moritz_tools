@@ -243,7 +243,7 @@ else:
     while file.get('p2') == '':
         file = File(PATH).json_r()
         print('.', end='', flush=True)
-        sleep(3)
+        sleep(1)
     SELF: int = 1
     print(f'Spieler {file['p2']} ist beigetreten')
 
