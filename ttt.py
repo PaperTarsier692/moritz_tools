@@ -257,12 +257,12 @@ while True:
         if CONFIRM:
             x = turn_x(game, x)
         print(f'{x=}')
-        add_w_gravity(game, x, current)
+        add_w_gravity(game, x, file['current'])
     else:
         x, y = turn(game)
         if CONFIRM:
             x, y = turn(game, (x, y))
-        game[x][y] = current + 1
-    current += 1
-    current %= 2
+        game[x][y] = file['current'] + 1
+    file['current'] += 1
+    file['current'] %= 2
     File(PATH).json_w(file)
