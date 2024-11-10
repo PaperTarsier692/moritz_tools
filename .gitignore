@@ -15,7 +15,7 @@ __pycache__/
 
 # Test files #
 ##############
-chat_test.json
+c_chat_test.json
 ttt.json
 *temp*
 test.py

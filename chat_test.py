@@ -412,16 +412,16 @@ else:
     generate_config()
 
 if not test_env:
-    print(f'Verfügbare Chaträume: {", ".join(
-        Dir.listfiles("Y:/2BHIT/test/", False))}')
+    print(f'Verfügbare Chaträume: {", ".join(file.replace("c_", "") for file in Dir.listfiles(
+        "Y:/2BHIT/test/", False) if os.path.basename(file).startswith('c_'))}')
 CHATROOM = better_input('Chatraum: ', 3, 10, False, allow_empty=True)
 if CHATROOM == '':
     if test_env:
-        PATH: str = os.path.join(current_path, 'chat_test.json')
+        PATH: str = os.path.join(current_path, 'c_chat_test.json')
     else:
         PATH: str = better_input('Pfad: ')
 else:
-    PATH: str = f"Y:/2BHIT/test/{CHATROOM}.json"
+    PATH: str = f"Y:/2BHIT/test/c_{CHATROOM}.json"
 
 KEY: str = better_getpass('Passwort: ', 5, 32, False)
 while KEY.lower() == CHATROOM.lower():
