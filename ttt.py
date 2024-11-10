@@ -1,9 +1,10 @@
 from mt import ensure_venv, y_n, better_input, type_input, test_env
 ensure_venv(__file__)
 
+import os
 from copy import deepcopy
 from typing import Literal
-from papertools import Console, File
+from papertools import Console, File, Dir
 
 
 def ausgabe(game: list[list[int]], mode: Literal['xy', 'y'] = 'xy') -> None:
@@ -137,16 +138,16 @@ def won(char_inp: str, game: list[list[int]]) -> bool:
 
 
 def new_game() -> dict:
-    settings: dict = {'p1': 'SP1',
-                      'p2': 'SP2',
-                      'game': [[0 for _ in range(COL)]
-                               for _ in range(ROW)],
-                      'current': 1,
-                      'row': ROW,
-                      'col': COL,
-                      'needed': NEEDED,
-                      'gravity': GRAVITY
-                      }
+    settings: dict = {
+        'p1': USER,
+        'p2': '',
+        'game': [[0 for _ in range(COL)] for _ in range(ROW)],
+        'current': 1,
+        'row': ROW,
+        'col': COL,
+        'needed': NEEDED,
+        'gravity': GRAVITY
+    }
     return settings
 
 
@@ -156,6 +157,17 @@ def add_w_gravity(game: list[list[int]], x: int, turn: int) -> None:
             game[y - 1][x] = turn + 1
             return
     game[ROW - 1][x] = turn + 1
+
+
+def get_free_games() -> list[str]:
+    games: list[str] = [file for file in Dir.listfiles('Y:/2BHIT/test/')
+                        if file.startswith('t_') and file.endswith('.json')]
+    out: list[str] = []
+    for file in games:
+        content: dict = File(os.path.join('Y:/2BHIT/test', file)).json_r()
+        if content.get('p2') == '':
+            out.append(file)
+    return out
 
 
 global CONFIRM, USER
