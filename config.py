@@ -24,8 +24,9 @@ class GUI:
         self.entries: dict = {}
         for group in self.cfg.keys():
             self.add_group(group)
+            self.entries[group] = {}
             for key, value in self.cfg[group].items():
-                self.add_option(key, value, type(value))
+                self.add_option(group, key, value, type(value))
 
         self.button_frame: Frame = Frame(self.root)
         self.button_frame.pack(side='bottom', fill='x')
@@ -57,7 +58,7 @@ class GUI:
         for child in widget.winfo_children():
             self._apply_widget_theme(child, bg_color, fg_color)
 
-    def add_option(self, name: str, value: str, type: type) -> None:
+    def add_option(self, group: str, name: str, value: str, type: type) -> None:
         frame: Frame = Frame(self.main_frame)
         frame.pack(fill='x', padx=20, pady=1)
 
@@ -72,12 +73,12 @@ class GUI:
                 frame, text="False", variable=var, value=False)
             true_button.pack(side='left', padx=5)
             false_button.pack(side='left', padx=5)
-            self.entries[name] = var
+            self.entries[group][name] = var
         else:
             text_field: Text = Text(frame, height=1, width=20)
             text_field.insert('1.0', value)
             text_field.pack(side='left', padx=5, fill='x', expand=True)
-            self.entries[name] = text_field
+            self.entries[group][name] = text_field
 
     def add_group(self, name: str) -> None:
         frame: Frame = Frame(self.main_frame)
@@ -89,19 +90,28 @@ class GUI:
     def save(self) -> None:
         for group, options in self.cfg.items():
             for name in options.keys():
-                if isinstance(self.entries[name], BooleanVar):
-                    self.cfg[group][name] = self.entries[name].get()
+                if isinstance(self.entries[group][name], BooleanVar):
+                    self.cfg[group][name] = self.entries[group][name].get()
                 elif name == 'theme':
-                    if self.entries[name].get(
+                    if self.entries[group][name].get(
                             '1.0', 'end-1c') in self.root.get_themes():
-                        self.cfg[group][name] = self.entries[name].get(
+                        self.cfg[group][name] = self.entries[group][name].get(
                             '1.0', 'end-1c')
-                        self.entries[name].config(bg=self.style.lookup(
+                        self.entries[group][name].config(bg=self.style.lookup(
                             'TFrame', 'background') or '#000')
                     else:
-                        self.entries[name].config(bg='#800')
+                        self.entries[group][name].config(bg='#800')
+                elif name == 'user':
+                    if len(self.entries[group][name].get(
+                            '1.0', 'end-1c')) <= 10:
+                        self.cfg[group][name] = self.entries[group][name].get(
+                            '1.0', 'end-1c')
+                        self.entries[group][name].config(bg=self.style.lookup(
+                            'TFrame', 'background') or '#000')
+                    else:
+                        self.entries[group][name].config(bg='#800')
                 else:
-                    self.cfg[group][name] = self.entries[name].get(
+                    self.cfg[group][name] = self.entries[group][name].get(
                         '1.0', 'end-1c')
         File('config.json').json_w(self.cfg)
 
