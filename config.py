@@ -5,6 +5,7 @@ from tkinter.ttk import Button, Label, Radiobutton
 from tkinter import Text, Frame, BooleanVar
 from ttkthemes import ThemedTk, ThemedStyle
 from papertools import File
+from typing import Union
 
 fix_res()
 
@@ -91,6 +92,15 @@ class GUI:
             for name in options.keys():
                 if isinstance(self.entries[name], BooleanVar):
                     self.cfg[group][name] = self.entries[name].get()
+                elif name == 'theme':
+                    if self.entries[name].get(
+                            '1.0', 'end-1c') in self.root.get_themes():
+                        self.cfg[group][name] = self.entries[name].get(
+                            '1.0', 'end-1c')
+                        self.entries[name].config(bg=self.style.lookup(
+                            'TFrame', 'background') or '#000')
+                    else:
+                        self.entries[name].config(bg='#800')
                 else:
                     self.cfg[group][name] = self.entries[name].get(
                         '1.0', 'end-1c')
