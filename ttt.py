@@ -245,7 +245,7 @@ else:
         print('.', end='', flush=True)
         sleep(1)
     SELF: int = 1
-    print(f'Spieler {file['p2']} ist beigetreten')
+    print(f'Spieler {file["p2"]} ist beigetreten')
 
 current: int = file['current']
 p1: str = file['p1']
