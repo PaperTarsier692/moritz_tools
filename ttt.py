@@ -199,6 +199,7 @@ if stgs_file.exists():
         CONFIRM = stgs['confirm']
         USER = stgs['user']
         CLEAR = stgs['clear']
+        USER = better_input('Name: ', 3, 10, False, True, True) or USER
     except:
         generate_config()
 else:
@@ -216,7 +217,6 @@ else:
     PATH: str = better_input('Pfad: ', 2, 10, False)
     PATH = os.path.join('Y:/2BHIT/test/', f't_{PATH}.json')
 
-USER = better_input('Name: ', 3, 10, False, True, True) or USER
 
 if os.path.basename(PATH).removesuffix('.json').removeprefix('t_') in get_free_games():
     print('Lädt Spiel')
