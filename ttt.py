@@ -175,7 +175,6 @@ def get_free_games() -> list[str]:
             current_path if test_env else 'Y:/2BHIT/test/', file)).json_r()
         if content.get('p2') == '':
             out.append(file.replace('t_', '', 1).removesuffix('.json'))
-            print(file)
     return out
 
 
