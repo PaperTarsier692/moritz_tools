@@ -5,7 +5,6 @@ from tkinter.ttk import Button, Label, Radiobutton
 from tkinter import Text, Frame, BooleanVar
 from ttkthemes import ThemedTk, ThemedStyle
 from papertools import File
-from typing import Union
 
 fix_res()
 
