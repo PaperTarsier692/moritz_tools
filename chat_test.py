@@ -359,31 +359,19 @@ class GUI:
         self.root.after(1000, self.update)
 
     def add_colours(self) -> None:
-        self.chat_widget.tag_config('//red//', foreground='red')
-        self.chat_widget.tag_config('//green//', foreground='green')
-        self.chat_widget.tag_config('//blue//', foreground='blue')
-        self.chat_widget.tag_config('//yellow//', foreground='yellow')
-        self.chat_widget.tag_config('//purple//', foreground='purple')
-        self.chat_widget.tag_config('//cyan//', foreground='cyan')
-        self.chat_widget.tag_config('//black//', foreground='black')
-        self.chat_widget.tag_config('//white//', foreground='white')
-        self.chat_widget.tag_config('//bblack//', background='black')
-        self.chat_widget.tag_config('//bred//', background='red')
-        self.chat_widget.tag_config('//bgreen//', background='green')
-        self.chat_widget.tag_config('//bblue//', background='blue')
-        self.chat_widget.tag_config('//byellow//', background='yellow')
-        self.chat_widget.tag_config('//bpurple//', background='purple')
-        self.chat_widget.tag_config('//bcyan//', background='cyan')
-        self.chat_widget.tag_config('//bwhite//', background='white')
-        self.chat_widget.tag_config('#', font='bold')
-        self.chat_widget.tag_config('*', font='italic')
+        for colour in only_colours:
+            self.chat_widget.tag_config(f'//{colour}//', foreground=colour)
+            self.chat_widget.tag_config(f'//b{colour}//', background=colour)
         self.chat_widget.tag_config('__', underline=True)
         self.chat_widget.tag_config('//reset//', font='normal')
 
 
-colours: list[str] = ['//reset//', '#', '*', '__', '//black//', '//blue//', '//cyan//', '//green//', '//purple//', '//red//',
-                      '//white//', '//yellow//', '//bblack//', '//bred//', '//bgreen//', '//byellow//', '//bblue', '//bpurple//', '//bcyan//', '//bwhite//']
+only_colours: list[str] = ['black', 'blue', 'cyan',
+                           'green', 'purple', 'red', 'white', 'yellow']
 
+colours: list[str] = ['//reset//', '__']
+colours.extend([f'//{colour}//' for colour in only_colours])
+colours.extend([f'//b{colour}//' for colour in only_colours])
 global USER, stgs
 
 
