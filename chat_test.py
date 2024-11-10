@@ -177,7 +177,7 @@ class Chat:
                 else:
                     length: int = int(args[0][0])
                 self.delete(length)
-            except Exception as e:
+            except:
                 pass
 
     def cmd(self, msg: str) -> bool:
@@ -401,8 +401,8 @@ else:
     generate_config()
 
 if not test_env:
-    print(f'Verfügbare Chaträume: {", ".join(file.replace("c_", "") for file in Dir.listfiles(
-        "Y:/2BHIT/test/", False) if file.startswith("c_"))}')
+    print(
+        f'Verfügbare Chaträume: {", ".join(file.replace("c_", "") for file in Dir.listfiles("Y:/2BHIT/test/", False) if file.startswith("c_"))}')
 CHATROOM = better_input('Chatraum: ', 3, 10, False, allow_empty=True)
 if CHATROOM == '':
     if test_env:

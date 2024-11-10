@@ -4,7 +4,6 @@ ensure_venv(__file__)
 from papertools import File, Dir
 from getpass import getuser
 from time import sleep
-import ctypes
 import os
 
 PATH: str = 'Y:/2BHIT/test/' if not test_env else current_path

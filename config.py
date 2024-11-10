@@ -1,4 +1,4 @@
-from mt import ensure_venv, windows, fix_res
+from mt import ensure_venv, fix_res
 ensure_venv(__file__)
 
 from tkinter.ttk import Button, Label, Radiobutton

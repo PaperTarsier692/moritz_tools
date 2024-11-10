@@ -28,7 +28,7 @@ def ausgabe(game: list[list[int]], mode: Literal['xy', 'y'] = 'xy') -> None:
         Console.print_colour(
             f'{symbols[game[x][0]]}  ', colours[game[x][0]], end='')
         for y in range(COL - 1):
-            print(f'|  ', end='')
+            print('|  ', end='')
             Console.print_colour(
                 f'{symbols[game[x][y + 1]]}  ', colours[game[x][y + 1]], end='')
         print('\n ', end='')
@@ -64,7 +64,7 @@ def turn(game: list[list[int]], second_pass: tuple[int, int] = (-1, -1)) -> tupl
             return turn(game)
 
         return x, y
-    except Exception:
+    except:
         return turn(game)
 
 
@@ -86,7 +86,7 @@ def turn_x(game: list[list[int]], second_pass: int = -1) -> int:
             return turn_x(game)
 
         return x
-    except Exception:
+    except:
         return turn_x(game, second_pass)
 
 
