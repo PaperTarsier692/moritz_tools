@@ -8,7 +8,13 @@ from typing import Literal
 from papertools import Console, File, Dir
 
 
+def clear() -> None:
+    if CLEAR:
+        Console.clear()
+
+
 def ausgabe(game: list[list[int]], mode: Literal['xy', 'y'] = 'xy') -> None:
+    clear()
     symbols: list[str] = [' ', 'X', 'O', '?']
     colours: list = ['red', 'red', 'green', 'yellow']
     for y in range(COL):
@@ -173,16 +179,17 @@ def get_free_games() -> list[str]:
     return out
 
 
-global CONFIRM, USER
+global CONFIRM, USER, CLEAR
 
 
 def generate_config() -> None:
-    global CONFIRM, USER
+    global CONFIRM, USER, CLEAR
     print("config.json wurde erstellt, bitte fülle die Felder aus.")
     inp: dict = stgs_file.json_r()
     CONFIRM = y_n('Bestätigungsmodus an? (Y/n)')
     USER = better_input('Name: ', 3, 10, False)
-    inp['ttt'] = {"confirm": CONFIRM, "user": USER}
+    CLEAR = y_n('Clear Modus an? (Y/n)')
+    inp['ttt'] = {"confirm": CONFIRM, "user": USER, "clear": CLEAR}
     stgs_file.json_w(inp)
 
 
@@ -192,6 +199,7 @@ if stgs_file.exists():
         stgs: dict = stgs_file.json_r()['ttt']
         CONFIRM = stgs['confirm']
         USER = stgs['user']
+        CLEAR = stgs['clear']
     except:
         generate_config()
 else:
@@ -262,12 +270,12 @@ while True:
             x, y = turn(game, (x, y))
         game[x][y] = file['current'] + 1
 
+    file['current'] += 1
+    file['current'] %= 2
+    ausgabe(game, 'y' if GRAVITY else 'xy')
     if won('X', game):
         print(f'{p1} hat gewonnen!!!')
     elif won('O', game):
         print(f'{p2} hat gewonnen!!!')
 
-    file['current'] += 1
-    file['current'] %= 2
-    ausgabe(game, 'y' if GRAVITY else 'xy')
     File(PATH).json_w(file)
