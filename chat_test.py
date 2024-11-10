@@ -92,7 +92,7 @@ class Chat:
 
     def pre_cmd(self) -> None:
         self.cmds: dict = {}
-        self.theme: int = 0
+        self.theme: int = -1
 
         def _cmd(name: str = '', display: str = '') -> Callable:
             def inner(func: Callable) -> Callable:
@@ -135,6 +135,7 @@ class Chat:
         @_cmd()
         def theme_cycle() -> None:
             '''Wechselt zum nächsten Theme'''
+            self.theme = gui.themes.index(gui.theme)
             self.theme += 1
             self.theme %= len(gui.themes)
             theme: str = gui.themes[self.theme]
@@ -151,7 +152,6 @@ class Chat:
             if theme in gui.themes:
                 Console.print_colour(f'Applying Theme {theme}', 'yellow')
                 gui.apply_theme(theme)
-                self.theme = gui.themes.index(theme)
             else:
                 Console.print_colour(f'Theme {theme} not found', 'red')
 
@@ -248,6 +248,7 @@ class GUI:
         self.update()
 
     def apply_theme(self, theme: str) -> None:
+        self.theme: str = theme
         self.root.title(f'Chat Test: {CHATROOM} - {theme.capitalize()}')
         self.root.set_theme(theme)
         self.style.theme_use(theme)
