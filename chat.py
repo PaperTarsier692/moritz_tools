@@ -14,6 +14,10 @@ import json
 import os
 
 
+Console.print_colour(
+    'WARNUNG: Das ist die alte Version vom Chat und ist mit der neuen inkompatibel. Benutze diese nur wenn es Probleme mit der Testversion gibt.', 'red')
+
+
 class Chat:
     def __init__(self, path: str, key: str) -> None:
         self.path: str = path
