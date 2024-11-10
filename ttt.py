@@ -1,7 +1,8 @@
-from mt import ensure_venv, y_n, better_input, type_input, test_env
+from mt import ensure_venv, y_n, better_input, type_input, test_env, current_path
 ensure_venv(__file__)
 
 import os
+from time import sleep
 from copy import deepcopy
 from typing import Literal
 from papertools import Console, File, Dir
@@ -160,11 +161,12 @@ def add_w_gravity(game: list[list[int]], x: int, turn: int) -> None:
 
 
 def get_free_games() -> list[str]:
-    games: list[str] = [file for file in Dir.listfiles('Y:/2BHIT/test/')
+    games: list[str] = [file for file in Dir.listfiles(current_path if test_env else 'Y:/2BHIT/test/')
                         if file.startswith('t_') and file.endswith('.json')]
     out: list[str] = []
     for file in games:
-        content: dict = File(os.path.join('Y:/2BHIT/test', file)).json_r()
+        content: dict = File(os.path.join(
+            current_path if test_env else 'Y:/2BHIT/test/', file)).json_r()
         if content.get('p2') == '':
             out.append(file)
     return out
@@ -195,28 +197,55 @@ else:
     stgs_file.json_w({})
     generate_config()
 
-PATH: str = better_input('Pfad: ', allow_empty=True)
-if PATH == '' and test_env:
-    PATH = 'ttt.json'
+print(f'Verfügbare Spiele: {", ".join(get_free_games())}')
+if test_env:
+    PATH: str = better_input('Pfad: ', allow_empty=True)
+    if PATH == '':
+        PATH = os.path.join(current_path, 't_ttt.json')
+    else:
+        PATH = os.path.join(current_path, f't_{PATH}')
+else:
+    PATH: str = better_input('Pfad: ', 2, 10, False)
+    PATH = os.path.join('Y:/2BHIT/test/', f't_{PATH}')
 
-ROW: int = type_input('Reihen: ', int, True) or 3
-COL: int = type_input('Spalten: ', int, True) or 3
-NEEDED: int = type_input('Benötigte Verbundene: ', int, True) or 3
-GRAVITY: bool = y_n('Schwerkraft? (Y/n)', True) or False
 USER = better_input('Name: ', 3, 10, False, True, True) or USER
 
-File(PATH).json_w(new_game())
+if os.path.basename(PATH) in get_free_games():
+    print('Lädt Spiel')
+    file: dict = File(PATH).json_r()
+    file['p2'] = USER
+    ROW: int = file['row']
+    COL: int = file['col']
+    NEEDED: int = file['needed']
+    GRAVITY: bool = file['gravity']
+    SELF: int = 0
+    File(PATH).json_w(file)
+    print('Spiel geladen')
+else:
+    print('Erstellt neues Spiel')
+    ROW: int = type_input('Reihen: ', int, True) or 3
+    COL: int = type_input('Spalten: ', int, True) or 3
+    NEEDED: int = type_input('Benötigte Verbundene: ', int, True) or 3
+    GRAVITY: bool = y_n('Schwerkraft? (Y/n)', True) or False
+    file: dict = new_game()
+    File(PATH).json_w(file)
+    print('Spiel erstellt')
+    print('Warte auf anderen Spieler', end='')
+    while file.get('p2') == '':
+        file = File(PATH).json_r()
+        print('.', end='', flush=True)
+        sleep(3)
+    SELF: int = 1
+    print(f'Spieler {file['p2']} ist beigetreten')
 
-current = 0
-
-file: dict = File(PATH).json_r()
-
+current: int = file['current']
 p1: str = file['p1']
 p2: str = file['p2']
 
-
 while True:
-    file = File(PATH).json_r()
+    while not file['current'] == SELF:
+        file = File(PATH).json_r()
+        sleep(2)
     game: list[list[int]] = file['game']
     ausgabe(game, 'y' if GRAVITY else 'xy')
     if won('X', game):
