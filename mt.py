@@ -80,8 +80,19 @@ def type_input(prompt: str, type: type, allow_empty: bool = False) -> Any:
 
 
 def popup(title: str, prompt: str) -> None:
-    import ctypes
-    ctypes.windll.user32.MessageBoxW(None, prompt, title, 0)  # type: ignore
+    if windows:
+        import ctypes
+        ctypes.windll.user32.MessageBoxW(  # type: ignore
+            None, prompt, title, 0)
+    else:
+        import subprocess
+        applescript = f"""
+        display dialog "{prompt}" ¬
+        with title "{title}" ¬
+        with icon caution ¬
+        buttons {{"OK"}}
+        """
+        subprocess.call(f"osascript -e '{applescript}'", shell=True)
 
 
 def fix_res() -> None:

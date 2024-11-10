@@ -345,8 +345,7 @@ class GUI:
         msgs, members = self.chat.chat_to_list()
         try:
             if f'@{USER}' in msgs[-1]:
-                if windows:
-                    popup('Ping', msgs[-1])
+                popup('Ping', msgs[-1])
                 self.chat.append('OK')
                 changes = True
         except IndexError:
