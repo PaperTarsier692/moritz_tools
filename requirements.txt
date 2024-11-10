@@ -1,5 +1,5 @@
 requests
 ttkthemes
-papertools
+papertools>=1.10
 context_menu
 cryptography
