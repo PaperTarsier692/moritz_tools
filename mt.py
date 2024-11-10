@@ -21,9 +21,13 @@ def ensure_venv(file: str, args: list[str] = []) -> None:
     if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
         pass
     else:
-        os.system(
-            f"Z: && cd Z:\\Documents\\moritz_tools && .\\.venv\\Scripts\\activate.bat && python {file} {' '.join(args)}")
-        exit()
+        if test_env:
+            os.system(
+                f'.\\.venv\\Scripts\\activate.bat && python "{file}" {" ".join(args)}')
+        else:
+            os.system(
+                f"Z: && cd Z:\\Documents\\moritz_tools && .\\.venv\\Scripts\\activate.bat && python {file} {' '.join(args)}")
+            exit()
 
 
 def better_input(prompt: str, min_len: int = 0, max_len: int = 0, allow_spaces: bool = True, silent: bool = False, allow_empty: bool = False) -> str:
