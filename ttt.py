@@ -168,7 +168,8 @@ def get_free_games() -> list[str]:
         content: dict = File(os.path.join(
             current_path if test_env else 'Y:/2BHIT/test/', file)).json_r()
         if content.get('p2') == '':
-            out.append(file)
+            out.append(file.replace('t_', '', 1).removesuffix('.json'))
+            print(file)
     return out
 
 
@@ -203,14 +204,14 @@ if test_env:
     if PATH == '':
         PATH = os.path.join(current_path, 't_ttt.json')
     else:
-        PATH = os.path.join(current_path, f't_{PATH}')
+        PATH = os.path.join(current_path, f't_{PATH}.json')
 else:
     PATH: str = better_input('Pfad: ', 2, 10, False)
-    PATH = os.path.join('Y:/2BHIT/test/', f't_{PATH}')
+    PATH = os.path.join('Y:/2BHIT/test/', f't_{PATH}.json')
 
 USER = better_input('Name: ', 3, 10, False, True, True) or USER
 
-if os.path.basename(PATH) in get_free_games():
+if os.path.basename(PATH).removesuffix('.json').removeprefix('t_') in get_free_games():
     print('Lädt Spiel')
     file: dict = File(PATH).json_r()
     file['p2'] = USER
@@ -245,13 +246,10 @@ p2: str = file['p2']
 while True:
     while not file['current'] == SELF:
         file = File(PATH).json_r()
-        sleep(2)
+        sleep(0.5)
     game: list[list[int]] = file['game']
     ausgabe(game, 'y' if GRAVITY else 'xy')
-    if won('X', game):
-        print(f'{p1} hat gewonnen!!!')
-    elif won('O', game):
-        print(f'{p2} hat gewonnen!!!')
+
     if GRAVITY:
         x = turn_x(game)
         if CONFIRM:
@@ -263,6 +261,13 @@ while True:
         if CONFIRM:
             x, y = turn(game, (x, y))
         game[x][y] = file['current'] + 1
+
+    if won('X', game):
+        print(f'{p1} hat gewonnen!!!')
+    elif won('O', game):
+        print(f'{p2} hat gewonnen!!!')
+
     file['current'] += 1
     file['current'] %= 2
+    ausgabe(game, 'y' if GRAVITY else 'xy')
     File(PATH).json_w(file)
