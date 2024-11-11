@@ -88,8 +88,10 @@ class SendToHome:
     def run(self, inp: str) -> None:
         if inp == '/shortcut_on':
             self.create_sc()
+            return
         elif inp == '/shortcut_off':
             self.remove_sc()
+            return
         path: str = os.path.abspath(inp.replace('"', ''))
         if os.path.isfile(path):
             file_name: str = os.path.basename(path)
@@ -137,9 +139,12 @@ class SendToHome:
         fc2.compile()
 
     def remove_sc(self) -> None:
-        from context_menu import menus
-        menus.removeMenu('Send To Home', 'FILES')
-        menus.removeMenu('Send to home', 'DIRECTORY')
+        try:
+            from context_menu import menus
+            menus.removeMenu('Send To Home', 'FILES')
+            menus.removeMenu('Send to home', 'DIRECTORY')
+        except:
+            print('Fehler beim Löschen der Shortcuts')
 
 
 sth: SendToHome = SendToHome(Webhook(URL, USERNAME))
