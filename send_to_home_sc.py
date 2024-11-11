@@ -43,5 +43,5 @@ if os.path.isdir(path):
     wh.send_file(zip_path)
     os.remove(zip_path)
 
-
-wh.send_file(path)
+else:
+    wh.send_file(path)
