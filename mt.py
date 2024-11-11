@@ -111,3 +111,9 @@ def fix_res() -> None:
     import ctypes
     if windows:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)  # type: ignore
+
+
+class theme:
+    def __init__(self, theme: str) -> None:
+        from ttkthemes.themed_tk import ThemedTk
+        self.exists: bool = theme in ThemedTk().get_themes()

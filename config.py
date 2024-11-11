@@ -1,4 +1,4 @@
-from mt import ensure_venv, fix_res
+from mt import ensure_venv, fix_res, theme
 ensure_venv(__file__)
 
 from tkinter.ttk import Button, Label, Radiobutton
@@ -93,8 +93,8 @@ class GUI:
                 if isinstance(self.entries[group][name], BooleanVar):
                     self.cfg[group][name] = self.entries[group][name].get()
                 elif name == 'theme':
-                    if self.entries[group][name].get(
-                            '1.0', 'end-1c') in self.root.get_themes():
+                    if theme(self.entries[group][name].get(
+                            '1.0', 'end-1c')).exists:
                         self.cfg[group][name] = self.entries[group][name].get(
                             '1.0', 'end-1c')
                         self.entries[group][name].config(bg=self.style.lookup(
