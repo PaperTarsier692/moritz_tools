@@ -1,8 +1,7 @@
-from mt import ensure_venv
+from mt import ensure_venv, test_env
 ensure_venv(__file__)
 
 from papertools import File
-import winreg as reg
 import os
 
 install_cmd: str = '''
@@ -18,11 +17,13 @@ if not os.path.exists('Y:/2BHIT/moritz/install.bat'):
 
 
 def disable_unc_check() -> None:
+    import winreg as reg
     try:
-        key: reg.HKEYType = reg.CreateKey(reg.HKEY_CURRENT_USER,
+        key: reg.HKEYType = reg.CreateKey(reg.HKEY_CURRENT_USER,  # type: ignore
                                           'Software\\Microsoft\\Command Processor')
-        reg.SetValueEx(key, 'DisableUNCCheck', 0, reg.REG_DWORD, 1)
-        reg.CloseKey(key)
+        reg.SetValueEx(key, 'DisableUNCCheck', 0,  # type: ignore
+                       reg.REG_DWORD, 1)  # type: ignore
+        reg.CloseKey(key)  # type: ignore
         print('UNC-Meldung erfolgreich ausgemacht')
     except Exception as e:
         print(f'Fehler bei UNC-Meldung ausmachen {e}')
