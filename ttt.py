@@ -229,6 +229,7 @@ if os.path.basename(PATH).removesuffix('.json').removeprefix('t_') in get_free_g
     SELF: int = 0
     File(PATH).json_w(file)
     print('Spiel geladen')
+    ausgabe(file['game'], 'y' if GRAVITY else 'xy')
 else:
     print('Erstellt neues Spiel')
     ROW: int = type_input('Reihen: ', int, True) or 3
