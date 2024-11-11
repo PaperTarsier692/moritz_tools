@@ -402,7 +402,7 @@ else:
 
 if not test_env:
     print(
-        f'Verfügbare Chaträume: {", ".join(file.replace("c_", "") for file in Dir.listfiles("Y:/2BHIT/test/", False) if file.startswith("c_"))}')
+        f'Verfügbare Chaträume: {", ".join(file.removeprefix("c_").removesuffix(".json") for file in Dir.listfiles("Y:/2BHIT/test/", False) if file.startswith("c_"))}')
 CHATROOM = better_input('Chatraum: ', 3, 10, False, allow_empty=True)
 if CHATROOM == '':
     if test_env:
