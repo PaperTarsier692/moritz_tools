@@ -98,7 +98,7 @@ def popup(title: str, prompt: str) -> None:
             None, prompt, title, 0)
     else:
         import subprocess
-        applescript = f"""
+        applescript: str = f"""
         display dialog "{prompt}" ¬
         with title "{title}" ¬
         with icon caution ¬
