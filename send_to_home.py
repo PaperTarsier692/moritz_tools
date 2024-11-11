@@ -18,7 +18,8 @@ def generate_config() -> None:
         'Soll ein Desktop Shortcut für sth erstellt werden? (Y/n)')
     URL = input('Webhook URL: ').strip()
     inp: dict = stgs_file.json_r()
-    inp['sth'] = {"url": URL, "username": USERNAME, "shortcut": SHORTCUT}
+    inp['sth'] = {"url": URL, "username": USERNAME,
+                  "shortcut": SHORTCUT, "context": False}
     stgs_file.json_w(inp)
 
 
@@ -128,7 +129,8 @@ class SendToHome:
         print("send_to_home.bat wird erstellt.")
         shortcut.write(bat_content)
 
-    def create_sc(self) -> None:
+    @staticmethod
+    def create_sc() -> None:
         from context_menu import menus
         from sys import executable
         fc = menus.FastCommand('Send To Home', type='FILES',
@@ -138,13 +140,24 @@ class SendToHome:
                                 command=f'Z: && cd Z:\\Documents\\moritz_tools && "{executable}" "Z:\\Documents\\moritz_tools\\send_to_home_sc.py" ?', command_vars=['FILENAME'])
         fc2.compile()
 
-    def remove_sc(self) -> None:
+        cfg: File = File('config.json')
+        inp: dict = cfg.json_r()
+        inp['sth']['context'] = True
+        cfg.json_w(inp)
+
+    @staticmethod
+    def remove_sc() -> None:
         try:
             from context_menu import menus
             menus.removeMenu('Send To Home', 'FILES')
             menus.removeMenu('Send to home', 'DIRECTORY')
         except:
             print('Fehler beim Löschen der Shortcuts')
+
+        cfg: File = File('config.json')
+        inp: dict = cfg.json_r()
+        inp['sth']['context'] = False
+        cfg.json_w(inp)
 
 
 sth: SendToHome = SendToHome(Webhook(URL, USERNAME))
