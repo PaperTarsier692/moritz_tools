@@ -32,8 +32,12 @@ def ensure_venv(file: str, args: list[str] = []) -> None:
 
 def better_input(prompt: str, min_len: int = 0, max_len: int = 0, allow_spaces: bool = True, silent: bool = False, allow_empty: bool = False) -> str:
     inp: str = input(prompt).strip()
-    if allow_empty and inp == '':
-        return inp
+    if inp == '':
+        if allow_empty:
+            return ''
+        else:
+            better_input(prompt, min_len, max_len,
+                         allow_spaces, silent, allow_empty)
     if max_len and len(inp) > max_len:
         if silent:
             inp = inp[:max_len]
@@ -54,8 +58,12 @@ def better_input(prompt: str, min_len: int = 0, max_len: int = 0, allow_spaces: 
 def better_getpass(prompt: str, min_len: int = 0, max_len: int = 0, allow_spaces: bool = True, silent: bool = False, allow_empty: bool = False) -> str:
     from getpass import getpass
     inp: str = getpass(prompt).strip()
-    if allow_empty and inp == '':
-        return inp
+    if inp == '':
+        if allow_empty:
+            return ''
+        else:
+            better_getpass(prompt, min_len, max_len,
+                           allow_spaces, silent, allow_empty)
     if max_len and len(inp) > max_len:
         if silent:
             inp = inp[:max_len]
