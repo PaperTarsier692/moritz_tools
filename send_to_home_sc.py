@@ -14,7 +14,14 @@ if not File('config.json').exists():
     exit()
 
 settings: dict = File('config.json').json_r()
-wh: Webhook = Webhook(settings['url'], settings['username'])
+try:
+    settings['sth']['url']
+    settings['sth']['username']
+except:
+    print('Fehler beim Laden der Werte, sind diese angegeben? Führe send_to_home.py aus um diese auszufüllen.')
+    input()
+
+wh: Webhook = Webhook(settings['sth']['url'], settings['sth']['username'])
 
 if os.path.isdir(path):
     zip_path: str = f"{path}.zip"
