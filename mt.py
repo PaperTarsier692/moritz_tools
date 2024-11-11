@@ -114,6 +114,8 @@ def fix_res() -> None:
 
 
 class theme:
-    def __init__(self, theme: str) -> None:
-        from ttkthemes.themed_tk import ThemedTk
-        self.exists: bool = theme in ThemedTk().get_themes()
+    def __init__(self, theme: str, error_ok: bool = False) -> None:
+        from ttkthemes.themed_style import ThemedStyle
+        self.exists: bool = theme in ThemedStyle().theme_names()
+        if not error_ok and not self.exists:
+            raise ValueError('Theme not found')

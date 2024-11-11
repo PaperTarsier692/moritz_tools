@@ -94,7 +94,7 @@ class GUI:
                     self.cfg[group][name] = self.entries[group][name].get()
                 elif name == 'theme':
                     if theme(self.entries[group][name].get(
-                            '1.0', 'end-1c')).exists:
+                            '1.0', 'end-1c'), True).exists:
                         self.cfg[group][name] = self.entries[group][name].get(
                             '1.0', 'end-1c')
                         self.entries[group][name].config(bg=self.style.lookup(
