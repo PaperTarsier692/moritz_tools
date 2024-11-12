@@ -24,7 +24,6 @@ class Chat:
             key.encode("utf-8").ljust(32)[:32]))
         self.check_file()
         self.load_file()
-        self.inp['members'].append(USER)
         self.save_file()
         self.pre_cmd()
 
@@ -66,11 +65,23 @@ class Chat:
             return
         self.inp['msgs'].append(self.encrypt(f"{USER}: {msg}"))
 
-    def chat_to_list(self) -> tuple[list[str], list[str]]:
-        out: list[str] = []
-        for i in self.inp['msgs']:
-            out.append(self.decrypt(i))
-        return out, self.inp['members']
+    def check_members(self, members: list[str]) -> bool:
+        if USER not in self.get_members():
+            self.inp['members'].append(self.encrypt(USER))
+            return True
+        return False
+
+    def get_msgs(self) -> list[str]:
+        msgs: list[str] = []
+        for msg in self.inp['msgs']:
+            msgs.append(self.decrypt(msg))
+        return msgs
+
+    def get_members(self) -> list[str]:
+        members: list[str] = []
+        for member in self.inp['members']:
+            members.append(self.decrypt(member))
+        return members
 
     def encrypt(self, string: str) -> str:
         return str(self.fernet.encrypt(string.encode())).replace("b'", "")\
@@ -329,12 +340,6 @@ class GUI:
         inner()
         self.chat_input.delete("1.0", "end")
 
-    def check_members(self) -> bool:
-        if USER in self.chat.inp['members']:
-            return False
-        self.chat.inp['members'].append(USER)
-        return True
-
     def update(self) -> None:
         changes: bool = False
         self.chat.load_file()
@@ -342,10 +347,12 @@ class GUI:
             changes = True
             self.chat.append(msg)
         self.messages = []
-        if self.check_members():
+        msgs: list[str] = self.chat.get_msgs()
+        members: list[str] = self.chat.get_members()
+        if self.chat.check_members(members):
+            members.append(USER)
             changes = True
 
-        msgs, members = self.chat.chat_to_list()
         try:
             if f'@{USER}' in msgs[-1]:
                 popup('Ping', msgs[-1])
@@ -432,6 +439,6 @@ gui: GUI = GUI(root, chat)
 root.mainloop()
 
 print('ENDE')
-_inp: dict = File(PATH).json_r()
-_inp['members'].remove(USER)
-File(PATH).json_w(_inp)
+# _inp: dict = File(PATH).json_r()
+# _inp['members'].remove(chat)
+# File(PATH).json_w(_inp)
