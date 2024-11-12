@@ -1,12 +1,30 @@
 from mt import ensure_venv, fix_res, theme
 ensure_venv(__file__)
 
-from tkinter.ttk import Button, Label, Radiobutton
-from tkinter import Text, Frame, BooleanVar
-from ttkthemes import ThemedTk, ThemedStyle
-from papertools import File
+from papertools import File, Cfg
 
 fix_res()
+
+config: str = '''
+[chat]
+user=
+theme=
+
+[ttt]
+user=
+clear=
+confirm=
+
+[sth]
+url=
+user=
+context=
+shortcut=
+
+[other]
+path=
+unc=
+'''
 
 
 class GUI:
@@ -116,4 +134,8 @@ class GUI:
         File('config.json').json_w(self.cfg)
 
 
-gui: GUI = GUI()
+if __name__ == '__main__':
+    from tkinter.ttk import Button, Label, Radiobutton
+    from tkinter import Text, Frame, BooleanVar
+    from ttkthemes import ThemedTk, ThemedStyle
+    gui: GUI = GUI()

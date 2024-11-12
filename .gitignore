@@ -23,6 +23,7 @@ test.py
 # Settings #
 ############
 config.json
+config.cfg
 .test_env
 
 # Downloaded Files #
