@@ -66,7 +66,7 @@ class Chat:
         self.inp['msgs'].append(self.encrypt(f"{USER}: {msg}"))
 
     def check_members(self, members: list[str]) -> bool:
-        if USER not in self.get_members():
+        if USER not in members:
             self.inp['members'].append(self.encrypt(USER))
             return True
         return False
