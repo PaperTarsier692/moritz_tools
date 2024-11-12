@@ -1,4 +1,4 @@
-from mt import ensure_venv, test_env, current_path, popup
+from mt import ensure_venv, test_env, current_path, popup, path
 ensure_venv(__file__)
 
 from papertools import File, Dir
@@ -6,7 +6,7 @@ from getpass import getuser
 from time import sleep
 import os
 
-PATH: str = 'Y:/2BHIT/test/' if not test_env else current_path
+PATH: str = path if not test_env else current_path
 USER: str = getuser()
 
 while True:

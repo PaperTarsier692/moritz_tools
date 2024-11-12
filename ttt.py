@@ -1,4 +1,4 @@
-from mt import ensure_venv, y_n, better_input, type_input, test_env, current_path
+from mt import ensure_venv, y_n, better_input, type_input, test_env, current_path, path
 ensure_venv(__file__)
 
 import os
@@ -167,12 +167,12 @@ def add_w_gravity(game: list[list[int]], x: int, turn: int) -> None:
 
 
 def get_free_games() -> list[str]:
-    games: list[str] = [file for file in Dir.listfiles(current_path if test_env else 'Y:/2BHIT/test/')
+    games: list[str] = [file for file in Dir.listfiles(current_path if test_env else path)
                         if file.startswith('t_') and file.endswith('.json')]
     out: list[str] = []
     for file in games:
         content: dict = File(os.path.join(
-            current_path if test_env else 'Y:/2BHIT/test/', file)).json_r()
+            current_path if test_env else path, file)).json_r()
         if content.get('p2') == '':
             out.append(file.replace('t_', '', 1).removesuffix('.json'))
     return out
@@ -215,7 +215,7 @@ if test_env:
         PATH = os.path.join(current_path, f't_{PATH}.json')
 else:
     PATH: str = better_input('Pfad: ', 2, 10, False)
-    PATH = os.path.join('Y:/2BHIT/test/', f't_{PATH}.json')
+    PATH = os.path.join(path, f't_{PATH}.json')
 
 
 if os.path.basename(PATH).removesuffix('.json').removeprefix('t_') in get_free_games():

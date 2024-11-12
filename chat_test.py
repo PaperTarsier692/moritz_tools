@@ -1,4 +1,4 @@
-from mt import ensure_venv, test_env, y_n, better_input, better_getpass, windows, current_path, popup, fix_res
+from mt import ensure_venv, test_env, y_n, better_input, better_getpass, windows, current_path, popup, fix_res, path
 ensure_venv(__file__)
 
 from tkinter.ttk import Frame, PanedWindow, Button
@@ -402,7 +402,7 @@ else:
 
 if not test_env:
     print(
-        f'Verfügbare Chaträume: {", ".join(file.removeprefix("c_").removesuffix(".json") for file in Dir.listfiles("Y:/2BHIT/test/", False) if file.startswith("c_"))}')
+        f'Verfügbare Chaträume: {", ".join(file.removeprefix("c_").removesuffix(".json") for file in Dir.listfiles(path, False) if file.startswith("c_"))}')
 CHATROOM = better_input('Chatraum: ', 3, 10, False, allow_empty=True)
 if CHATROOM == '':
     if test_env:
@@ -410,7 +410,7 @@ if CHATROOM == '':
     else:
         PATH: str = better_input('Pfad: ')
 else:
-    PATH: str = f"Y:/2BHIT/test/c_{CHATROOM}.json"
+    PATH: str = f"{path}/c_{CHATROOM}.json"
 
 KEY: str = better_getpass('Passwort: ', 5, 32, False)
 while KEY.lower() == CHATROOM.lower():
