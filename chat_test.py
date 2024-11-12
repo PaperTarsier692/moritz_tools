@@ -66,10 +66,23 @@ class Chat:
         self.inp['msgs'].append(self.encrypt(f"{USER}: {msg}"))
 
     def check_members(self, members: list[str]) -> bool:
+        seen: set = set()
+        new_members: list[str] = []
+        changes: bool = False
+        for enc in self.inp['members']:
+            if enc not in seen:
+                seen.add(enc)
+                new_members.append(enc)
+
+        if len(new_members) != len(self.inp['members']):
+            self.inp['members'] = new_members
+            changes = True
+
         if USER not in members:
             self.inp['members'].append(self.encrypt(USER))
-            return True
-        return False
+            changes = True
+
+        return changes
 
     def get_msgs(self) -> list[str]:
         msgs: list[str] = []
