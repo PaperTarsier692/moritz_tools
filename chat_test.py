@@ -162,9 +162,8 @@ class Chat:
             '''Speichert das aktuelle Theme als Einstellung'''
             cfg: File = File('config.json')
             inp: dict = cfg.json_r()
-            theme: str = gui.themes[self.theme]
-            inp['chat']['theme'] = theme
-            Console.print_colour(f'Theme {theme} saved', 'green')
+            inp['chat']['theme'] = gui.theme
+            Console.print_colour(f'Theme {gui.theme} saved', 'green')
             cfg.json_w(inp)
 
         @_cmd(display='del [int]', name='del')
