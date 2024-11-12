@@ -1,4 +1,4 @@
-from mt import ensure_venv, test_env
+from mt import ensure_venv, test_env, add_sth_sc
 ensure_venv(__file__)
 
 from papertools import File
@@ -29,4 +29,13 @@ def disable_unc_check() -> None:
         print(f'Fehler bei UNC-Meldung ausmachen {e}')
 
 
+def check_sth_sc() -> None:
+    try:
+        if File('config.json').json_r()['sth']['context']:
+            add_sth_sc()
+    except:
+        pass
+
+
+check_sth_sc()
 # disable_unc_check()
