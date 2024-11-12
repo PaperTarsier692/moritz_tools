@@ -1,13 +1,13 @@
 import os
 import sys
 from typing import Any
-from papertools import File
 
 test_env: bool = os.path.exists('.test_env')
 current_path: str = os.path.abspath(
     os.path.join(os.path.abspath(__file__), os.pardir))
 windows: bool = os.name == 'nt'
 try:
+    from papertools import File
     path: str = File('config.json').json_r().get('path') or 'Y:/2BHIT/test/'
 except:
     path: str = 'Y:/2BHIT/test/'
