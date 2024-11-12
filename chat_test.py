@@ -439,6 +439,10 @@ gui: GUI = GUI(root, chat)
 root.mainloop()
 
 print('ENDE')
-# _inp: dict = File(PATH).json_r()
-# _inp['members'].remove(chat)
-# File(PATH).json_w(_inp)
+chat.load_file()
+members_enc: list[str] = chat.inp['members']
+for member_enc in members_enc:
+    if chat.decrypt(member_enc) == USER:
+        members_enc.remove(member_enc)
+        break
+chat.save_file()
