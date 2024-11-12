@@ -35,55 +35,59 @@ def ensure_venv(file: str, args: list[str] = []) -> None:
             exit()
 
 
-def better_input(prompt: str, min_len: int = 0, max_len: int = 0, allow_spaces: bool = True, silent: bool = False, allow_empty: bool = False) -> str:
-    inp: str = input(prompt).strip()
-    if inp == '':
-        if allow_empty:
+def better_input(prompt: str, min_len: int = 0, max_len: int = 0, allow_spaces: bool = True, silent: bool = False, allow_empty: bool = False, halal: bool = True) -> str:
+    while True:
+        inp: str = input(prompt).strip()
+
+        if inp == '' and allow_empty:
             return ''
-        else:
-            better_input(prompt, min_len, max_len,
-                         allow_spaces, silent, allow_empty)
-    if max_len and len(inp) > max_len:
-        if silent:
-            inp = inp[:max_len]
-        else:
-            print('Eingabe zu lang')
-            return better_input(prompt, min_len, max_len, allow_spaces, silent, allow_empty)
-    if len(inp) < min_len:
-        if not silent:
-            print('Eingabe zu kurz')
-        return better_input(prompt, min_len, max_len, allow_spaces, silent, allow_empty)
-    if not allow_spaces and ' ' in inp:
-        if not silent:
-            print('Eingabe enthält Abstände')
-        return better_input(prompt, min_len, max_len, allow_spaces, silent, allow_empty)
-    return inp
+
+        if len(inp) < min_len:
+            if not silent:
+                print('Eingabe zu kurz')
+            continue
+
+        if len(inp) > max_len:
+            if not silent:
+                print('Eingabe zu lang')
+            continue
+
+        if not allow_spaces and ' ' in inp:
+            if not silent:
+                print('Eingabe enthält Abstände')
+            continue
+
+        return inp
 
 
-def better_getpass(prompt: str, min_len: int = 0, max_len: int = 0, allow_spaces: bool = True, silent: bool = False, allow_empty: bool = False) -> str:
+def better_getpass(prompt: str, min_len: int = 0, max_len: int = 0, allow_spaces: bool = True, silent: bool = False, allow_empty: bool = False, halal: bool = True) -> str:
     from getpass import getpass
-    inp: str = getpass(prompt).strip()
-    if inp == '':
-        if allow_empty:
+
+    while True:
+        inp: str = getpass(prompt).strip()
+
+        if inp == '' and allow_empty:
             return ''
-        else:
-            better_getpass(prompt, min_len, max_len,
-                           allow_spaces, silent, allow_empty)
-    if max_len and len(inp) > max_len:
-        if silent:
-            inp = inp[:max_len]
-        else:
-            print('Eingabe zu lang')
-            return better_getpass(prompt, min_len, max_len, allow_spaces, silent, allow_empty)
-    if len(inp) < min_len:
-        if not silent:
-            print('Eingabe zu kurz')
-        return better_getpass(prompt, min_len, max_len, allow_spaces, silent, allow_empty)
-    if not allow_spaces and ' ' in inp:
-        if not silent:
-            print('Eingabe enthält Abstände')
-        return better_getpass(prompt, min_len, max_len, allow_spaces, silent, allow_empty)
-    return inp
+
+        if halal and ('neg' in inp or 'nig' in inp):
+            continue
+
+        if len(inp) < min_len:
+            if not silent:
+                print('Eingabe zu kurz')
+            continue
+
+        if len(inp) > max_len:
+            if not silent:
+                print('Eingabe zu lang')
+            continue
+
+        if not allow_spaces and ' ' in inp:
+            if not silent:
+                print('Eingabe enthält Abstände')
+            continue
+
+        return inp
 
 
 def type_input(prompt: str, type: type, allow_empty: bool = False) -> Any:
