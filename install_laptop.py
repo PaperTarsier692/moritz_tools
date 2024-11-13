@@ -1,11 +1,11 @@
 import os
 import sys
 from venv import create
-from mt import ensure_venv, y_n, current_path, test_env, laptop, venv
+from mt import ensure_venv, current_path, test_env, laptop, venv_available
 
 
 def activate_venv() -> None:
-    if os.path.dirname(current_path) != 'moritz_tools':
+    if os.path.basename(current_path) != 'moritz_tools':
         print('Parent Directory ist nicht moritz_tools, es könnten Daten verloren gehen. Drücke Enter um fortzufahren.')
         input()
     create('.venv', with_pip=True, upgrade_deps=True, clear=True)
@@ -17,7 +17,7 @@ def install_dependencies() -> None:
 
 print(f'Python Version: {sys.version}')
 
-if not venv:
+if not venv_available:
     print('Keine virtuelle Umgebung erkannt')
     if test_env:
         print('Test Umgebung festgestellt')
@@ -28,4 +28,6 @@ if not venv:
     activate_venv()
 
 else:
+    print('Virtuelle Umgebung erkannt')
     ensure_venv(__file__)
+    install_dependencies()

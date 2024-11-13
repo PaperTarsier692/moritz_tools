@@ -6,6 +6,7 @@ test_env: bool = os.path.exists('.test_env')
 laptop: bool = os.path.exists('.laptop')
 venv: bool = hasattr(sys, 'real_prefix') or (
     hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
+venv_available: bool = os.path.exists('.venv')
 current_path: str = os.path.abspath(
     os.path.join(os.path.abspath(__file__), os.pardir))
 windows: bool = os.name == 'nt'
@@ -30,8 +31,12 @@ def ensure_venv(file: str, args: list[str] = []) -> None:
         pass
     else:
         if test_env:
-            os.system(
-                f'.\\.venv\\Scripts\\activate.bat && python "{file}" {" ".join(args)}')
+            if windows:
+                os.system(
+                    f'.\\.venv\\Scripts\\activate.bat && python "{file}" {" ".join(args)}')
+            else:
+                os.system(
+                    f'source .venv/bin/activate && python "{file}" {" ".join(args)}')
         else:
             os.system(
                 f"Z: && cd Z:\\Documents\\moritz_tools && .\\.venv\\Scripts\\activate.bat && python {file} {' '.join(args)}")
