@@ -134,7 +134,11 @@ class Chat:
             '''Zeigt Informationen zu einen Befehl an
             Argumente:
             <str>: Befehl (benötigt)'''
-            cmd_name: str = args[0][0]
+            try:
+                cmd_name: str = args[0][0]
+            except IndexError:
+                Console.print_colour('Kein Command angegeben', 'red')
+                return
             if cmd_name not in self.cmds.keys():
                 Console.print_colour(
                     f'Help: Command {cmd_name} nicht gefunden', 'red')
