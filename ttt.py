@@ -250,6 +250,8 @@ else:
 current: int = file['current']
 p1: str = file['p1']
 p2: str = file['p2']
+symbols: list[str] = [' ', 'X', 'O']
+symbols2: list[str] = [' ', 'O', 'X']
 
 while True:
     while not file['current'] == SELF:
@@ -273,9 +275,9 @@ while True:
     file['current'] += 1
     file['current'] %= 2
     ausgabe(game, 'y' if GRAVITY else 'xy')
-    if won('X', game):
+    if won(symbols[SELF], game):
         print(f'{p1} hat gewonnen!!!')
-    elif won('O', game):
+    elif won(symbols2[SELF], game):
         print(f'{p2} hat gewonnen!!!')
 
     File(PATH).json_w(file)
