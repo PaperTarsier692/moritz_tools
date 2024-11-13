@@ -9,6 +9,7 @@ def activate_venv() -> None:
         print('Parent Directory ist nicht moritz_tools, es könnten Daten verloren gehen. Drücke Enter um fortzufahren.')
         input()
     create('.venv', with_pip=True, upgrade_deps=True, clear=True)
+    print('Führe diese Datei erneut aus um die erforderlichen Abhängigkeiten zu installieren.')
 
 
 def install_dependencies() -> None:
