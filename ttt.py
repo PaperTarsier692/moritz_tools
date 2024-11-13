@@ -275,9 +275,9 @@ while True:
     file['current'] += 1
     file['current'] %= 2
     ausgabe(game, 'y' if GRAVITY else 'xy')
-    if won(symbols[SELF], game):
+    if won(symbols[SELF+1], game):
         print(f'{p1} hat gewonnen!!!')
-    elif won(symbols2[SELF], game):
+    elif won(symbols2[SELF+1], game):
         print(f'{p2} hat gewonnen!!!')
 
     File(PATH).json_w(file)
