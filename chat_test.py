@@ -1,4 +1,4 @@
-from mt import ensure_venv, test_env, y_n, better_input, better_getpass, windows, current_path, popup, fix_res
+from mt import ensure_venv, test_env, y_n, better_input, better_getpass, windows, current_path, popup, fix_res, path
 ensure_venv(__file__)
 
 from tkinter.ttk import Frame, PanedWindow, Button
@@ -11,7 +11,6 @@ from typing import Callable
 import base64
 import os
 
-from mt import path
 
 fix_res()
 
