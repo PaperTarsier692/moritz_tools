@@ -1,4 +1,4 @@
-from mt import ensure_venv, test_env, y_n, better_input, better_getpass, windows, current_path, popup, fix_res, path
+from mt import ensure_venv, test_env, y_n, better_input, better_getpass, windows, current_path, popup, fix_res, path, generate_random_string
 ensure_venv(__file__)
 
 from tkinter.ttk import Frame, PanedWindow, Button
@@ -207,6 +207,11 @@ class Chat:
                 self.delete(length)
             except:
                 pass
+
+        @_cmd()
+        def ttt() -> None:
+            msg: str = f'[ttt]{generate_random_string(6)}'
+            self.append(msg)
 
     def cmd(self, msg: str) -> bool:
         msg = msg.strip().lower()
