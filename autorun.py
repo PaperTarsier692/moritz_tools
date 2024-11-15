@@ -2,7 +2,7 @@ from mt import ensure_venv, add_sth_sc
 ensure_venv(__file__)
 
 from papertools import File
-import os
+# import os
 
 install_cmd: str = '''
 Z:
