@@ -147,3 +147,10 @@ def add_sth_sc() -> None:
     fc2 = menus.FastCommand('Send To Home', type='DIRECTORY',
                             command=f'Z: && cd Z:\\Documents\\moritz_tools && "{executable}" "Z:\\Documents\\moritz_tools\\send_to_home_sc.py" ?', command_vars=['FILENAME'])
     fc2.compile()
+
+
+def generate_random_string(length: int) -> str:
+    import string
+    import random
+    letters: str = string.ascii_letters + string.digits
+    return ''.join(random.choice(letters) for _ in range(length))
