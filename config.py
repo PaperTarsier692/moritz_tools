@@ -2,6 +2,7 @@ from mt import ensure_venv, fix_res, theme
 ensure_venv(__file__)
 
 from papertools import File, Cfg
+from sys import argv
 
 fix_res()
 
@@ -139,3 +140,9 @@ if __name__ == '__main__':
     from tkinter import Text, Frame, BooleanVar
     from ttkthemes import ThemedTk, ThemedStyle
     gui: GUI = GUI()
+
+elif len(argv) > 1:
+    cat: str = argv[1]
+    cfg: dict = Cfg.path_to_dict('config.cfg')[cat]
+    if any([value.strip() == '' for value in cfg.values()]):
+        print('Nicht voll')

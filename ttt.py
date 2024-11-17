@@ -194,6 +194,39 @@ def generate_config() -> None:
 
 
 if len(argv) > 1:
+    if argv[1] in get_free_games():
+        USER = ''
+        PATH = os.path.join(path, argv[1])
+        print('Lädt Spiel von request')
+        file: dict = File(PATH).json_r()
+        file['p2'] = USER
+        ROW: int = file['row']
+        COL: int = file['col']
+        NEEDED: int = file['needed']
+        GRAVITY: bool = file['gravity']
+        SELF: int = 0
+        File(PATH).json_w(file)
+        print('Spiel geladen')
+        ausgabe(file['game'], 'y' if GRAVITY else 'xy')
+    else:
+        PATH = ''
+        print('Erstellt neues Spiel')
+        ROW: int = type_input('Reihen: ', int, True) or 3
+        COL: int = type_input('Spalten: ', int, True) or 3
+        NEEDED: int = type_input('Benötigte Verbundene: ', int, True) or 3
+        GRAVITY: bool = y_n('Schwerkraft? (Y/n)', True) or False
+        file: dict = new_game()
+        File(PATH).json_w(file)
+        print('Spiel erstellt')
+        print('Warte auf anderen Spieler', end='')
+        while file.get('p2') == '':
+            file = File(PATH).json_r()
+            print('.', end='', flush=True)
+            sleep(1)
+        SELF: int = 1
+        print(f'Spieler {file["p2"]} ist beigetreten')
+
+else:
     stgs_file: File = File("config.json")
     if stgs_file.exists():
         try:
@@ -247,35 +280,6 @@ if len(argv) > 1:
             sleep(1)
         SELF: int = 1
         print(f'Spieler {file["p2"]} ist beigetreten')
-
-if os.path.basename(PATH).removesuffix('.json').removeprefix('t_') in get_free_games():
-    print('Lädt Spiel')
-    file: dict = File(PATH).json_r()
-    file['p2'] = USER
-    ROW: int = file['row']
-    COL: int = file['col']
-    NEEDED: int = file['needed']
-    GRAVITY: bool = file['gravity']
-    SELF: int = 0
-    File(PATH).json_w(file)
-    print('Spiel geladen')
-    ausgabe(file['game'], 'y' if GRAVITY else 'xy')
-else:
-    print('Erstellt neues Spiel')
-    ROW: int = type_input('Reihen: ', int, True) or 3
-    COL: int = type_input('Spalten: ', int, True) or 3
-    NEEDED: int = type_input('Benötigte Verbundene: ', int, True) or 3
-    GRAVITY: bool = y_n('Schwerkraft? (Y/n)', True) or False
-    file: dict = new_game()
-    File(PATH).json_w(file)
-    print('Spiel erstellt')
-    print('Warte auf anderen Spieler', end='')
-    while file.get('p2') == '':
-        file = File(PATH).json_r()
-        print('.', end='', flush=True)
-        sleep(1)
-    SELF: int = 1
-    print(f'Spieler {file["p2"]} ist beigetreten')
 
 current: int = file['current']
 p1: str = file['p1']
