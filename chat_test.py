@@ -7,7 +7,7 @@ from tkinter import Text
 from papertools import Console, File, Dir
 from cryptography.fernet import Fernet
 from inspect import signature
-from typing import Callable
+from typing import Callable, Literal
 import base64
 import os
 
@@ -119,12 +119,16 @@ class Chat:
         self.cmds: dict = {}
         self.theme: int = -1
 
-        def _cmd(name: str = '', display: str = '') -> Callable:
+        def _cmd(name: str = '', display: str = '', arguments: Literal['optional', 'required'] = 'required') -> Callable:
             def inner(func: Callable) -> Callable:
                 cmd_name = name or func.__name__
                 display_name = display or cmd_name
-                self.cmds[cmd_name] = {
-                    'func': func, 'args': len(signature(func).parameters) > 0, 'name': display_name}
+                if len(signature(func).parameters) > 0:
+                    self.cmds[cmd_name] = {
+                        'func': func, 'args': True, 'name': display_name, 'arguments': arguments}
+                else:
+                    self.cmds[cmd_name] = {
+                        'func': func, 'args': False, 'name': display_name, 'arguments': 'optional'}
                 return func
             return inner
 
@@ -133,11 +137,7 @@ class Chat:
             '''Zeigt Informationen zu einen Befehl an
             Argumente:
             <str>: Befehl (benötigt)'''
-            try:
-                cmd_name: str = args[0][0]
-            except IndexError:
-                Console.print_colour('Kein Command angegeben', 'red')
-                return
+            cmd_name: str = args[0][0]
             if cmd_name not in self.cmds.keys():
                 Console.print_colour(
                     f'Help: Command {cmd_name} nicht gefunden', 'red')
@@ -193,7 +193,7 @@ class Chat:
             Console.print_colour(f'Theme {gui.theme} saved', 'green')
             cfg.json_w(inp)
 
-        @_cmd(display='del [int]', name='del')
+        @_cmd(display='del [int]', name='del', arguments='optional')
         def rem(*args) -> None:
             '''Löscht 1 / die angegebene Anzahl an Nachrichten
             Argumente:
@@ -224,6 +224,9 @@ class Chat:
         cmd: dict = self.cmds[cmd_name]
         cmd_args: list[str] = msg.split(' ')[1:] or []
         if cmd['args']:
+            if cmd['arguments'] == 'required' and cmd_args == []:
+                Console.print_colour('Zu wenig Argumente angegeben', 'red')
+                return True
             cmd['func'](cmd_args)
         else:
             cmd['func']()
