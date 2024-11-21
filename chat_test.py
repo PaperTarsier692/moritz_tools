@@ -1,4 +1,4 @@
-from mt import ensure_venv, test_env, y_n, better_input, better_getpass, windows, current_path, popup, fix_res, path, generate_random_string
+from mt import ensure_venv, test_env, y_n, better_input, better_getpass, current_path, popup, fix_res, path, generate_random_string
 ensure_venv(__file__)
 
 from tkinter.ttk import Frame, PanedWindow, Button
@@ -6,8 +6,8 @@ from ttkthemes import ThemedTk, ThemedStyle
 from tkinter import Text
 from papertools import Console, File, Dir, Timer
 from cryptography.fernet import Fernet
-from inspect import signature
 from typing import Callable, Literal
+from inspect import signature
 import base64
 import os
 
@@ -449,12 +449,6 @@ while KEY.lower() == CHATROOM.lower():
     Console.print_colour(
         "Passwort und Chatraum dürfen nicht gleich sein.", "red")
     KEY = better_getpass('Passwort: ', 5, 32, False)
-
-
-if windows:
-    Console.print_colour("OS: Windows", "yellow")
-else:
-    Console.print_colour("OS: MacOS/Linux", "yellow")
 
 
 global root, gui
