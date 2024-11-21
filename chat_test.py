@@ -4,7 +4,7 @@ ensure_venv(__file__)
 from tkinter.ttk import Frame, PanedWindow, Button
 from ttkthemes import ThemedTk, ThemedStyle
 from tkinter import Text
-from papertools import Console, File, Dir
+from papertools import Console, File, Dir, Timer
 from cryptography.fernet import Fernet
 from inspect import signature
 from typing import Callable, Literal
@@ -457,9 +457,24 @@ else:
     Console.print_colour("OS: MacOS/Linux", "yellow")
 
 
+global root, gui
+
+
+@Timer.simple_dec
+def ttk_start() -> None:
+    global root
+    root = ThemedTk()
+
+
+@Timer.simple_dec
+def gui_start() -> None:
+    global root, gui
+    gui = GUI(root, chat)
+
+
 chat: Chat = Chat(PATH, KEY)
-root: ThemedTk = ThemedTk()
-gui: GUI = GUI(root, chat)
+ttk_start()
+gui_start()
 root.mainloop()
 
 print('ENDE')
