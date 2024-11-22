@@ -1,6 +1,5 @@
 from mt import ensure_venv, y_n, better_input, type_input, test_env, current_path, path
-from sys import argv
-ensure_venv(__file__, argv)
+ensure_venv(__file__)
 
 import os
 from time import sleep
@@ -193,93 +192,60 @@ def generate_config() -> None:
     stgs_file.json_w(inp)
 
 
-if len(argv) > 1:
-    if argv[1] in get_free_games():
-        USER = ''
-        PATH = os.path.join(path, argv[1])
-        print('Lädt Spiel von request')
-        file: dict = File(PATH).json_r()
-        file['p2'] = USER
-        ROW: int = file['row']
-        COL: int = file['col']
-        NEEDED: int = file['needed']
-        GRAVITY: bool = file['gravity']
-        SELF: int = 0
-        File(PATH).json_w(file)
-        print('Spiel geladen')
-        ausgabe(file['game'], 'y' if GRAVITY else 'xy')
-    else:
-        PATH = ''
-        print('Erstellt neues Spiel')
-        ROW: int = type_input('Reihen: ', int, True) or 3
-        COL: int = type_input('Spalten: ', int, True) or 3
-        NEEDED: int = type_input('Benötigte Verbundene: ', int, True) or 3
-        GRAVITY: bool = y_n('Schwerkraft? (Y/n)', True) or False
-        file: dict = new_game()
-        File(PATH).json_w(file)
-        print('Spiel erstellt')
-        print('Warte auf anderen Spieler', end='')
-        while file.get('p2') == '':
-            file = File(PATH).json_r()
-            print('.', end='', flush=True)
-            sleep(1)
-        SELF: int = 1
-        print(f'Spieler {file["p2"]} ist beigetreten')
-
-else:
-    stgs_file: File = File("config.json")
-    if stgs_file.exists():
-        try:
-            stgs: dict = stgs_file.json_r()['ttt']
-            CONFIRM = stgs['confirm']
-            USER = stgs['user']
-            CLEAR = stgs['clear']
-            USER = better_input('Name: ', 3, 10, False, True, True) or USER
-        except:
-            generate_config()
-    else:
-        stgs_file.json_w({})
+stgs_file: File = File("config.json")
+if stgs_file.exists():
+    try:
+        stgs: dict = stgs_file.json_r()['ttt']
+        CONFIRM = stgs['confirm']
+        USER = stgs['user']
+        CLEAR = stgs['clear']
+        USER = better_input('Name: ', 3, 10, False, True, True) or USER
+    except:
         generate_config()
+else:
+    stgs_file.json_w({})
+    generate_config()
 
-    print(f'Verfügbare Spiele: {", ".join(get_free_games())}')
-    if test_env:
-        PATH: str = better_input('Pfad: ', allow_empty=True)
-        if PATH == '':
-            PATH = os.path.join(current_path, 't_ttt.json')
-        else:
-            PATH = os.path.join(current_path, f't_{PATH}.json')
+print(f'Verfügbare Spiele: {", ".join(get_free_games())}')
+if test_env:
+    PATH: str = better_input('Pfad: ', allow_empty=True)
+    if PATH == '':
+        PATH = os.path.join(current_path, 't_ttt.json')
     else:
-        PATH: str = better_input('Pfad: ', 2, 10, False)
-        PATH = os.path.join(path, f't_{PATH}.json')
+        PATH = os.path.join(current_path, f't_{PATH}.json')
+else:
+    PATH: str = better_input('Pfad: ', 2, 10, False)
+    PATH = os.path.join(path, f't_{PATH}.json')
 
-    if os.path.basename(PATH).removesuffix('.json').removeprefix('t_') in get_free_games():
-        print('Lädt Spiel')
-        file: dict = File(PATH).json_r()
-        file['p2'] = USER
-        ROW: int = file['row']
-        COL: int = file['col']
-        NEEDED: int = file['needed']
-        GRAVITY: bool = file['gravity']
-        SELF: int = 0
-        File(PATH).json_w(file)
-        print('Spiel geladen')
-        ausgabe(file['game'], 'y' if GRAVITY else 'xy')
-    else:
-        print('Erstellt neues Spiel')
-        ROW: int = type_input('Reihen: ', int, True) or 3
-        COL: int = type_input('Spalten: ', int, True) or 3
-        NEEDED: int = type_input('Benötigte Verbundene: ', int, True) or 3
-        GRAVITY: bool = y_n('Schwerkraft? (Y/n)', True) or False
-        file: dict = new_game()
-        File(PATH).json_w(file)
-        print('Spiel erstellt')
-        print('Warte auf anderen Spieler', end='')
-        while file.get('p2') == '':
-            file = File(PATH).json_r()
-            print('.', end='', flush=True)
-            sleep(1)
-        SELF: int = 1
-        print(f'Spieler {file["p2"]} ist beigetreten')
+
+if os.path.basename(PATH).removesuffix('.json').removeprefix('t_') in get_free_games():
+    print('Lädt Spiel')
+    file: dict = File(PATH).json_r()
+    file['p2'] = USER
+    ROW: int = file['row']
+    COL: int = file['col']
+    NEEDED: int = file['needed']
+    GRAVITY: bool = file['gravity']
+    SELF: int = 0
+    File(PATH).json_w(file)
+    print('Spiel geladen')
+    ausgabe(file['game'], 'y' if GRAVITY else 'xy')
+else:
+    print('Erstellt neues Spiel')
+    ROW: int = type_input('Reihen: ', int, True) or 3
+    COL: int = type_input('Spalten: ', int, True) or 3
+    NEEDED: int = type_input('Benötigte Verbundene: ', int, True) or 3
+    GRAVITY: bool = y_n('Schwerkraft? (Y/n)', True) or False
+    file: dict = new_game()
+    File(PATH).json_w(file)
+    print('Spiel erstellt')
+    print('Warte auf anderen Spieler', end='')
+    while file.get('p2') == '':
+        file = File(PATH).json_r()
+        print('.', end='', flush=True)
+        sleep(1)
+    SELF: int = 1
+    print(f'Spieler {file["p2"]} ist beigetreten')
 
 current: int = file['current']
 p1: str = file['p1']
