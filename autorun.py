@@ -38,4 +38,8 @@ def check_sth_sc() -> None:
 
 
 check_sth_sc()
-# disable_unc_check()
+try:
+    if File('config.json').json_r()['other']['unc']:
+        disable_unc_check()
+except:
+    pass
