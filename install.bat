@@ -11,3 +11,4 @@ pip install --upgrade -r requirements.txt
 
 call autorun.bat
 del "Z:\Start Menu\Programs\Startup\vsc_c.bat"
+del "Z:\Start Menu\Programs\Startup\moritz.bat"
