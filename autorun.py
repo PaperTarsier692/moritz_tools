@@ -1,6 +1,7 @@
 from mt import ensure_venv, add_sth_sc
 ensure_venv(__file__)
 
+from subprocess import run
 from papertools import File
 import os
 
@@ -37,7 +38,7 @@ def check_sth_sc() -> None:
         pass
 
 
-os.system(r'call Z:\Documents\moritz_tools\autorun.bat')
+run(r'Z:\Documents\moritz_tools\autorun.bat')
 check_sth_sc()
 try:
     if File('config.json').json_r()['other']['unc']:
