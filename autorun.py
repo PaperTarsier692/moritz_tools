@@ -2,7 +2,7 @@ from mt import ensure_venv, add_sth_sc
 ensure_venv(__file__)
 
 from papertools import File
-# import os
+import os
 
 install_cmd: str = '''
 Z:
@@ -12,8 +12,8 @@ cd moritz_tools
 call install.bat
 '''
 
-# if not os.path.exists('Y:/2BHIT/moritz/install.bat'):
-# File('Y:/2BHIT/moritz/install.bat').write(install_cmd, create_path=True)
+if not os.path.exists('Y:/2BHIT/moritz/install.bat'):
+    File('Y:/2BHIT/moritz/install.bat').write(install_cmd, create_path=True)
 
 
 def disable_unc_check() -> None:
