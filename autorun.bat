@@ -11,7 +11,6 @@ mkdir Y:\2BHIT\test
 
 call .venv\Scripts\activate.bat
 pip install -r requirements.txt
-python autorun.py
 
 goto finish
 

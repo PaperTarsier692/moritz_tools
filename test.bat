@@ -1,2 +1,0 @@
-
-powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('Z:\Desktop\test.lnk');$s.TargetPath='Z:\Documents\moritz_tools\.venv\Scripts\pythonw.exe';$s.Arguments='Z:\Documents\moritz_tools\autorun.py';$s.IconLocation='Z:\Documents\moritz_tools\.venv\Scripts\pythonw.exe';$s.WorkingDirectory='Z:\Documents\moritz_tools';$s.WindowStyle=7;$s.Save()"

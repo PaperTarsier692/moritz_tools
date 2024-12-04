@@ -37,6 +37,7 @@ def check_sth_sc() -> None:
         pass
 
 
+os.system(r'call Z:\Documents\moritz_tools\autorun.bat')
 check_sth_sc()
 try:
     if File('config.json').json_r()['other']['unc']:

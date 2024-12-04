@@ -1,8 +1,6 @@
 Z:
 
-echo Z: > "Z:\Start Menu\Programs\Startup\moritz.bat"
-echo cd Z:\Documents\moritz_tools >> "Z:\Start Menu\Programs\Startup\moritz.bat"
-echo autorun.bat >> "Z:\Start Menu\Programs\Startup\moritz.bat"
+powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('Z:\Start Menu\Programs\Startup\moritz_tools.lnk');$s.TargetPath='Z:\Documents\moritz_tools\.venv\Scripts\pythonw.exe';$s.Arguments='Z:\Documents\moritz_tools\autorun.py';$s.IconLocation='Z:\Documents\moritz_tools\.venv\Scripts\pythonw.exe';$s.WorkingDirectory='Z:\Documents\moritz_tools';$s.WindowStyle=7;$s.Save()"
 
 cd Z:\Documents\moritz_tools
 git pull
