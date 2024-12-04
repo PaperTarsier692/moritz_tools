@@ -1,7 +1,7 @@
 from mt import ensure_venv, add_sth_sc
 ensure_venv(__file__)
 
-from subprocess import run
+import subprocess
 from papertools import File
 import os
 
@@ -38,7 +38,10 @@ def check_sth_sc() -> None:
         pass
 
 
-run(r'Z:\Documents\moritz_tools\autorun.bat')
+subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
+               shell=True,
+               creationflags=subprocess.CREATE_NO_WINDOW)  # type: ignore
+
 check_sth_sc()
 try:
     if File('config.json').json_r()['other']['unc']:
