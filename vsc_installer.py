@@ -50,6 +50,8 @@ try:
     Console.print_colour('VSC installiert, löscht Installationsdatei', 'green')
     os.remove(f'C:\\Users\\{getuser()}\\vsc.exe')
 
+    os.system(f'C:\\Users\\{getuser()}\\vsc\\code.exe')
+
 finally:
     Console.print_colour('Drücke Enter um das Fenster zu schließen', 'green')
     input()
