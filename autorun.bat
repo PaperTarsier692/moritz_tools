@@ -1,7 +1,6 @@
 Z:
 cd Z:\Documents\moritz_tools
 
-echo executed>executed
 
 git reset --hard HEAD
 git pull | findstr /C:"Updating"
