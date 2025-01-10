@@ -3,6 +3,7 @@ ensure_venv(__file__)
 
 import os
 processes: list[str] = os.popen(
-    'wmic process get description, processid').read().splitlines()
+    'wmic process').read().splitlines()
+processes = [process.strip() for process in processes]
 
 print(processes)
