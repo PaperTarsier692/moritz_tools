@@ -39,8 +39,16 @@ try:
     else:
         Console.print_colour('VSC konnte nicht heruntergeladen werden', 'red')
 
+    Console.print_colour('Installiert VSC', 'yellow')
+
+    os.makedirs(
+        f'C:\\Users\\{getuser()}\\vsc\\', exist_ok=True)
+
     os.system(
         f'Z:\\Downloads\\vsc.exe /SP- /VERYSILENT /LOG="log.txt" /NOCANCEL /NORESTART /FORCECLOSEAPPLICATIONS /DIR="C:\\Users\\{getuser()}\\vsc\\')
 
+    Console.print_colour('VSC installiert', 'green')
+
 finally:
+    Console.print_colour('Drücke Enter um das Fenster zu schließen', 'green')
     input()
