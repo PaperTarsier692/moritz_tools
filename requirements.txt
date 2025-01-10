@@ -3,3 +3,4 @@ ttkthemes
 papertools>=1.11
 context_menu
 cryptography
+psutil

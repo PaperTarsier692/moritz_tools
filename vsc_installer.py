@@ -4,6 +4,7 @@ ensure_venv(__file__)
 import os
 import ctypes
 from papertools import Console
+from psutil import disk_usage
 
 while True:
     processes: list[str] = os.popen(
@@ -20,9 +21,7 @@ while True:
         break
 
 while True:
-    free_bytes: ctypes.c_ulonglong = ctypes.c_ulonglong(0)
-    ctypes.windll.kernel32.GetDiskFreeSpaceExW(
-        ctypes.c_wchar_p('Z:\\'), None, None, ctypes.pointer(free_bytes))
+    free_bytes: int = disk_usage('Z:\\').free
     Console.print_colour(
-        f'Freier Speicherplatz: {free_bytes.value / 1024 / 1024}', 'yellow')
+        f'Freier Speicherplatz: {free_bytes}', 'yellow')
     input()
