@@ -21,10 +21,10 @@ try:
         else:
             break
 
-    if os.path.exists('Z:\\Downloads\\vsc.exe'):
+    if os.path.exists(f'C:\\Users\\{getuser()}\\vsc.exe\\'):
         Console.print_colour(
             'Andere Installation von vsc.exe gefunden, wird gelöscht...', 'yellow')
-        os.remove('Z:\\Downloads\\vsc.exe')
+        os.remove(f'C:\\Users\\{getuser()}\\vsc.exe')
 
     Console.print_colour(
         'Lädt VSC herunter...', 'red')
@@ -33,7 +33,7 @@ try:
         'https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user')
 
     if response.status_code == 200:
-        with open('Z:\\Downloads\\vsc.exe', 'wb') as f:
+        with open(f'C:\\Users\\{getuser()}\\vsc.exe', 'wb') as f:
             f.write(response.content)
         Console.print_colour('VSC heruntergeladen', 'green')
     else:
@@ -45,7 +45,7 @@ try:
         f'C:\\Users\\{getuser()}\\vsc\\', exist_ok=True)
 
     os.system(
-        f'Z:\\Downloads\\vsc.exe /SP- /VERYSILENT /LOG="log.txt" /NOCANCEL /NORESTART /FORCECLOSEAPPLICATIONS /DIR="C:\\Users\\{getuser()}\\vsc\\')
+        f'C:\\Users\\{getuser()}\\vsc.exe /SP- /VERYSILENT /LOG="log.txt" /NOCANCEL /NORESTART /FORCECLOSEAPPLICATIONS /DIR="C:\\Users\\{getuser()}\\vsc\\')
 
     Console.print_colour('VSC installiert', 'green')
 
