@@ -21,7 +21,8 @@ while True:
 
 while True:
     free_bytes: ctypes.c_ulonglong = ctypes.c_ulonglong(0)
-    storage: int = ctypes.windll.kernel32.GetDiskFreeSpaceExW(
-        ctypes.c_wchar_p('Z:'), None, None, ctypes.pointer(free_bytes))
-    Console.print_colour(f'Freier Speicherplatz: {storage}', 'yellow')
+    ctypes.windll.kernel32.GetDiskFreeSpaceExW(
+        ctypes.c_wchar_p('Z:\\'), None, None, ctypes.pointer(free_bytes))
+    Console.print_colour(
+        f'Freier Speicherplatz: {free_bytes.value / 1024 / 1024}', 'yellow')
     input()
