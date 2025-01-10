@@ -47,7 +47,8 @@ try:
     os.system(
         f'C:\\Users\\{getuser()}\\vsc.exe /SP- /VERYSILENT /LOG="log.txt" /NOCANCEL /NORESTART /FORCECLOSEAPPLICATIONS /DIR="C:\\Users\\{getuser()}\\vsc\\')
 
-    Console.print_colour('VSC installiert', 'green')
+    Console.print_colour('VSC installiert, löscht Installationsdatei', 'green')
+    os.remove(f'C:\\Users\\{getuser()}\\vsc.exe')
 
 finally:
     Console.print_colour('Drücke Enter um das Fenster zu schließen', 'green')
