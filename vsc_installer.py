@@ -13,7 +13,9 @@ while True:
     if 'Code.exe' in processes:
         Console.print_colour(
             'Visual Studio Code rennt noch, bitte schließe es um Probleme zu vermeiden.', 'red')
-        input()
+        inp: str = input()
+        if inp == 'c':
+            break
     else:
         break
 
