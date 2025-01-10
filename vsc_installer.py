@@ -40,7 +40,7 @@ try:
         Console.print_colour('VSC konnte nicht heruntergeladen werden', 'red')
 
     os.system(
-        f'Z:\\Downloads\\vsc.exe /SP- /LOG="log.txt" /NOCANCEL /NORESTART /FORCECLOSEAPPLICATIONS /DIR="C:\\Users\\{getuser()}\\vsc\\')
+        f'Z:\\Downloads\\vsc.exe /SP- /VERYSILENT /LOG="log.txt" /NOCANCEL /NORESTART /FORCECLOSEAPPLICATIONS /DIR="C:\\Users\\{getuser()}\\vsc\\')
 
 finally:
     input()
