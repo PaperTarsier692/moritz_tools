@@ -21,6 +21,11 @@ try:
         else:
             break
 
+    if os.path.exists('Z:\\Downloads\\vsc.exe'):
+        Console.print_colour(
+            'Andere Installation von vsc.exe gefunden, wird gelöscht...', 'yellow')
+        os.remove('Z:\\Downloads\\vsc.exe')
+
     Console.print_colour(
         'Lädt VSC herunter...', 'red')
 
