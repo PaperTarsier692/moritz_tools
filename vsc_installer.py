@@ -50,7 +50,9 @@ try:
     Console.print_colour('VSC installiert, löscht Installationsdatei', 'green')
     os.remove(f'C:\\Users\\{getuser()}\\vsc.exe')
 
-    os.system(f'C:\\Users\\{getuser()}\\vsc\\code.exe')
+    os.system(
+        f'C:\\Users\\{getuser()}\\vsc\\code.exe --install-extension ms-vscode.cpptools --install-extension danielpinto8zz6.c-cpp-compile-rundanielpinto8zz6.c-cpp-compile-run')
+
 
 finally:
     Console.print_colour('Drücke Enter um das Fenster zu schließen', 'green')
