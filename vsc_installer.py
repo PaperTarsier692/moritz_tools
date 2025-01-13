@@ -53,6 +53,8 @@ try:
     os.system(
         f'C:\\Users\\{getuser()}\\vsc\\code.exe --install-extension ms-vscode.cpptools --install-extension danielpinto8zz6.c-cpp-compile-rundanielpinto8zz6.c-cpp-compile-run')
 
+    os.system('setx Path "C:\\Program Files\\CodeBlocks\\MinGW\\bin; %USERPROFILE%\\AppData\\Local\\Microsoft\\WindowsApps"')
+
 
 finally:
     Console.print_colour('Drücke Enter um das Fenster zu schließen', 'green')
