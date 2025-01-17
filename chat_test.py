@@ -27,7 +27,13 @@ class Chat:
         self.pre_cmd()
 
     def load_file(self) -> None:
-        self.inp: dict = self.file.json_r()
+        try:
+            self.inp: dict = self.file.json_r()
+        except Exception as e:
+            Console.print_colour(f'Fehler {e}', 'red')
+            if not self.file.exists():
+                Console.print_colour(f'Stellt Datei wieder her', 'red')
+                self.save_file()
 
     def save_file(self) -> None:
         self.file.json_w(self.inp)
