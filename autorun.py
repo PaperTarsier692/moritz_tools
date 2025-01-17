@@ -1,8 +1,9 @@
 from mt import ensure_venv, add_sth_sc
 ensure_venv(__file__)
 
-import subprocess
 from papertools import File
+from getpass import getuser
+import subprocess
 import os
 
 install_cmd: str = '''
@@ -37,11 +38,17 @@ def check_sth_sc() -> None:
     except:
         pass
 
+def vsc() -> None:
+    if os.path.exists(f'C:\\Users\\{getuser()}\\vsc\\'):
+        print('VSC gefunden')
+        os.system(fr'''powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('Z:\Start Menu\Programs\Visual Studio Code\Visual Studio Code.lnk');$s.TargetPath='C:\Users\{getuser()}\vsc\code';$s.Save()"''')
+        
 
 subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
                shell=True,
                creationflags=subprocess.CREATE_NO_WINDOW)  # type: ignore
 
+vsc()
 check_sth_sc()
 try:
     if File('config.json').json_r()['other']['unc']:
