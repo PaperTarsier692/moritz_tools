@@ -1,13 +1,13 @@
-from mt import ensure_venv, test_env, y_n, better_input, better_getpass, windows, current_path, popup, fix_res, path
+from mt import ensure_venv, test_env, y_n, better_input, better_getpass, current_path, popup, fix_res, path, generate_random_string
 ensure_venv(__file__)
 
 from tkinter.ttk import Frame, PanedWindow, Button
 from ttkthemes import ThemedTk, ThemedStyle
 from tkinter import Text
-from papertools import Console, File, Dir
+from papertools import Console, File, Dir, Timer
 from cryptography.fernet import Fernet
+from typing import Callable, Literal
 from inspect import signature
-from typing import Callable
 import base64
 import os
 
@@ -27,7 +27,13 @@ class Chat:
         self.pre_cmd()
 
     def load_file(self) -> None:
-        self.inp: dict = self.file.json_r()
+        try:
+            self.inp: dict = self.file.json_r()
+        except Exception as e:
+            Console.print_colour(f'Fehler {e}', 'red')
+            if not self.file.exists():
+                Console.print_colour(f'Stellt Datei wieder her', 'red')
+                self.save_file()
 
     def save_file(self) -> None:
         self.file.json_w(self.inp)
@@ -119,12 +125,16 @@ class Chat:
         self.cmds: dict = {}
         self.theme: int = -1
 
-        def _cmd(name: str = '', display: str = '') -> Callable:
+        def _cmd(name: str = '', display: str = '', arguments: Literal['optional', 'required'] = 'required') -> Callable:
             def inner(func: Callable) -> Callable:
                 cmd_name = name or func.__name__
                 display_name = display or cmd_name
-                self.cmds[cmd_name] = {
-                    'func': func, 'args': len(signature(func).parameters) > 0, 'name': display_name}
+                if len(signature(func).parameters) > 0:
+                    self.cmds[cmd_name] = {
+                        'func': func, 'args': True, 'name': display_name, 'arguments': arguments}
+                else:
+                    self.cmds[cmd_name] = {
+                        'func': func, 'args': False, 'name': display_name, 'arguments': 'optional'}
                 return func
             return inner
 
@@ -133,11 +143,7 @@ class Chat:
             '''Zeigt Informationen zu einen Befehl an
             Argumente:
             <str>: Befehl (benötigt)'''
-            try:
-                cmd_name: str = args[0][0]
-            except IndexError:
-                Console.print_colour('Kein Command angegeben', 'red')
-                return
+            cmd_name: str = args[0][0]
             if cmd_name not in self.cmds.keys():
                 Console.print_colour(
                     f'Help: Command {cmd_name} nicht gefunden', 'red')
@@ -193,7 +199,7 @@ class Chat:
             Console.print_colour(f'Theme {gui.theme} saved', 'green')
             cfg.json_w(inp)
 
-        @_cmd(display='del [int]', name='del')
+        @_cmd(display='del [int]', name='del', arguments='optional')
         def rem(*args) -> None:
             '''Löscht 1 / die angegebene Anzahl an Nachrichten
             Argumente:
@@ -208,6 +214,11 @@ class Chat:
             except:
                 pass
 
+        @_cmd()
+        def ttt() -> None:
+            msg: str = f'[ttt]{generate_random_string(6)}'
+            self.append(msg)
+
     def cmd(self, msg: str) -> bool:
         msg = msg.strip().lower()
         if not msg.startswith('/'):
@@ -219,6 +230,9 @@ class Chat:
         cmd: dict = self.cmds[cmd_name]
         cmd_args: list[str] = msg.split(' ')[1:] or []
         if cmd['args']:
+            if cmd['arguments'] == 'required' and cmd_args == []:
+                Console.print_colour('Zu wenig Argumente angegeben', 'red')
+                return True
             cmd['func'](cmd_args)
         else:
             cmd['func']()
@@ -234,7 +248,7 @@ class GUI:
 
         self.style: ThemedStyle = ThemedStyle()
 
-        self.root.title("Chat")
+        self.root.title("Chat Test")
 
         self.paned_window: PanedWindow = PanedWindow(
             self.root, orient='horizontal')
@@ -269,6 +283,11 @@ class GUI:
 
         self.button2: Button = Button(self.button_frame, text="Textstil")
         self.button2.pack(side='left', fill='x', expand=True)
+
+        self.chat_widget.tag_configure(
+            "link", underline=True, foreground='blue')
+
+        self.chat_widget.tag_bind("hyperlink", "<Button-1>", self.ttt_request)
 
         self.apply_theme(stgs['theme'])
         self.add_cmds()
@@ -310,6 +329,10 @@ class GUI:
                 cmd.pack(side='top', fill='x', expand=True)
             self.cmds_open = True
 
+    def ttt_request(self, event) -> None:
+        print('TTT Request')
+        pass
+
     def add_messages(self, messages: list[str]) -> None:
         self.chat_widget.config(state='normal')
         self.chat_widget.delete("1.0", "end")
@@ -327,6 +350,8 @@ class GUI:
                 for i, colour in enumerate(colour_list):
                     self.chat_widget.insert(
                         "end", msg[msg.index(colour) + len(colour): indexes[i + 1]], colour)
+            elif '[ttt]' in msg:
+                self.chat_widget.insert("end", 'TTT Request', "hyperlink")
             else:
                 self.chat_widget.insert("end", msg)
             self.chat_widget.insert("end", '\n')
@@ -443,15 +468,24 @@ while KEY.lower() == CHATROOM.lower():
     KEY = better_getpass('Passwort: ', 5, 32, False)
 
 
-if windows:
-    Console.print_colour("OS: Windows", "yellow")
-else:
-    Console.print_colour("OS: MacOS/Linux", "yellow")
+global root, gui
+
+
+@Timer.simple_dec
+def ttk_start() -> None:
+    global root
+    root = ThemedTk()
+
+
+@Timer.simple_dec
+def gui_start() -> None:
+    global root, gui
+    gui = GUI(root, chat)
 
 
 chat: Chat = Chat(PATH, KEY)
-root: ThemedTk = ThemedTk()
-gui: GUI = GUI(root, chat)
+ttk_start()
+gui_start()
 root.mainloop()
 
 print('ENDE')
