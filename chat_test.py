@@ -284,6 +284,11 @@ class GUI:
         self.button2: Button = Button(self.button_frame, text="Textstil")
         self.button2.pack(side='left', fill='x', expand=True)
 
+        self.chat_widget.tag_configure(
+            "link", underline=True, foreground='blue')
+
+        self.chat_widget.tag_bind("hyperlink", "<Button-1>", self.ttt_request)
+
         self.apply_theme(stgs['theme'])
         self.add_cmds()
         self.add_colours()
@@ -324,6 +329,10 @@ class GUI:
                 cmd.pack(side='top', fill='x', expand=True)
             self.cmds_open = True
 
+    def ttt_request(self, event) -> None:
+        print('TTT Request')
+        pass
+
     def add_messages(self, messages: list[str]) -> None:
         self.chat_widget.config(state='normal')
         self.chat_widget.delete("1.0", "end")
@@ -341,6 +350,8 @@ class GUI:
                 for i, colour in enumerate(colour_list):
                     self.chat_widget.insert(
                         "end", msg[msg.index(colour) + len(colour): indexes[i + 1]], colour)
+            elif '[ttt]' in msg:
+                self.chat_widget.insert("end", 'TTT Request', "hyperlink")
             else:
                 self.chat_widget.insert("end", msg)
             self.chat_widget.insert("end", '\n')
