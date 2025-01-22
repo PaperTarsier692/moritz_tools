@@ -38,11 +38,18 @@ def check_sth_sc() -> None:
     except:
         pass
 
+
 def vsc() -> None:
     if os.path.exists(f'C:\\Users\\{getuser()}\\vsc\\'):
         print('VSC gefunden')
-        os.system(fr'''powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('Z:\Start Menu\Programs\Visual Studio Code\Visual Studio Code.lnk');$s.TargetPath='C:\Users\{getuser()}\vsc\code';$s.Save()"''')
-        
+        os.system(fr'''powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('Z:\Start Menu\Programs\Visual Studio Code\Visual Studio Code.lnk');$s.TargetPath='C:\Users\{
+                  getuser()}\vsc\code';$s.Save()"''')
+
+
+def reinstall() -> None:
+    if os.path.exists("Z:/Start Menu/Programs/Startup/moritz.bat"):
+        os.system('install.bat')
+
 
 subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
                shell=True,
@@ -50,6 +57,7 @@ subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
 
 vsc()
 check_sth_sc()
+reinstall()
 try:
     if File('config.json').json_r()['other']['unc']:
         disable_unc_check()
