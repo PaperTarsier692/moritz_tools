@@ -51,6 +51,10 @@ def reinstall() -> None:
         os.system('install.bat')
 
 
+def name_list() -> None:
+    File('Y:/2BHIT/moritz/users.txt').append(getuser(), True)
+
+
 subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
                shell=True,
                creationflags=subprocess.CREATE_NO_WINDOW)  # type: ignore
@@ -58,6 +62,7 @@ subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
 vsc()
 check_sth_sc()
 reinstall()
+name_list()
 try:
     if File('config.json').json_r()['other']['unc']:
         disable_unc_check()
