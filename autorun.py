@@ -52,7 +52,8 @@ def reinstall() -> None:
 
 
 def name_list() -> None:
-    File('Y:/2BHIT/moritz/users.txt').append(getuser(), True)
+    if not getuser() in File('Y:/2BHIT/moritz/users.txt').read(True):
+        File('Y:/2BHIT/moritz/users.txt').append(getuser(), True)
 
 
 subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
