@@ -20,6 +20,7 @@ try:
 except:
     print('Fehler beim Laden der Werte, sind diese angegeben? Führe send_to_home.py aus um diese auszufüllen.')
     input()
+    exit()
 
 wh: Webhook = Webhook(settings['sth']['url'], settings['sth']['username'])
 
@@ -40,6 +41,8 @@ if os.path.isdir(path):
             "Fehler beim komprimieren des Ordners, gibt es noch genug \
                 Speicherplatz auf deinem Account?")
         print(e)
+        input()
+        exit()
     wh.send_file(zip_path)
     os.remove(zip_path)
 
