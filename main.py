@@ -1,7 +1,7 @@
 from mt import ensure_venv, fix_res
 ensure_venv(__file__)
 
-from tkinter.ttk import Notebook, Frame, Label
+from tkinter.ttk import Notebook, Frame
 from ttkthemes import ThemedTk, ThemedStyle
 import chat
 
