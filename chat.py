@@ -303,7 +303,7 @@ class GUI:
 
     def apply_theme(self, theme: str) -> None:
         self.theme: str = theme
-        self.root.title(f'Chat Test: {CHATROOM} - {theme.capitalize()}')
+        self.root.title(f'Chat - {theme.capitalize()}')
         self.root.set_theme(theme)
         self.style.theme_use(theme)
         bg_color = self.style.lookup('TFrame', 'background') or '#000'
@@ -433,55 +433,57 @@ colours.extend([f'//b{colour}//' for colour in only_colours])
 global USER, stgs
 
 
-def generate_config() -> None:
-    global USER, stgs
-    print('config.json wurde erstellt')
-    inp: dict = stgs_file.json_r()
-    USER = better_input('User: ', 2, 10, False)
-    inp['chat'] = {"user": USER, "theme": "equilux"}
-    stgs = inp['chat']
-    stgs_file.json_w(inp)
+def get_inputs() -> tuple[str, str]:
+    global USER
 
+    def generate_config() -> None:
+        global USER, stgs
+        print('config.json wurde erstellt')
+        inp: dict = stgs_file.json_r()
+        USER = better_input('User: ', 2, 10, False)
+        inp['chat'] = {"user": USER, "theme": "equilux"}
+        stgs = inp['chat']
+        stgs_file.json_w(inp)
 
-stgs_file: File = File('config.json')
-if stgs_file.exists():
-    try:
-        stgs: dict = stgs_file.json_r()['chat']
-        theme: str = stgs['theme']
-        USER = better_input('User (Enter für Standard): ', 2, 10, False,
-                            allow_empty=True) or stgs['user']
-    except:
-        generate_config()
-else:
-    stgs_file.json_w({})
-    generate_config()
-
-if not test_env:
-    print(
-        f'Verfügbare Chaträume: {", ".join(file.removeprefix("c_").removesuffix(".json") for file in Dir.listfiles(path, False) if file.startswith("c_"))}')
-CHATROOM = better_input('Chatraum: ', 3, 10, False, allow_empty=True)
-if CHATROOM == '':
-    if test_env:
-        PATH: str = os.path.join(current_path, 'c_chat_test.json')
+    stgs_file: File = File('config.json')
+    if stgs_file.exists():
+        try:
+            stgs: dict = stgs_file.json_r()['chat']
+            theme: str = stgs['theme']
+            USER = better_input('User (Enter für Standard): ', 2, 10, False,
+                                allow_empty=True) or stgs['user']
+        except:
+            generate_config()
     else:
-        PATH: str = better_input('Pfad: ')
-else:
-    PATH: str = f"{path}/c_{CHATROOM}.json"
+        stgs_file.json_w({})
+        generate_config()
 
-KEY: str = better_getpass('Passwort: ', 5, 32, False)
-while KEY.lower() == CHATROOM.lower():
-    Console.print_colour(
-        "Passwort und Chatraum dürfen nicht gleich sein.", "red")
-    KEY = better_getpass('Passwort: ', 5, 32, False)
+    if not test_env:
+        print(
+            f'Verfügbare Chaträume: {", ".join(file.removeprefix("c_").removesuffix(".json") for file in Dir.listfiles(path, False) if file.startswith("c_"))}')
+    CHATROOM = better_input('Chatraum: ', 3, 10, False, allow_empty=True)
+    if CHATROOM == '':
+        if test_env:
+            PATH: str = os.path.join(current_path, 'c_chat_test.json')
+        else:
+            PATH: str = better_input('Pfad: ')
+    else:
+        PATH: str = f"{path}/c_{CHATROOM}.json"
+
+    KEY: str = better_getpass('Passwort: ', 5, 32, False)
+    while KEY.lower() == CHATROOM.lower():
+        Console.print_colour(
+            "Passwort und Chatraum dürfen nicht gleich sein.", "red")
+        KEY = better_getpass('Passwort: ', 5, 32, False)
+    return PATH, KEY
 
 
-global root, gui
+if __name__ == '__main__':
+    path, key = get_inputs()
+    fix_res()
+    root = ThemedTk()
+    chat: Chat = Chat(path, key)
+    gui = GUI(root, chat)
 
-fix_res()
-
-root = ThemedTk()
-chat: Chat = Chat(PATH, KEY)
-gui = GUI(root, chat)
-
-root.mainloop()
-chat.close()
+    root.mainloop()
+    chat.close()
