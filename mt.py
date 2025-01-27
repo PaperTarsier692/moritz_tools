@@ -3,10 +3,8 @@ import sys
 from typing import Any, Callable
 
 test_env: bool = os.path.exists('.test_env')
-laptop: bool = os.path.exists('.laptop')
 venv: bool = hasattr(sys, 'real_prefix') or (
     hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
-venv_available: bool = os.path.exists('.venv')
 current_path: str = os.path.abspath(
     os.path.join(os.path.abspath(__file__), os.pardir))
 windows: bool = os.name == 'nt'

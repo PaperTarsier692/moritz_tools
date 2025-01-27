@@ -24,9 +24,7 @@ test.py
 # Settings #
 ############
 config.json
-config.cfg
 .test_env
-.laptop
 
 # Downloaded Files #
 ####################
