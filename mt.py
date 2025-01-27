@@ -128,14 +128,6 @@ def fix_res() -> None:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)  # type: ignore
 
 
-class theme:
-    def __init__(self, theme: str, error_ok: bool = False) -> None:
-        from ttkthemes.themed_style import ThemedStyle
-        self.exists: bool = theme in ThemedStyle().theme_names()
-        if not error_ok and not self.exists:
-            raise ValueError('Theme not found')
-
-
 def add_sth_sc() -> None:
     from context_menu import menus
     from sys import executable
