@@ -63,6 +63,7 @@ subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
 vsc()
 check_sth_sc()
 name_list()
+log()
 
 try:
     if File('config.json').json_r()['other']['unc']:
