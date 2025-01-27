@@ -2,9 +2,8 @@ from mt import ensure_venv, test_env, y_n, better_input, better_getpass, current
 ensure_venv(__file__)
 
 from tkinter.ttk import Frame, PanedWindow, Button
-from ttkthemes import ThemedTk, ThemedStyle
 from tkinter import Text
-from papertools import Console, File, Dir, Timer
+from papertools import Console, File, Dir
 from cryptography.fernet import Fernet
 from typing import Callable, Literal
 from inspect import signature
@@ -13,7 +12,8 @@ import os
 
 
 class Chat:
-    def __init__(self, path: str, key: str) -> None:
+    def __init__(self, path: str, key: str, user: str, gui) -> None:
+        self.user: str = user
         self.path: str = path
         self.file: File = File(path)
         self.fernet: Fernet = Fernet(base64.urlsafe_b64encode(
@@ -22,6 +22,7 @@ class Chat:
         self.load_file()
         self.save_file()
         self.pre_cmd()
+        self.gui = gui
 
     def load_file(self) -> None:
         try:
@@ -65,7 +66,7 @@ class Chat:
     def append(self, msg: str) -> None:
         if self.cmd(msg):
             return
-        self.inp['msgs'].append(self.encrypt(f"{USER}: {msg}"))
+        self.inp['msgs'].append(self.encrypt(f"{self.user}: {msg}"))
 
     def check_members(self, members: list[str]) -> bool:
         seen: set = set()
@@ -80,8 +81,8 @@ class Chat:
             self.inp['members'] = new_members
             changes = True
 
-        if USER not in members:
-            self.inp['members'].append(self.encrypt(USER))
+        if self.user not in members:
+            self.inp['members'].append(self.encrypt(self.user))
             changes = True
 
         return changes
@@ -164,38 +165,6 @@ class Chat:
             '''Setzt die Mitgliederliste zurück'''
             self.inp = {"msgs": self.inp['msgs'], "members": []}
 
-        @_cmd()
-        def theme_cycle() -> None:
-            '''Wechselt zum nächsten Theme'''
-            self.theme = gui.themes.index(gui.theme)
-            self.theme += 1
-            self.theme %= len(gui.themes)
-            theme: str = gui.themes[self.theme]
-            Console.print_colour(
-                f'Applying Theme {theme} {self.theme + 1}/{len(gui.themes)}', 'yellow')
-            gui.apply_theme(theme)
-
-        @_cmd(display='theme <str>')
-        def theme(*args) -> None:
-            '''Wechselt zum angegebenen Theme
-            Argumente:
-            <str>: theme (benötigt)'''
-            theme: str = args[0][0]
-            if theme in gui.themes:
-                Console.print_colour(f'Applying Theme {theme}', 'yellow')
-                gui.apply_theme(theme)
-            else:
-                Console.print_colour(f'Theme {theme} not found', 'red')
-
-        @_cmd()
-        def save_theme() -> None:
-            '''Speichert das aktuelle Theme als Einstellung'''
-            cfg: File = File('config.json')
-            inp: dict = cfg.json_r()
-            inp['chat']['theme'] = gui.theme
-            Console.print_colour(f'Theme {gui.theme} saved', 'green')
-            cfg.json_w(inp)
-
         @_cmd(display='del [int]', name='del', arguments='optional')
         def rem(*args) -> None:
             '''Löscht 1 / die angegebene Anzahl an Nachrichten
@@ -240,22 +209,20 @@ class Chat:
         self.load_file()
         members_enc: list[str] = self.inp['members']
         for member_enc in members_enc:
-            if chat.decrypt(member_enc) == USER:
+            if self.decrypt(member_enc) == self.user:
                 members_enc.remove(member_enc)
                 break
         self.save_file()
 
 
 class GUI:
-    def __init__(self, root: ThemedTk, chat: Chat) -> None:
+    def __init__(self, root: Frame, path: str, key: str, user: str) -> None:
         self.messages: list[str] = []
-        self.root: ThemedTk = root
-        self.chat: Chat = chat
-        self.themes: list[str] = self.root.get_themes()
+        self.root: Frame = root
+        self.chat: Chat = Chat(path, key, user, self)
+        self.user: str = user
 
-        self.style: ThemedStyle = ThemedStyle()
-
-        self.root.title("Chat Test")
+        # self.root.title("Chat Test")
 
         self.paned_window: PanedWindow = PanedWindow(
             self.root, orient='horizontal')
@@ -296,21 +263,12 @@ class GUI:
 
         self.chat_widget.tag_bind("hyperlink", "<Button-1>", self.ttt_request)
 
-        self.apply_theme(stgs['theme'])
         self.add_cmds()
         self.add_colours()
         self.update()
 
-    def apply_theme(self, theme: str) -> None:
-        self.theme: str = theme
-        self.root.title(f'Chat - {theme.capitalize()}')
-        self.root.set_theme(theme)
-        self.style.theme_use(theme)
-        bg_color = self.style.lookup('TFrame', 'background') or '#000'
-        fg_color = self.style.lookup('TLabel', 'foreground') or '#FFF'
-        self.chat_widget.config(bg=bg_color, fg=fg_color)
-        self.chat_input.config(bg=bg_color, fg=fg_color)
-        self.right_tab.config(bg=bg_color, fg=fg_color)
+        self.root.mainloop()
+        self.chat.close()
 
     def write_cmd(self, cmd: str, args: bool) -> None:
         self.chat_input.delete("1.0", "end")
@@ -398,11 +356,11 @@ class GUI:
         msgs: list[str] = self.chat.get_msgs()
         members: list[str] = self.chat.get_members()
         if self.chat.check_members(members):
-            members.append(USER)
+            members.append(self.user)
             changes = True
 
         try:
-            if f'@{USER}' in msgs[-1]:
+            if f'@{self.user}' in msgs[-1]:
                 popup('Ping', msgs[-1])
                 self.chat.append('OK')
                 changes = True
@@ -430,11 +388,10 @@ only_colours: list[str] = ['black', 'blue', 'cyan',
 colours: list[str] = ['//reset//', '__']
 colours.extend([f'//{colour}//' for colour in only_colours])
 colours.extend([f'//b{colour}//' for colour in only_colours])
-global USER, stgs
 
 
-def get_inputs() -> tuple[str, str]:
-    global USER
+def get_inputs() -> tuple[str, str, str]:
+    global USER, stgs
 
     def generate_config() -> None:
         global USER, stgs
@@ -448,7 +405,7 @@ def get_inputs() -> tuple[str, str]:
     stgs_file: File = File('config.json')
     if stgs_file.exists():
         try:
-            stgs: dict = stgs_file.json_r()['chat']
+            stgs = stgs_file.json_r()['chat']
             theme: str = stgs['theme']
             USER = better_input('User (Enter für Standard): ', 2, 10, False,
                                 allow_empty=True) or stgs['user']
@@ -475,15 +432,4 @@ def get_inputs() -> tuple[str, str]:
         Console.print_colour(
             "Passwort und Chatraum dürfen nicht gleich sein.", "red")
         KEY = better_getpass('Passwort: ', 5, 32, False)
-    return PATH, KEY
-
-
-if __name__ == '__main__':
-    path, key = get_inputs()
-    fix_res()
-    root = ThemedTk()
-    chat: Chat = Chat(path, key)
-    gui = GUI(root, chat)
-
-    root.mainloop()
-    chat.close()
+    return PATH, KEY, USER
