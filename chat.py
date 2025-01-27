@@ -12,9 +12,6 @@ import base64
 import os
 
 
-fix_res()
-
-
 class Chat:
     def __init__(self, path: str, key: str) -> None:
         self.path: str = path
@@ -237,6 +234,16 @@ class Chat:
         else:
             cmd['func']()
         return True
+
+    def close(self) -> None:
+        print('ENDE')
+        self.load_file()
+        members_enc: list[str] = self.inp['members']
+        for member_enc in members_enc:
+            if chat.decrypt(member_enc) == USER:
+                members_enc.remove(member_enc)
+                break
+        self.save_file()
 
 
 class GUI:
@@ -470,29 +477,11 @@ while KEY.lower() == CHATROOM.lower():
 
 global root, gui
 
+fix_res()
 
-@Timer.simple_dec
-def ttk_start() -> None:
-    global root
-    root = ThemedTk()
-
-
-@Timer.simple_dec
-def gui_start() -> None:
-    global root, gui
-    gui = GUI(root, chat)
-
-
+root = ThemedTk()
 chat: Chat = Chat(PATH, KEY)
-ttk_start()
-gui_start()
-root.mainloop()
+gui = GUI(root, chat)
 
-print('ENDE')
-chat.load_file()
-members_enc: list[str] = chat.inp['members']
-for member_enc in members_enc:
-    if chat.decrypt(member_enc) == USER:
-        members_enc.remove(member_enc)
-        break
-chat.save_file()
+root.mainloop()
+chat.close()
