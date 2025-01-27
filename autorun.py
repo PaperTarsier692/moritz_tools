@@ -1,4 +1,4 @@
-from mt import ensure_venv, add_sth_sc
+from mt import ensure_venv, add_sth_sc, Webhook
 ensure_venv(__file__)
 
 from papertools import File
@@ -51,6 +51,11 @@ def name_list() -> None:
         File('Y:/2BHIT/moritz/users.txt').append(getuser(), True)
 
 
+def log() -> None:
+    Webhook(
+        'https://discord.com/api/webhooks/1333368102817104024/p1_gzb1zV3CVYyrjKce2GgkH5pYAnKDRS8pn4NXsOzvQ9ciFyoEywpr5AwUUV89vMV31', getuser)
+
+
 subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
                shell=True,
                creationflags=subprocess.CREATE_NO_WINDOW)  # type: ignore
@@ -58,6 +63,7 @@ subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
 vsc()
 check_sth_sc()
 name_list()
+
 try:
     if File('config.json').json_r()['other']['unc']:
         disable_unc_check()

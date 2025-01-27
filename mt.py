@@ -1,6 +1,6 @@
 import os
 import sys
-from typing import Any
+from typing import Any, Callable
 
 test_env: bool = os.path.exists('.test_env')
 laptop: bool = os.path.exists('.laptop')
@@ -154,3 +154,8 @@ def generate_random_string(length: int) -> str:
     import random
     letters: str = string.ascii_letters + string.digits
     return ''.join(random.choice(letters) for _ in range(length))
+
+
+def Webhook(url: str, content: Callable) -> None:
+    from requests import post
+    post(url, json={'content': f'{content()} {content}'})
