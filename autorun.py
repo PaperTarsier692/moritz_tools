@@ -46,11 +46,6 @@ def vsc() -> None:
                   getuser()}\vsc\code';$s.Save()"''')
 
 
-def reinstall() -> None:
-    if os.path.exists("Z:/Start Menu/Programs/Startup/moritz.bat"):
-        os.system('install.bat')
-
-
 def name_list() -> None:
     if not getuser() in File('Y:/2BHIT/moritz/users.txt').read(True):
         File('Y:/2BHIT/moritz/users.txt').append(getuser(), True)
@@ -62,7 +57,6 @@ subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
 
 vsc()
 check_sth_sc()
-reinstall()
 name_list()
 try:
     if File('config.json').json_r()['other']['unc']:
