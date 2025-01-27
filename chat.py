@@ -267,9 +267,6 @@ class GUI:
         self.add_colours()
         self.update()
 
-        self.root.mainloop()
-        self.chat.close()
-
     def write_cmd(self, cmd: str, args: bool) -> None:
         self.chat_input.delete("1.0", "end")
         self.chat_input.insert("end", f'/{cmd} ')
