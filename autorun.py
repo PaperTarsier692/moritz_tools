@@ -14,8 +14,10 @@ cd moritz_tools
 call install.bat
 '''
 
-if not os.path.exists('Y:/2BHIT/moritz/install.bat'):
-    File('Y:/2BHIT/moritz/install.bat').write(install_cmd, create_path=True)
+
+def write_install() -> None:
+    if not os.path.exists('Y:/2BHIT/moritz/install.bat'):
+        File('Y:/2BHIT/moritz/install.bat').write(install_cmd, create_path=True)
 
 
 def disable_unc_check() -> None:
@@ -56,14 +58,18 @@ def log() -> None:
         'https://discord.com/api/webhooks/1333368102817104024/p1_gzb1zV3CVYyrjKce2GgkH5pYAnKDRS8pn4NXsOzvQ9ciFyoEywpr5AwUUV89vMV31', getuser)
 
 
-subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
-               shell=True,
-               creationflags=subprocess.CREATE_NO_WINDOW)  # type: ignore
+def autorun() -> None:
+    subprocess.run(['cmd', '/c', r'Z:\Documents\moritz_tools\autorun.bat'],
+                   shell=True,
+                   creationflags=subprocess.CREATE_NO_WINDOW)  # type: ignore
 
+
+log()
 vsc()
 check_sth_sc()
 name_list()
-log()
+write_install()
+autorun()
 
 try:
     if File('config.json').json_r()['other']['unc']:
