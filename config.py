@@ -1,5 +1,7 @@
-from mt import ensure_venv
+from mt import ensure_venv, deprecated
 ensure_venv(__file__)
+deprecated(__name__)
+
 
 from tkinter.ttk import Button, Label, Radiobutton, Frame
 from tkinter import Text, BooleanVar

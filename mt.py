@@ -149,3 +149,12 @@ def generate_random_string(length: int) -> str:
 def Webhook(url: str, content: Callable) -> None:
     from requests import post
     post(url, json={'content': f'{content()} {content}'})
+
+
+def deprecated(name: str) -> None:
+    if name == '__main__':
+        from papertools import Console
+        Console.print_colour(
+            'Dieses Programm funktioniert nicht mehr so wie vorher und ist nun ein Teil von main.py. Führe main.py aus um das Programm weiterhin zu benutzen.', 'red')
+        input()
+        exit()
