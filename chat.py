@@ -217,13 +217,9 @@ class Chat:
 
 
 class GUI:
-    def __init__(self, root: Frame, path: str, key: str, user: str) -> None:
+    def __init__(self, root: Frame) -> None:
         self.messages: list[str] = []
         self.root: Frame = root
-        self.chat: Chat = Chat(path, key, user, self)
-        self.user: str = user
-
-        # self.root.title("Chat Test")
 
         self.paned_window: PanedWindow = PanedWindow(
             self.root, orient='horizontal')
@@ -263,9 +259,12 @@ class GUI:
 
         self.chat_widget.tag_bind("hyperlink", "<Button-1>", self.ttt_request)
 
+    def login(self, values: tuple[str, str, str]) -> None:
+        self.chat: Chat = Chat(values[2], values[1], values[0], self)
+        self.user: str = values[0]
+        self.update()
         self.add_cmds()
         self.add_colours()
-        self.update()
 
     def write_cmd(self, cmd: str, args: bool) -> None:
         self.chat_input.delete("1.0", "end")
@@ -407,6 +406,10 @@ class InputGUI:
             child.pack_forget()
         self.root.pack_forget()
         self.chat.paned_window.pack(fill='both', expand=True)
+        self.chat.login(self.get_values())
+
+    def get_values(self) -> tuple[str, str, str]:
+        return self.user_text.get('1.0', 'end-1c'), self.pswd_text.get('1.0', 'end-1c'), self.chat_text.get('1.0', 'end-1c')
 
 
 only_colours: list[str] = ['black', 'blue', 'cyan',

@@ -9,8 +9,6 @@ import chat
 
 fix_res()
 
-pswd: str = 'testpswd'
-
 
 class GUI:
     def __init__(self, theme: str) -> None:
@@ -25,8 +23,7 @@ class GUI:
             self.notebook)
         self.chat_input_frame: Frame = Frame(self.chat_frame)
 
-        self.chat = chat.GUI(
-            self.chat_frame, 'c_chat_test.json', pswd, 'Ich')
+        self.chat = chat.GUI(self.chat_frame)
 
         self.chat_input: chat.InputGUI = chat.InputGUI(
             self.chat_input_frame, self.chat)
