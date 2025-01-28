@@ -146,3 +146,52 @@ def deprecated(name: str) -> None:
             'Dieses Programm funktioniert nicht mehr so wie vorher und ist nun ein Teil von main.py. Führe main.py aus um das Programm weiterhin zu benutzen.', 'red')
         input()
         exit()
+
+
+class Config:
+    def __init__(self) -> None:
+        self.file: File = File('config.json')
+        self.check_cfg()
+        self.cfg: dict[str, Any] = self.file.json_r()
+
+    def check_cfg(self) -> None:
+        if not self.file.exists():
+            print('Config Datei nicht gefunden, wird neu erstellt')
+            self.file.json_w({})
+        try:
+            self.cfg: dict[str, Any] = self.file.json_r()
+        except Exception as e:
+            print(f'Fehler beim Lesen der Config Datei: {e}')
+            input()
+            exit()
+
+    def read(self) -> dict[str, Any]:
+        self.cfg = self.file.json_r()
+        return self.cfg
+
+    def write(self, cfg: dict[str, Any]) -> None:
+        self.cfg = cfg
+        self.file.json_w(cfg)
+
+    def smart_get(self, inp: str, path: str) -> Any:
+        if inp.strip() == '':
+            try:
+                return self.get_value_from_path(path)
+            except:
+                self.write_value_to_path(path, inp)
+                return inp
+        else:
+            return inp
+
+    def get_value_from_path(self, path: str) -> Any:
+        keys: list[str] = path.strip('/').split('/')
+        value: Any = self.cfg
+        for key in keys:
+            value = value[key]
+        return value
+
+    def write_value_to_path(self, path: str, value: Any) -> None:
+        keys: list[str] = path.strip('/').split('/')
+        for key in keys[:-1]:
+            value = value[key]
+        value[keys[-1]] = value
