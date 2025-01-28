@@ -1,8 +1,8 @@
 from mt import ensure_venv, fix_res
 ensure_venv(__file__)
 
-from tkinter.ttk import Notebook, Frame
 from ttkthemes import ThemedTk, ThemedStyle
+from tkinter.ttk import Notebook, Frame
 from papertools import File
 import config
 import chat
@@ -23,9 +23,14 @@ class GUI:
 
         self.chat_frame: Frame = Frame(
             self.notebook)
-        self.chat: chat.GUI = chat.GUI(self.chat_frame, 'c_chat_test.json',
-                                       pswd, 'Ich')
+        self.chat: chat.GUI = chat.GUI(
+            self.chat_frame, 'c_chat_test.json', pswd, 'Ich')
+        # self.chat_frame.pack(fill='both', expand=True)
+
+        self.chat_input: chat.InputGUI = chat.InputGUI(self.chat_frame)
         self.chat_frame.pack(fill='both', expand=True)
+        self.chat_frame.pack_forget()
+
         self.notebook.add(self.chat_frame, text='Chat', state='normal')
         print('Chat added')
 

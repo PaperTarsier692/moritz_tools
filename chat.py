@@ -379,6 +379,23 @@ class GUI:
         self.chat_widget.tag_config('//reset//', font='normal')
 
 
+class InputGUI:
+    def __init__(self, root: Frame) -> None:
+        self.root = root
+        self.user_text: Text = Text(self.root, height=1, width=20)
+        self.user_text.pack(anchor='center', pady=2)
+        self.pswd_text: Text = Text(self.root, height=1, width=20)
+        self.pswd_text.pack(anchor='center', pady=2)
+        self.chat_text: Text = Text(self.root, height=1, width=20)
+        self.chat_text.pack(anchor='center', pady=2)
+        self.confirm: Button = Button(
+            self.root, command=self.confirm_callback, text='Confirm')
+        self.confirm.pack(anchor='center', pady=2)
+
+    def confirm_callback(self) -> None:
+        print('MHM')
+
+
 only_colours: list[str] = ['black', 'blue', 'cyan',
                            'green', 'purple', 'red', 'white', 'yellow']
 
