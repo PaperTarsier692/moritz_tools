@@ -173,14 +173,20 @@ class Config:
         self.cfg = cfg
         self.file.json_w(cfg)
 
-    def smart_get(self, inp: str, path: str) -> Any:
+    def smart_get(self, inp: str, path: str, **kwargs) -> Any:
         if inp.strip() == '':
             try:
                 return self.get_value_from_path(path)
             except:
-                self.write_value_to_path(path, inp)
-                return inp
+                if kwargs.get('error_callback') != None:
+                    kwargs['error_callback'](kwargs)
+                return ''
+
         else:
+            try:
+                self.get_value_from_path(path)
+            except:
+                self.write_value_to_path(path, inp)
             return inp
 
     def get_value_from_path(self, path: str) -> Any:
