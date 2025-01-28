@@ -1,21 +1,17 @@
-from mt import ensure_venv, fix_res
+from mt import ensure_venv
 ensure_venv(__file__)
 
 from papertools import File
-from tkinter.ttk import Button, Label, Radiobutton
-from tkinter import Text, Frame, BooleanVar
+from tkinter.ttk import Button, Label, Radiobutton, Frame
+from tkinter import Text, BooleanVar
 from ttkthemes import ThemedTk, ThemedStyle
-
-fix_res()
 
 
 class GUI:
-    def __init__(self) -> None:
-        self.theme: str = 'equilux'
-        self.root: ThemedTk = ThemedTk(theme='equilux')
-        self.themes: list[str] = self.root.get_themes()
-
-        self.style: ThemedStyle = ThemedStyle()
+    def __init__(self, root: Frame, themes: list[str]) -> None:
+        self.root: Frame = root
+        self.themes: list[str] = themes
+        self.style: ThemedStyle = ThemedStyle(root)
 
         self.main_frame: Frame = Frame(self.root)
         self.main_frame.pack(fill='both', expand=True)
@@ -34,29 +30,6 @@ class GUI:
         self.button1: Button = Button(
             self.button_frame, text="Speichern", command=self.save)
         self.button1.pack(fill='x')
-
-        self.apply_theme(self.theme)
-        self.root.mainloop()
-
-    def apply_theme(self, theme: str) -> None:
-        self.root.title(f'Config - {theme.capitalize()}')
-        self.root.set_theme(theme)
-        self.style.theme_use(theme)
-        bg_color = self.style.lookup('TFrame', 'background') or '#000'
-        fg_color = self.style.lookup('TLabel', 'foreground') or '#FFF'
-
-        for widget in self.root.winfo_children():
-            self._apply_widget_theme(widget, bg_color, fg_color)
-
-    def _apply_widget_theme(self, widget, bg_color, fg_color):
-        if isinstance(widget, Frame):
-            widget.config(bg=bg_color)
-        elif isinstance(widget, Label):
-            widget.config(background=bg_color, foreground=fg_color)
-        elif isinstance(widget, Text):
-            widget.config(background=bg_color, foreground=fg_color)
-        for child in widget.winfo_children():
-            self._apply_widget_theme(child, bg_color, fg_color)
 
     def add_option(self, group: str, name: str, value: str, type: type) -> None:
         frame: Frame = Frame(self.main_frame)
@@ -94,7 +67,7 @@ class GUI:
                     self.cfg[group][name] = self.entries[group][name].get()
                 elif name == 'theme':
                     if self.entries[group][name].get(
-                            '1.0', 'end-1c') in self.root.get_themes():
+                            '1.0', 'end-1c') in self.themes:
                         self.cfg[group][name] = self.entries[group][name].get(
                             '1.0', 'end-1c')
                         self.entries[group][name].config(bg=self.style.lookup(
@@ -114,6 +87,3 @@ class GUI:
                     self.cfg[group][name] = self.entries[group][name].get(
                         '1.0', 'end-1c')
         File('config.json').json_w(self.cfg)
-
-
-gui: GUI = GUI()

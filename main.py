@@ -4,6 +4,7 @@ ensure_venv(__file__)
 from tkinter.ttk import Notebook, Frame
 from ttkthemes import ThemedTk, ThemedStyle
 import chat
+import config
 
 fix_res()
 
@@ -19,13 +20,22 @@ class GUI:
         self.notebook: Notebook = Notebook(self.root)
         self.notebook.pack(fill='both', expand=True)
 
-        self.chat_widget: Frame = Frame(
+        self.chat_frame: Frame = Frame(
             self.notebook)
-        self.chat: chat.GUI = chat.GUI(self.chat_widget, 'c_chat_test.json',
+        self.chat: chat.GUI = chat.GUI(self.chat_frame, 'c_chat_test.json',
                                        pswd, 'Ich')
-        self.chat_widget.pack(fill='both', expand=True)
-        self.notebook.add(self.chat_widget, text='Chat', state='normal')
-        print('Es ist so weit gekommen')
+        self.chat_frame.pack(fill='both', expand=True)
+        self.notebook.add(self.chat_frame, text='Chat', state='normal')
+        print('Chat added')
+
+        self.config_frame: Frame = Frame(self.notebook)
+        self.config: config.GUI = config.GUI(
+            self.config_frame, self.root.get_themes())
+        self.config_frame.pack(fill='both', expand=True)
+        self.notebook.add(self.config_frame, text='Config', state='normal')
+        print('Config added')
+
+        print('Finished adding categories')
         self.apply_theme(self.theme)
         self.root.mainloop()
         self.chat.chat.close()
