@@ -5,8 +5,8 @@ deprecated(__name__)
 from tkinter.ttk import Frame, PanedWindow, Button, Label
 from ttkthemes import ThemedStyle
 from tkinter import Text
-from papertools import Console, File, Dir
 from cryptography.fernet import Fernet
+from papertools import Console, File
 from typing import Callable, Literal
 from inspect import signature
 import base64
