@@ -1,4 +1,4 @@
-from mt import ensure_venv, test_env, y_n, popup, generate_random_string, deprecated, check_str
+from mt import ensure_venv, y_n, popup, generate_random_string, deprecated, check_str
 ensure_venv(__file__)
 deprecated(__name__)
 
@@ -90,16 +90,10 @@ class Chat:
         return changes
 
     def get_msgs(self) -> list[str]:
-        msgs: list[str] = []
-        for msg in self.inp['msgs']:
-            msgs.append(self.decrypt(msg))
-        return msgs
+        return [self.decrypt(msg) for msg in self.inp['msgs']]
 
     def get_members(self) -> list[str]:
-        members: list[str] = []
-        for member in self.inp['members']:
-            members.append(self.decrypt(member))
-        return members
+        return [self.decrypt(member) for member in self.inp['members']]
 
     def encrypt(self, string: str) -> str:
         return str(self.fernet.encrypt(string.encode())).replace("b'", "")\
@@ -113,13 +107,6 @@ class Chat:
 
     def delete(self, length: int) -> None:
         del self.inp['msgs'][-length:]
-
-    @staticmethod
-    def convert(inp: str) -> str:
-        output: str = ''
-        for c in inp:
-            output = c + output
-        return output
 
     def pre_cmd(self) -> None:
         self.cmds: dict = {}
@@ -332,8 +319,7 @@ class GUI:
             content: str = self.chat_input.get("1.0", "end-1c").strip()
             if len(content) > 128:
                 content = content[:128] + '...'
-            if Chat.convert('gen') in content.lower() or Chat.convert('gin')\
-                    in content.lower():
+            if not check_str(content, silent=True):
                 return
             if len(content) == 0:
                 return
