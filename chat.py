@@ -2,7 +2,7 @@ from mt import ensure_venv, test_env, y_n, better_input, better_getpass, current
 ensure_venv(__file__)
 deprecated(__name__)
 
-from tkinter.ttk import Frame, PanedWindow, Button
+from tkinter.ttk import Frame, PanedWindow, Button, Label
 from tkinter import Text
 from papertools import Console, File, Dir
 from cryptography.fernet import Fernet
@@ -382,10 +382,18 @@ class GUI:
 class InputGUI:
     def __init__(self, root: Frame, chat: GUI) -> None:
         self.root = root
+        self.user_label: Label = Label(self.root, text="User:")
+        self.user_label.pack(anchor='center', pady=2)
         self.user_text: Text = Text(self.root, height=1, width=20)
         self.user_text.pack(anchor='center', pady=2)
+
+        self.pswd_label: Label = Label(self.root, text="Password:")
+        self.pswd_label.pack(anchor='center', pady=2)
         self.pswd_text: Text = Text(self.root, height=1, width=20)
         self.pswd_text.pack(anchor='center', pady=2)
+
+        self.chat_label: Label = Label(self.root, text="Chatroom:")
+        self.chat_label.pack(anchor='center', pady=2)
         self.chat_text: Text = Text(self.root, height=1, width=20)
         self.chat_text.pack(anchor='center', pady=2)
         self.confirm: Button = Button(
