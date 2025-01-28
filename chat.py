@@ -1,4 +1,4 @@
-from mt import ensure_venv, test_env, y_n, better_input, better_getpass, current_path, popup, path, generate_random_string, deprecated, check_str
+from mt import ensure_venv, test_env, y_n, popup, generate_random_string, deprecated, check_str
 ensure_venv(__file__)
 deprecated(__name__)
 
@@ -441,48 +441,3 @@ only_colours: list[str] = ['black', 'blue', 'cyan',
 colours: list[str] = ['//reset//', '__']
 colours.extend([f'//{colour}//' for colour in only_colours])
 colours.extend([f'//b{colour}//' for colour in only_colours])
-
-
-def get_inputs() -> tuple[str, str, str]:
-    global USER, stgs
-
-    def generate_config() -> None:
-        global USER, stgs
-        print('config.json wurde erstellt')
-        inp: dict = stgs_file.json_r()
-        USER = better_input('User: ', 2, 10, False)
-        inp['chat'] = {"user": USER, "theme": "equilux"}
-        stgs = inp['chat']
-        stgs_file.json_w(inp)
-
-    stgs_file: File = File('config.json')
-    if stgs_file.exists():
-        try:
-            stgs = stgs_file.json_r()['chat']
-            theme: str = stgs['theme']
-            USER = better_input('User (Enter für Standard): ', 2, 10, False,
-                                allow_empty=True) or stgs['user']
-        except:
-            generate_config()
-    else:
-        stgs_file.json_w({})
-        generate_config()
-
-    if not test_env:
-        print(
-            f'Verfügbare Chaträume: {", ".join(file.removeprefix("c_").removesuffix(".json") for file in Dir.listfiles(path, False) if file.startswith("c_"))}')
-    CHATROOM = better_input('Chatraum: ', 3, 10, False, allow_empty=True)
-    if CHATROOM == '':
-        if test_env:
-            PATH: str = os.path.join(current_path, 'c_chat_test.json')
-        else:
-            PATH: str = better_input('Pfad: ')
-    else:
-        PATH: str = f"{path}/c_{CHATROOM}.json"
-
-    KEY: str = better_getpass('Passwort: ', 5, 32, False)
-    while KEY.lower() == CHATROOM.lower():
-        Console.print_colour(
-            "Passwort und Chatraum dürfen nicht gleich sein.", "red")
-        KEY = better_getpass('Passwort: ', 5, 32, False)
-    return PATH, KEY, USER
