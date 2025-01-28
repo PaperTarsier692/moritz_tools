@@ -66,5 +66,5 @@ class GUI:
         self.apply_theme(cfg['common']['theme'])
 
 
-cfg: dict = File('settings.json').json_r()
+cfg: dict = File('config.json').json_r()
 gui: GUI = GUI(cfg['common']['theme'])
