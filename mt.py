@@ -1,6 +1,6 @@
 import os
 import sys
-from typing import Any, Callable
+from typing import Any, Callable, Union
 
 test_env: bool = os.path.exists('.test_env')
 venv: bool = hasattr(sys, 'real_prefix') or (
@@ -42,58 +42,46 @@ def ensure_venv(file: str, args: list[str] = []) -> None:
 
 
 def better_input(prompt: str, min_len: int = 0, max_len: int = 0, allow_spaces: bool = True, silent: bool = False, allow_empty: bool = False, halal: bool = True) -> str:
-    while True:
-        inp: str = input(prompt).strip()
-
-        if inp == '' and allow_empty:
-            return ''
-
-        if len(inp) < min_len:
-            if not silent:
-                print('Eingabe zu kurz')
-            continue
-
-        if len(inp) > max_len:
-            if not silent:
-                print('Eingabe zu lang')
-            continue
-
-        if not allow_spaces and ' ' in inp:
-            if not silent:
-                print('Eingabe enthält Abstände')
-            continue
-
-        return inp
+    inp: Union[str, None] = None
+    while not check_str(inp, min_len, max_len, allow_spaces, silent, allow_empty, halal):
+        inp = input(prompt).strip()
+    return str(inp)
 
 
 def better_getpass(prompt: str, min_len: int = 0, max_len: int = 0, allow_spaces: bool = True, silent: bool = False, allow_empty: bool = False, halal: bool = True) -> str:
     from getpass import getpass
+    inp: Union[str, None] = None
+    while not check_str(inp, min_len, max_len, allow_spaces, silent, allow_empty, halal):
+        inp = getpass(prompt).strip()
+    return str(inp)
 
-    while True:
-        inp: str = getpass(prompt).strip()
 
-        if inp == '' and allow_empty:
-            return ''
+def check_str(inp: Union[str, None], min_len: int = 0, max_len: int = 0, allow_spaces: bool = True, silent: bool = False, allow_empty: bool = False, halal: bool = True) -> bool:
+    if inp is None:
+        return False
 
-        if halal and ('neg' in inp or 'nig' in inp):
-            continue
+    if inp == '' and allow_empty:
+        return True
 
-        if len(inp) < min_len:
-            if not silent:
-                print('Eingabe zu kurz')
-            continue
+    if halal and ('neg' in inp or 'nig' in inp):
+        return False
 
-        if len(inp) > max_len:
-            if not silent:
-                print('Eingabe zu lang')
-            continue
+    if len(inp) < min_len:
+        if not silent:
+            print('Eingabe zu kurz')
+        return False
 
-        if not allow_spaces and ' ' in inp:
-            if not silent:
-                print('Eingabe enthält Abstände')
-            continue
+    if len(inp) > max_len:
+        if not silent:
+            print('Eingabe zu lang')
+        return False
 
-        return inp
+    if not allow_spaces and ' ' in inp:
+        if not silent:
+            print('Eingabe enthält Abstände')
+        return False
+
+    return True
 
 
 def type_input(prompt: str, type: type, allow_empty: bool = False) -> Any:
