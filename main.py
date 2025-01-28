@@ -23,13 +23,15 @@ class GUI:
 
         self.chat_frame: Frame = Frame(
             self.notebook)
-        self.chat: chat.GUI = chat.GUI(
-            self.chat_frame, 'c_chat_test.json', pswd, 'Ich')
-        # self.chat_frame.pack(fill='both', expand=True)
+        self.chat_input_frame: Frame = Frame(
+            self.notebook)
 
-        self.chat_input: chat.InputGUI = chat.InputGUI(self.chat_frame)
-        self.chat_frame.pack(fill='both', expand=True)
-        self.chat_frame.pack_forget()
+        self.chat = chat.GUI(
+            self.chat_frame, 'c_chat_test.json', pswd, 'Ich')
+
+        self.chat_input: chat.InputGUI = chat.InputGUI(
+            self.chat_input_frame, self.chat_frame)
+        self.chat_input_frame.pack(fill='both', expand=True)
 
         self.notebook.add(self.chat_frame, text='Chat', state='normal')
         print('Chat added')

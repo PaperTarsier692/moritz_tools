@@ -381,7 +381,7 @@ class GUI:
 
 
 class InputGUI:
-    def __init__(self, root: Frame) -> None:
+    def __init__(self, root: Frame, show: Frame) -> None:
         self.root = root
         self.user_text: Text = Text(self.root, height=1, width=20)
         self.user_text.pack(anchor='center', pady=2)
@@ -392,9 +392,13 @@ class InputGUI:
         self.confirm: Button = Button(
             self.root, command=self.confirm_callback, text='Confirm')
         self.confirm.pack(anchor='center', pady=2)
+        self.show_frame: Frame = show
 
     def confirm_callback(self) -> None:
         print('MHM')
+        for child in self.root.winfo_children():
+            child.pack_forget()
+        self.show_frame.pack(fill='both', expand=True)
 
 
 only_colours: list[str] = ['black', 'blue', 'cyan',
