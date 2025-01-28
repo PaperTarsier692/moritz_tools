@@ -3,8 +3,9 @@ ensure_venv(__file__)
 
 from tkinter.ttk import Notebook, Frame
 from ttkthemes import ThemedTk, ThemedStyle
-import chat
+from papertools import File
 import config
+import chat
 
 fix_res()
 
@@ -30,7 +31,7 @@ class GUI:
 
         self.config_frame: Frame = Frame(self.notebook)
         self.config: config.GUI = config.GUI(
-            self.config_frame, self.root.get_themes())
+            self.config_frame, self.root.get_themes(), self.save_callback)
         self.config_frame.pack(fill='both', expand=True)
         self.notebook.add(self.config_frame, text='Config', state='normal')
         print('Config added')
@@ -60,8 +61,10 @@ class GUI:
         for child in widget.winfo_children():
             self.apply_theme_widgets(child, bg_color, fg_color)
 
-    def add_categorys(self, theme):
-        pass
+    def save_callback(self, cfg: dict) -> None:
+        print('Config gespeichert')
+        self.apply_theme(cfg['common']['theme'])
 
 
-gui: GUI = GUI('equilux')
+cfg: dict = File('settings.json').json_r()
+gui: GUI = GUI(cfg['common']['theme'])

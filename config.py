@@ -1,17 +1,19 @@
 from mt import ensure_venv
 ensure_venv(__file__)
 
-from papertools import File
 from tkinter.ttk import Button, Label, Radiobutton, Frame
 from tkinter import Text, BooleanVar
-from ttkthemes import ThemedTk, ThemedStyle
+from ttkthemes import ThemedStyle
+from papertools import File
+from typing import Callable
 
 
 class GUI:
-    def __init__(self, root: Frame, themes: list[str]) -> None:
+    def __init__(self, root: Frame, themes: list[str], save_callback: Callable) -> None:
         self.root: Frame = root
         self.themes: list[str] = themes
         self.style: ThemedStyle = ThemedStyle(root)
+        self.save_callback: Callable = save_callback
 
         self.main_frame: Frame = Frame(self.root)
         self.main_frame.pack(fill='both', expand=True)
@@ -87,3 +89,4 @@ class GUI:
                     self.cfg[group][name] = self.entries[group][name].get(
                         '1.0', 'end-1c')
         File('config.json').json_w(self.cfg)
+        self.save_callback(self.cfg)
