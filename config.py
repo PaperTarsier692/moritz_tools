@@ -1,31 +1,12 @@
-from mt import ensure_venv, fix_res, theme
+from mt import ensure_venv, fix_res
 ensure_venv(__file__)
 
-from papertools import File, Cfg
-from sys import argv
+from papertools import File
+from tkinter.ttk import Button, Label, Radiobutton
+from tkinter import Text, Frame, BooleanVar
+from ttkthemes import ThemedTk, ThemedStyle
 
 fix_res()
-
-config: str = '''
-[chat]
-user=
-theme=
-
-[ttt]
-user=
-clear=
-confirm=
-
-[sth]
-url=
-user=
-context=
-shortcut=
-
-[other]
-path=
-unc=
-'''
 
 
 class GUI:
@@ -112,8 +93,8 @@ class GUI:
                 if isinstance(self.entries[group][name], BooleanVar):
                     self.cfg[group][name] = self.entries[group][name].get()
                 elif name == 'theme':
-                    if theme(self.entries[group][name].get(
-                            '1.0', 'end-1c'), True).exists:
+                    if self.entries[group][name].get(
+                            '1.0', 'end-1c') in self.root.get_themes():
                         self.cfg[group][name] = self.entries[group][name].get(
                             '1.0', 'end-1c')
                         self.entries[group][name].config(bg=self.style.lookup(
@@ -135,14 +116,4 @@ class GUI:
         File('config.json').json_w(self.cfg)
 
 
-if __name__ == '__main__':
-    from tkinter.ttk import Button, Label, Radiobutton
-    from tkinter import Text, Frame, BooleanVar
-    from ttkthemes import ThemedTk, ThemedStyle
-    gui: GUI = GUI()
-
-elif len(argv) > 1:
-    cat: str = argv[1]
-    cfg: dict = Cfg.path_to_dict('config.cfg')[cat]
-    if any([value.strip() == '' for value in cfg.values()]):
-        print('Nicht voll')
+gui: GUI = GUI()
