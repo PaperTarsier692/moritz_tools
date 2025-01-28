@@ -71,7 +71,7 @@ def check_str(inp: Union[str, None], min_len: int = 0, max_len: int = 0, allow_s
             print('Eingabe zu kurz')
         return False
 
-    if len(inp) > max_len:
+    if max_len > 0 and len(inp) > max_len:
         if not silent:
             print('Eingabe zu lang')
         return False
