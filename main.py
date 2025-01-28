@@ -14,6 +14,7 @@ class GUI:
     def __init__(self, theme: str) -> None:
         self.theme: str = theme
         self.root: ThemedTk = ThemedTk(theme=self.theme)
+        self.root.geometry('800x600')
         self.style: ThemedStyle = ThemedStyle(self.root, theme=self.theme)
 
         self.notebook: Notebook = Notebook(self.root)
