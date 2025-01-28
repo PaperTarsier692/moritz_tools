@@ -1,4 +1,4 @@
-from mt import ensure_venv, test_env, y_n, better_input, better_getpass, current_path, popup, fix_res, path, generate_random_string
+from mt import ensure_venv, test_env, y_n, better_input, better_getpass, current_path, popup, path, generate_random_string
 ensure_venv(__file__)
 
 from tkinter.ttk import Frame, PanedWindow, Button
