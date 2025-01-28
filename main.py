@@ -26,7 +26,7 @@ class GUI:
         self.chat = chat.GUI(self.chat_frame)
 
         self.chat_input: chat.InputGUI = chat.InputGUI(
-            self.chat_input_frame, self.chat)
+            self.chat_input_frame, self.chat, self.style)
         self.chat_input_frame.pack(fill='both', expand=True)
 
         self.notebook.add(self.chat_frame, text='Chat', state='normal')

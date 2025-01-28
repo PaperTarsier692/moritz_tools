@@ -1,8 +1,9 @@
-from mt import ensure_venv, test_env, y_n, better_input, better_getpass, current_path, popup, path, generate_random_string, deprecated
+from mt import ensure_venv, test_env, y_n, better_input, better_getpass, current_path, popup, path, generate_random_string, deprecated, check_str
 ensure_venv(__file__)
 deprecated(__name__)
 
 from tkinter.ttk import Frame, PanedWindow, Button, Label
+from ttkthemes import ThemedStyle
 from tkinter import Text
 from papertools import Console, File, Dir
 from cryptography.fernet import Fernet
@@ -379,7 +380,7 @@ class GUI:
 
 
 class InputGUI:
-    def __init__(self, root: Frame, chat: GUI) -> None:
+    def __init__(self, root: Frame, chat: GUI, style: ThemedStyle) -> None:
         self.root = root
         self.user_label: Label = Label(self.root, text="User:")
         self.user_label.pack(anchor='center', pady=2)
@@ -399,9 +400,31 @@ class InputGUI:
             self.root, command=self.confirm_callback, text='Confirm')
         self.confirm.pack(anchor='center', pady=2)
         self.chat: GUI = chat
+        self.style: ThemedStyle = style
+
+    def check_values(self, values: tuple[str, str, str]) -> bool:
+        user, key, path = values
+        out: bool = True
+        bg_color = self.style.lookup('TFrame', 'background') or '#000'
+        self.user_text.config(bg=bg_color)
+        self.pswd_text.config(bg=bg_color)
+        self.chat_text.config(bg=bg_color)
+        if not check_str(user, 3, 12, False):
+            self.user_text.config(bg='#800')
+            out = False
+        if not check_str(key, 4, 20, False):
+            self.pswd_text.config(bg='#800')
+            out = False
+        if not check_str(path, 2, allow_spaces=False):
+            self.chat_text.config(bg='#800')
+            out = False
+        return out
 
     def confirm_callback(self) -> None:
         print('MHM')
+        if not self.check_values(self.get_values()):
+            print('Falscher Input')
+            return
         for child in self.root.winfo_children():
             child.pack_forget()
         self.root.pack_forget()
