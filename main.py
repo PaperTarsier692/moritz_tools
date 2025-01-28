@@ -43,17 +43,24 @@ class GUI:
         print('Config added')
 
         print('Finished adding categories')
+        self.notebook.bind('<<NotebookTabChanged>>', self.set_name)
         self.apply_theme(self.theme)
         self.root.mainloop()
         self.chat.chat.close()
 
+    def set_name(self, *args) -> None:
+        print('Titel aktualisiert')
+        self.root.title(
+            f'{self.notebook.tab(self.notebook.index("current"), "text")} - {self.theme.capitalize()}')
+
     def apply_theme(self, theme: str) -> None:
-        self.root.title(f'Config - {theme.capitalize()}')
+        self.theme = theme
         self.root.set_theme(theme)
         self.style.theme_use(theme)
         bg_color = self.style.lookup('TFrame', 'background') or '#000'
         fg_color = self.style.lookup('TLabel', 'foreground') or '#FFF'
         self.apply_theme_widgets(self.root, bg_color, fg_color)
+        self.set_name()
 
     def apply_theme_widgets(self, widget, bg_color, fg_color):
         try:
