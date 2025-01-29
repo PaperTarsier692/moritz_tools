@@ -1,4 +1,4 @@
-from mt import ensure_venv, y_n, better_input, type_input, test_env, current_path, path
+from mt import ensure_venv, y_n, better_input, type_input, path
 ensure_venv(__file__)
 
 import os
@@ -207,10 +207,11 @@ else:
     generate_config()
 
 print(f'Verfügbare Spiele: {", ".join(get_free_games())}')
+SHORT_PATH: str = better_input('Pfad: ', 2, 10, False)
 PATH: str = os.path.join(
-    path, f't_{better_input('Pfad: ', 2, 10, False)}.json')
+    path, f't_{SHORT_PATH}.json')
 
-if os.path.basename(PATH).removesuffix('.json').removeprefix('t_') in get_free_games():
+if SHORT_PATH in get_free_games():
     print('Lädt Spiel')
     file: dict = File(PATH).json_r()
     file['p2'] = USER
