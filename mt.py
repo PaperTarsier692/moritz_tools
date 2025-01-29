@@ -1,6 +1,5 @@
 import os
 import sys
-from papertools import File
 from typing import Any, Callable, Union
 
 test_env: bool = os.path.exists('.test_env')
@@ -152,6 +151,7 @@ def deprecated(name: str) -> None:
 
 class Config:
     def __init__(self) -> None:
+        from papertools import File
         self.file: File = File('config.json')
         self.check_cfg()
         self.cfg: dict[str, Any] = self.file.json_r()
