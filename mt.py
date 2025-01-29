@@ -169,9 +169,10 @@ class Config:
         self.cfg = self.file.json_r()
         return self.cfg
 
-    def write(self, cfg: dict[str, Any]) -> None:
-        self.cfg = cfg
-        self.file.json_w(cfg)
+    def write(self, cfg: Union[dict[str, Any], None] = None) -> None:
+        if cfg is not None:
+            self.cfg = cfg
+        self.file.json_w(self.cfg)
 
     def smart_get(self, inp: str, path: str, **kwargs) -> Any:
         if inp.strip() == '':
@@ -179,7 +180,7 @@ class Config:
                 return self.get_value_from_path(path)
             except:
                 if kwargs.get('error_callback') != None:
-                    kwargs['error_callback'](kwargs)
+                    kwargs['error_callback'](**kwargs)
                 return ''
 
         else:
@@ -196,7 +197,7 @@ class Config:
             value = value[key]
         return value
 
-    def write_value_to_path(self, path: str, value: Any) -> None:
+    def write_value_to_path(self, path: str, value: Any, save: bool = True) -> None:
         keys: list[str] = path.strip('/').split('/')
         d: dict[str, Any] = self.cfg
         for key in keys[:-1]:
@@ -204,3 +205,5 @@ class Config:
                 d[key] = {}
             d = d[key]
         d[keys[-1]] = value
+        if save:
+            self.write()

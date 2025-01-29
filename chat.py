@@ -1,4 +1,4 @@
-from mt import ensure_venv, y_n, popup, generate_random_string, deprecated, check_str
+from mt import ensure_venv, y_n, popup, generate_random_string, deprecated, check_str, Config
 ensure_venv(__file__)
 deprecated(__name__)
 
@@ -389,21 +389,30 @@ class InputGUI:
         self.style: ThemedStyle = style
 
     def check_values(self, values: tuple[str, str, str]) -> bool:
+        global out
         user, key, path = values
-        out: bool = True
+        out = True
         bg_color = self.style.lookup('TFrame', 'background') or '#000'
         self.user_text.config(bg=bg_color)
         self.pswd_text.config(bg=bg_color)
         self.chat_text.config(bg=bg_color)
-        if not check_str(user, 3, 12, False):
-            self.user_text.config(bg='#800')
+
+        def mark_wrong(**kwargs) -> None:
+            print(f'Mark wrong: {kwargs}')
+            global out
             out = False
+            kwargs['mark'].config(bg='#800')  # type: ignore
+
+        if not check_str(user, 3, 12, False, allow_empty=True):
+            mark_wrong(mark=self.chat_text)
+        else:
+            self.user_text.delete('1.0', 'end')
+            self.user_text.insert('1.0', Config().smart_get(user, 'chat/user',
+                                                            error_callback=mark_wrong, mark=self.user_text))
         if not check_str(key, 4, 20, False):
-            self.pswd_text.config(bg='#800')
-            out = False
+            mark_wrong(mark=self.pswd_text)
         if not check_str(path, 2, allow_spaces=False):
-            self.chat_text.config(bg='#800')
-            out = False
+            mark_wrong(mark=self.chat_text)
         return out
 
     def confirm_callback(self) -> None:
