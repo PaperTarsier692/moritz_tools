@@ -198,6 +198,9 @@ class Config:
 
     def write_value_to_path(self, path: str, value: Any) -> None:
         keys: list[str] = path.strip('/').split('/')
+        d: dict[str, Any] = self.cfg
         for key in keys[:-1]:
-            value = value[key]
-        value[keys[-1]] = value
+            if key not in d or not isinstance(d[key], dict):
+                d[key] = {}
+            d = d[key]
+        d[keys[-1]] = value
