@@ -3,7 +3,6 @@ ensure_venv(__file__)
 
 from ttkthemes import ThemedTk, ThemedStyle
 from tkinter.ttk import Notebook, Frame
-from papertools import File
 import config
 import chat
 

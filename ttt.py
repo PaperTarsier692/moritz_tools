@@ -2,14 +2,29 @@ from mt import ensure_venv, y_n, better_input, type_input, path
 ensure_venv(__file__)
 
 import os
+import sys
 from time import sleep
 from copy import deepcopy
-from typing import Literal, Any
 from papertools import Console, File, Dir
+from typing import Literal, Any, TextIO, Union
+
+
+class OutputRedirector:
+    def __init__(self, text_widget):
+        self.text_widget = text_widget
+
+    def write(self, string):
+        self.text_widget.insert('end', string)
+        self.text_widget.see('end')
+
+    def flush(self):
+        pass
 
 
 class TTT:
-    def __init__(self) -> None:
+    def __init__(self, stdout: Union[TextIO, None] = None) -> None:
+        if stdout is not None:
+            sys.stdout = stdout
         self.stgs_file: File = File("config.json")
         if self.stgs_file.exists():
             try:
