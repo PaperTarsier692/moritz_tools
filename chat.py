@@ -1,4 +1,4 @@
-from mt import ensure_venv, y_n, popup, generate_random_string, deprecated, check_str, Config
+from mt import ensure_venv, y_n, popup, generate_random_string, deprecated, check_str, Config, path
 ensure_venv(__file__)
 deprecated(__name__)
 
@@ -427,7 +427,10 @@ class InputGUI:
         self.chat.login(self.get_values())
 
     def get_values(self) -> tuple[str, str, str]:
-        return self.user_text.get('1.0', 'end-1c'), self.pswd_text.get('1.0', 'end-1c'), self.chat_text.get('1.0', 'end-1c')
+        chat: str = self.chat_text.get('1.0', 'end-1c')
+        if not chat.endswith('.json'):
+            chat = f'{path}/c_{chat}.json'
+        return self.user_text.get('1.0', 'end-1c'), self.pswd_text.get('1.0', 'end-1c'), chat
 
 
 only_colours: list[str] = ['black', 'blue', 'cyan',
