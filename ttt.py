@@ -4,7 +4,7 @@ ensure_venv(__file__)
 import os
 from time import sleep
 from copy import deepcopy
-from typing import Literal
+from typing import Literal, Any
 from papertools import Console, File, Dir
 
 
@@ -13,9 +13,9 @@ class TTT:
         self.stgs_file: File = File("config.json")
         if self.stgs_file.exists():
             try:
-                stgs: dict = self.stgs_file.json_r()['ttt']
-                self.confirm = stgs['confirm']
-                self.user = stgs['user']
+                stgs: dict[str, Any] = self.stgs_file.json_r()['ttt']
+                self.confirm: bool = stgs['confirm']
+                self.user: str = stgs['user']
                 self.user = better_input(
                     'Name: ', 3, 10, False, True, True) or self.user
             except:
@@ -59,7 +59,6 @@ class TTT:
             self.self: int = 1
             print(f'Spieler {file["p2"]} ist beigetreten')
 
-        current: int = file['current']
         p1: str = file['p1']
         p2: str = file['p2']
         symbols: list[str] = [' ', 'X', 'O']
