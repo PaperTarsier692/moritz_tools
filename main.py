@@ -1,4 +1,4 @@
-from mt import ensure_venv, fix_res
+from mt import ensure_venv, fix_res, Config
 ensure_venv(__file__)
 
 from ttkthemes import ThemedTk, ThemedStyle
@@ -77,5 +77,10 @@ class GUI:
         self.apply_theme(cfg['common']['theme'])
 
 
-cfg: dict = File('config.json').json_r()
-gui: GUI = GUI(cfg['common']['theme'])
+cfg: Config = Config()
+try:
+    assert cfg.get_value_from_path('common/theme') == None
+except:
+    cfg.write_value_to_path('common/theme', 'equilux')
+
+gui: GUI = GUI(cfg.cfg['common']['theme'])
