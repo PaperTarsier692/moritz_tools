@@ -64,7 +64,7 @@ def check_str(inp: Union[str, None], min_len: int = 0, max_len: int = 0, allow_s
     if inp == '' and allow_empty:
         return True
 
-    if halal and ('neg' in inp or 'nig' in inp):
+    if halal and ('neg' in inp.lower() or 'nig' in inp.lower()):
         return False
 
     if len(inp) < min_len:
