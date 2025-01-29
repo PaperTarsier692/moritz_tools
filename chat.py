@@ -387,6 +387,13 @@ class InputGUI:
         self.confirm.pack(anchor='center', pady=2)
         self.chat: GUI = chat
         self.style: ThemedStyle = style
+        self.user_text.bind("<Tab>", self.focus_next_widget)
+        self.pswd_text.bind("<Tab>", self.focus_next_widget)
+        self.chat_text.bind("<Tab>", self.focus_next_widget)
+
+    def focus_next_widget(self, event):
+        event.widget.tk_focusNext().focus()
+        return "break"
 
     def check_values(self, values: tuple[str, str, str]) -> bool:
         global out
