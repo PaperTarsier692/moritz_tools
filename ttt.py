@@ -8,13 +8,8 @@ from typing import Literal
 from papertools import Console, File, Dir
 
 
-def clear() -> None:
-    if CLEAR:
-        Console.clear()
-
-
 def ausgabe(game: list[list[int]], mode: Literal['xy', 'y'] = 'xy') -> None:
-    clear()
+    Console.clear()
     symbols: list[str] = [' ', 'X', 'O', '?']
     colours: list = ['red', 'red', 'green', 'yellow']
     for y in range(COL):
@@ -178,17 +173,16 @@ def get_free_games() -> list[str]:
     return out
 
 
-global CONFIRM, USER, CLEAR
+global CONFIRM, USER
 
 
 def generate_config() -> None:
-    global CONFIRM, USER, CLEAR
+    global CONFIRM, USER
     print("config.json wurde erstellt, bitte fülle die Felder aus.")
     inp: dict = stgs_file.json_r()
     CONFIRM = y_n('Bestätigungsmodus an? (Y/n)')
     USER = better_input('Name: ', 3, 10, False)
-    CLEAR = y_n('Clear Modus an? (Y/n)')
-    inp['ttt'] = {"confirm": CONFIRM, "user": USER, "clear": CLEAR}
+    inp['ttt'] = {"confirm": CONFIRM, "user": USER}
     stgs_file.json_w(inp)
 
 
@@ -198,7 +192,6 @@ if stgs_file.exists():
         stgs: dict = stgs_file.json_r()['ttt']
         CONFIRM = stgs['confirm']
         USER = stgs['user']
-        CLEAR = stgs['clear']
         USER = better_input('Name: ', 3, 10, False, True, True) or USER
     except:
         generate_config()
