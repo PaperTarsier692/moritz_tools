@@ -1,5 +1,6 @@
 import os
 import sys
+from papertools import File
 from typing import Any, Callable, Union
 
 test_env: bool = os.path.exists('.test_env')
@@ -8,11 +9,12 @@ venv: bool = hasattr(sys, 'real_prefix') or (
 current_path: str = os.path.abspath(
     os.path.join(os.path.abspath(__file__), os.pardir))
 windows: bool = os.name == 'nt'
-try:
-    from papertools import File
-    path: str = File('config.json').json_r().get('path') or 'Y:/2BHIT/test/'
-except:
-    path: str = 'Y:/2BHIT/test/'
+
+path: str = 'Y:/2BHIT/test/' if not test_env else os.path.join(
+    current_path, 'test')
+
+if test_env and not os.path.exists(path):
+    os.makedirs(path)
 
 
 def y_n(inp: str, allow_empty: bool = False) -> bool:
