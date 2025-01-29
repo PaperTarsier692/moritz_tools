@@ -387,9 +387,10 @@ class InputGUI:
         self.confirm.pack(anchor='center', pady=2)
         self.chat: GUI = chat
         self.style: ThemedStyle = style
-        self.user_text.bind("<Tab>", self.focus_next_widget)
-        self.pswd_text.bind("<Tab>", self.focus_next_widget)
-        self.chat_text.bind("<Tab>", self.focus_next_widget)
+        for text in self.root.winfo_children():
+            if isinstance(text, Text):
+                text.bind("<Tab>", self.focus_next_widget)
+                text.bind("<Return>", self.confirm_callback)
 
     def focus_next_widget(self, event):
         event.widget.tk_focusNext().focus()
@@ -411,18 +412,18 @@ class InputGUI:
             kwargs['mark'].config(bg='#800')  # type: ignore
 
         if not check_str(user, 3, 12, False, allow_empty=True):
-            mark_wrong(mark=self.chat_text)
+            mark_wrong(mark=self.user_text)
         else:
             self.user_text.delete('1.0', 'end')
             self.user_text.insert('1.0', Config().smart_get(user, 'chat/user',
                                                             error_callback=mark_wrong, mark=self.user_text))
         if not check_str(key, 4, 20, False):
             mark_wrong(mark=self.pswd_text)
-        if not check_str(path, 2, allow_spaces=False):
+        if not check_str(path, 2):
             mark_wrong(mark=self.chat_text)
         return out
 
-    def confirm_callback(self) -> None:
+    def confirm_callback(self, event=None) -> None:
         print('MHM')
         if not self.check_values(self.get_values()):
             print('Falscher Input')
@@ -434,10 +435,10 @@ class InputGUI:
         self.chat.login(self.get_values())
 
     def get_values(self) -> tuple[str, str, str]:
-        chat: str = self.chat_text.get('1.0', 'end-1c')
+        chat: str = self.chat_text.get('1.0', 'end-1c').strip()
         if not chat.endswith('.json'):
             chat = f'{path}/c_{chat}.json'
-        return self.user_text.get('1.0', 'end-1c'), self.pswd_text.get('1.0', 'end-1c'), chat
+        return self.user_text.get('1.0', 'end-1c').strip(), self.pswd_text.get('1.0', 'end-1c').strip(), chat
 
 
 only_colours: list[str] = ['black', 'blue', 'cyan',
