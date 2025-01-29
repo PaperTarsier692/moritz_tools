@@ -244,6 +244,7 @@ p1: str = file['p1']
 p2: str = file['p2']
 symbols: list[str] = [' ', 'X', 'O']
 symbols2: list[str] = [' ', 'O', 'X']
+end: bool = False
 
 while True:
     while not file['current'] == SELF:
@@ -251,6 +252,10 @@ while True:
         sleep(0.5)
     game: list[list[int]] = file['game']
     ausgabe(game, 'y' if GRAVITY else 'xy')
+    if won(symbols2[SELF + 1], game):
+        print(f'{p2} hat gewonnen!!!')
+        input()
+        exit()
 
     if GRAVITY:
         x = turn_x(game)
@@ -269,7 +274,9 @@ while True:
     ausgabe(game, 'y' if GRAVITY else 'xy')
     if won(symbols[SELF + 1], game):
         print(f'{p1} hat gewonnen!!!')
-    elif won(symbols2[SELF + 1], game):
-        print(f'{p2} hat gewonnen!!!')
+        end = True
 
     File(PATH).json_w(file)
+    if end:
+        input()
+        exit()
