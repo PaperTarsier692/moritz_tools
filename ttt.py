@@ -167,14 +167,14 @@ def add_w_gravity(game: list[list[int]], x: int, turn: int) -> None:
 
 
 def get_free_games() -> list[str]:
-    games: list[str] = [file for file in Dir.listfiles(current_path if test_env else path)
+    games: list[str] = [file for file in Dir.listfiles(path)
                         if file.startswith('t_') and file.endswith('.json')]
     out: list[str] = []
     for file in games:
         content: dict = File(os.path.join(
-            current_path if test_env else path, file)).json_r()
+            path, file)).json_r()
         if content.get('p2') == '':
-            out.append(file.replace('t_', '', 1).removesuffix('.json'))
+            out.append(file.removeprefix('t_').removesuffix('.json'))
     return out
 
 
@@ -207,16 +207,8 @@ else:
     generate_config()
 
 print(f'Verfügbare Spiele: {", ".join(get_free_games())}')
-if test_env:
-    PATH: str = better_input('Pfad: ', allow_empty=True)
-    if PATH == '':
-        PATH = os.path.join(current_path, 't_ttt.json')
-    else:
-        PATH = os.path.join(current_path, f't_{PATH}.json')
-else:
-    PATH: str = better_input('Pfad: ', 2, 10, False)
-    PATH = os.path.join(path, f't_{PATH}.json')
-
+PATH: str = os.path.join(
+    path, f't_{better_input('Pfad: ', 2, 10, False)}.json')
 
 if os.path.basename(PATH).removesuffix('.json').removeprefix('t_') in get_free_games():
     print('Lädt Spiel')
