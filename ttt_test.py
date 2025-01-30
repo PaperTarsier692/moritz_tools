@@ -1,21 +1,21 @@
-from mt import ensure_venv, fix_res, Config, path, check_str
+from mt import ensure_venv, fix_res, Config, path, check_str, deprecated
 ensure_venv(__file__)
+deprecated(__name__)
 
 from ttkthemes import ThemedTk, ThemedStyle
-from tkinter.ttk import Button
+from tkinter.ttk import Button, Frame
 from papertools import File, Dir
 from typing import Union
-from tkinter import Text, Label, Frame, Event
+from tkinter import Text, Label, Event
 import os
 
 fix_res()
 
 
 class TTT:
-    def __init__(self, root: ThemedTk) -> None:
-        self.root: ThemedTk = root
+    def __init__(self, root: Frame) -> None:
+        self.root: Frame = root
         self.root_frame: Frame = Frame(self.root)
-        self.root.geometry('800x800')
         self.path: str = os.path.join(path, 't_ttt.json')
         self.user: str = 'User1'
         self.rows: int = 4
@@ -26,7 +26,6 @@ class TTT:
                                       for _ in range(self.rows)]
         self.buttons: list[list[Button]] = []
         self.generate_buttons()
-        self.root.mainloop()
 
     def new_game(self) -> dict:
         settings: dict = {
@@ -57,12 +56,12 @@ class TTT:
             self.buttons.append([])
             for x in range(self.cols):
                 button = Button(
-                    self.root, text=f'{x} | {y}', command=lambda x=x, y=y: self.button_callback(x, y))
+                    self.root_frame, text=f'{x} | {y}', command=lambda x=x, y=y: self.button_callback(x, y))
                 button.grid(row=y * 2, column=x * 2, rowspan=2,
                             columnspan=2, sticky='nsew')
                 self.buttons[y].append(button)
-                self.root.grid_rowconfigure(y * 2, weight=1)
-                self.root.grid_columnconfigure(x * 2, weight=1)
+                self.root_frame.grid_rowconfigure(y * 2, weight=1)
+                self.root_frame.grid_columnconfigure(x * 2, weight=1)
 
     def button_callback(self, x: int, y: int) -> None:
         print(f'Button {x} | {y} pressed')
@@ -202,6 +201,3 @@ class InputGUI:
         if not path.endswith('.json'):
             path = f'{path}/t_{path}.json'
         return self.user_text.get('1.0', 'end-1c').strip(), self.pswd_text.get('1.0', 'end-1c').strip(), path
-
-
-TTT(ThemedTk(theme='equilux'))

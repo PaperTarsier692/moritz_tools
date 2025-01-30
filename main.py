@@ -5,6 +5,7 @@ from ttkthemes import ThemedTk, ThemedStyle
 from tkinter.ttk import Notebook, Frame
 import config
 import chat
+import ttt_test as ttt
 
 fix_res()
 
@@ -31,6 +32,14 @@ class GUI:
 
         self.notebook.add(self.chat_frame, text='Chat', state='normal')
         print('Chat added')
+
+        self.ttt_frame: Frame = Frame(self.notebook)
+        self.ttt: ttt.TTT = ttt.TTT(self.ttt_frame)
+        self.ttt_input: ttt.InputGUI = ttt.InputGUI(
+            self.ttt_frame, self.ttt, self.style)
+        self.ttt_frame.pack(fill='both', expand=True)
+        self.notebook.add(self.ttt_frame, text='TTT', state='normal')
+        print('TTT added')
 
         self.config_frame: Frame = Frame(self.notebook)
         self.config: config.GUI = config.GUI(
