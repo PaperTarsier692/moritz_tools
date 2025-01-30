@@ -208,6 +208,7 @@ class GUI:
     def __init__(self, root: Frame) -> None:
         self.messages: list[str] = []
         self.root: Frame = root
+        self.logged_in: bool = False
 
         self.paned_window: PanedWindow = PanedWindow(
             self.root, orient='horizontal')
@@ -250,6 +251,7 @@ class GUI:
     def login(self, values: tuple[str, str, str]) -> None:
         self.chat: Chat = Chat(values[2], values[1], values[0], self)
         self.user: str = values[0]
+        self.logged_in = True
         self.update()
         self.add_cmds()
         self.add_colours()

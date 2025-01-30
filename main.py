@@ -43,7 +43,8 @@ class GUI:
         self.notebook.bind('<<NotebookTabChanged>>', self.set_name)
         self.apply_theme(self.theme)
         self.root.mainloop()
-        self.chat.chat.close()
+        if self.chat.logged_in:
+            self.chat.chat.close()
 
     def set_name(self, *args) -> None:
         print('Titel aktualisiert')
