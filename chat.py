@@ -369,7 +369,7 @@ class GUI:
 
 class InputGUI:
     def __init__(self, root: Frame, chat: GUI, style: ThemedStyle) -> None:
-        self.root = root
+        self.root: Frame = root
         self.user_label: Label = Label(self.root, text="User:")
         self.user_label.pack(anchor='center', pady=2)
         self.user_text: Text = Text(self.root, height=1, width=20)
