@@ -3,7 +3,8 @@ ensure_venv(__file__)
 deprecated(__name__)
 
 from ttkthemes import ThemedTk, ThemedStyle
-from tkinter.ttk import Button, Frame
+from tkinter.ttk import Button, Frame, OptionMenu
+from tkinter import StringVar
 from papertools import File, Dir
 from typing import Union
 from tkinter import Text, Label, Event
@@ -128,6 +129,7 @@ class TTT:
 class InputGUI:
     def __init__(self, root: Frame, ttt: TTT, style: ThemedStyle) -> None:
         self.root: Frame = root
+        self.ttt: TTT = ttt
         self.user_label: Label = Label(self.root, text="User:")
         self.user_label.pack(anchor='center', pady=2)
         self.user_text: Text = Text(self.root, height=1, width=20)
@@ -138,14 +140,17 @@ class InputGUI:
         self.pswd_text: Text = Text(self.root, height=1, width=20)
         self.pswd_text.pack(anchor='center', pady=2)
 
-        self.path_label: Label = Label(self.root, text="Chatroom:")
+        self.path_label: Label = Label(self.root, text="Game:")
         self.path_label.pack(anchor='center', pady=2)
-        self.path_text: Text = Text(self.root, height=1, width=20)
-        self.path_text.pack(anchor='center', pady=2)
+        self.path_var: StringVar = StringVar(self.root)
+        self.path_var.set("Select a game")
+        self.path_menu: OptionMenu = OptionMenu(
+            self.root, self.path_var, *self.ttt.get_free_games())
+        self.path_menu.pack(anchor='center', pady=2)
+
         self.confirm: Button = Button(
             self.root, command=self.confirm_callback, text='Confirm')
         self.confirm.pack(anchor='center', pady=2)
-        self.ttt: TTT = ttt
         self.style: ThemedStyle = style
         for text in self.root.winfo_children():
             if isinstance(text, Text):
@@ -158,14 +163,12 @@ class InputGUI:
             event.widget.tag_add("sel", "1.0", "end")
         return "break"
 
-    def check_values(self, values: tuple[str, str, str]) -> bool:
+    def check_values(self, values: tuple[str, str]) -> bool:
         global out
-        user, key, path = values
+        user, path = values
         out = True
         bg_color = self.style.lookup('TFrame', 'background') or '#000'
         self.user_text.config(bg=bg_color)
-        self.pswd_text.config(bg=bg_color)
-        self.path_text.config(bg=bg_color)
 
         def mark_wrong(**kwargs) -> None:
             print(f'Mark wrong: {kwargs}')
@@ -179,10 +182,7 @@ class InputGUI:
             self.user_text.delete('1.0', 'end')
             self.user_text.insert('1.0', Config().smart_get(user, 'ttt/user',
                                                             error_callback=mark_wrong, mark=self.user_text))
-        if not check_str(key, 4, 20, False):
-            mark_wrong(mark=self.pswd_text)
-        if not check_str(path, 2):
-            mark_wrong(mark=self.path_text)
+
         return out
 
     def confirm_callback(self, event: Union[Event, None] = None) -> None:
@@ -196,8 +196,8 @@ class InputGUI:
         self.ttt.root_frame.pack(fill='both', expand=True)
         # self.ttt.login(self.get_values())
 
-    def get_values(self) -> tuple[str, str, str]:
-        path: str = self.path_text.get('1.0', 'end-1c').strip()
+    def get_values(self) -> tuple[str, str]:
+        path: str = self.path_var.get().strip()
         if not path.endswith('.json'):
             path = f'{path}/t_{path}.json'
-        return self.user_text.get('1.0', 'end-1c').strip(), self.pswd_text.get('1.0', 'end-1c').strip(), path
+        return self.user_text.get('1.0', 'end-1c').strip(), path
