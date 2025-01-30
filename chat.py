@@ -4,10 +4,10 @@ deprecated(__name__)
 
 from tkinter.ttk import Frame, PanedWindow, Button, Label
 from ttkthemes import ThemedStyle
-from tkinter import Text
+from tkinter import Text, Event
+from typing import Callable, Literal, Union
 from cryptography.fernet import Fernet
 from papertools import Console, File
-from typing import Callable, Literal
 from inspect import signature
 import base64
 import os
@@ -280,7 +280,7 @@ class GUI:
                 cmd.pack(side='top', fill='x', expand=True)
             self.cmds_open = True
 
-    def ttt_request(self, event) -> None:
+    def ttt_request(self, event: Event) -> None:
         print('TTT Request')
         pass
 
@@ -316,7 +316,7 @@ class GUI:
         self.right_tab.insert("end", msg)
         self.right_tab.config(state='disabled')
 
-    def on_enter(self, event=None) -> None:
+    def on_enter(self, event: Union[Event, None] = None) -> None:
         def inner() -> None:
             content: str = self.chat_input.get("1.0", "end-1c").strip()
             if len(content) > 128:
@@ -394,8 +394,10 @@ class InputGUI:
                 text.bind("<Tab>", self.focus_next_widget)
                 text.bind("<Return>", self.confirm_callback)
 
-    def focus_next_widget(self, event):
+    def focus_next_widget(self, event: Event) -> str:
         event.widget.tk_focusNext().focus()
+        if isinstance(event.widget, Text):
+            event.widget.tag_add("sel", "1.0", "end")
         return "break"
 
     def check_values(self, values: tuple[str, str, str]) -> bool:
@@ -425,7 +427,7 @@ class InputGUI:
             mark_wrong(mark=self.chat_text)
         return out
 
-    def confirm_callback(self, event=None) -> None:
+    def confirm_callback(self, event: Union[Event, None] = None) -> None:
         print('MHM')
         if not self.check_values(self.get_values()):
             print('Falscher Input')
