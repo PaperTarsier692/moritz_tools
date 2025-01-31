@@ -160,7 +160,6 @@ class InputGUI:
 
     def update_games(self) -> None:
         menu: Menu = self.path_menu['menu']
-        print(type(menu))
         menu.delete(0, 'end')
         for game in self.ttt.get_free_games():
             menu.add_command(
@@ -181,7 +180,6 @@ class InputGUI:
         self.user_text.config(bg=bg_color)
 
         def mark_wrong(**kwargs) -> None:
-            print(f'Mark wrong: {kwargs}')
             global out
             out = False
             kwargs['mark'].config(bg='#800')  # type: ignore
@@ -196,7 +194,6 @@ class InputGUI:
         return out
 
     def confirm_callback(self, event: Union[Event, None] = None) -> None:
-        print('MHM')
         if not self.check_values(self.get_values()):
             print('Falscher Input')
             return
