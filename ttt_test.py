@@ -3,8 +3,8 @@ ensure_venv(__file__)
 deprecated(__name__)
 
 from ttkthemes import ThemedTk, ThemedStyle
-from tkinter.ttk import Button, Frame, OptionMenu
-from tkinter import Menu, StringVar
+from tkinter.ttk import Button, Frame, OptionMenu, Radiobutton
+from tkinter import Menu, StringVar, BooleanVar
 from papertools import File, Dir
 from typing import Union
 from tkinter import Text, Label, Event
@@ -128,9 +128,11 @@ class TTT:
 
 class InputGUI:
     def __init__(self, root: Frame, ttt: TTT, style: ThemedStyle) -> None:
+        self.style: ThemedStyle = style
         self.root: Frame = root
         self.ttt: TTT = ttt
         self.logged_in: bool = False
+        self.create_screen: bool = False
         self.user_label: Label = Label(self.root, text="User:")
         self.user_label.pack(anchor='center', pady=2)
         self.user_text: Text = Text(self.root, height=1, width=20)
@@ -152,7 +154,6 @@ class InputGUI:
         self.confirm: Button = Button(
             self.root, command=self.confirm_callback, text='Confirm')
         self.confirm.pack(anchor='center', pady=2)
-        self.style: ThemedStyle = style
         for text in self.root.winfo_children():
             if isinstance(text, Text):
                 text.bind("<Tab>", self.focus_next_widget)
@@ -162,6 +163,11 @@ class InputGUI:
     def update_games(self) -> None:
         if self.path_var.get() == '':
             print('Neues Spiel ausgewählt')
+            if not self.create_screen:
+                self.create_game_gui()
+                self.create_screen = True
+        else:
+            self.create_screen = False
         menu: Menu = self.path_menu['menu']
         menu.delete(0, 'end')
         for game in self.ttt.get_free_games():
@@ -215,3 +221,41 @@ class InputGUI:
         if not path.endswith('.json'):
             path = f'{path}/t_{path}.json'
         return self.user_text.get('1.0', 'end-1c').strip(), path
+
+    def create_game_gui(self) -> None:
+        bg_color = self.style.lookup('TFrame', 'background') or '#000'
+        fg_color = self.style.lookup('TLabel', 'foreground') or '#FFF'
+        self.confirm.pack_forget()
+        self.rows_label: Label = Label(self.root, text="Rows:")
+        self.rows_label.pack(anchor='center', pady=2)
+        self.rows_text: Text = Text(self.root, height=1, width=20)
+        self.rows_text.pack(anchor='center', pady=2)
+
+        self.cols_label: Label = Label(self.root, text="Columns:")
+        self.cols_label.pack(anchor='center', pady=2)
+        self.cols_text: Text = Text(self.root, height=1, width=20)
+        self.cols_text.pack(anchor='center', pady=2)
+
+        self.needed_label: Label = Label(self.root, text="Needed:")
+        self.needed_label.pack(anchor='center', pady=2)
+        self.needed_text: Text = Text(self.root, height=1, width=20)
+        self.needed_text.pack(anchor='center', pady=2)
+
+        self.gravity_label: Label = Label(self.root, text="Gravity:")
+        self.gravity_label.pack(anchor='center', pady=2)
+        self.gravity_var: BooleanVar = BooleanVar()
+        self.gravity_var.set(False)
+        self.gravity_button: Radiobutton = Radiobutton(
+            self.root, text="True", variable=self.gravity_var, value=True)
+        self.gravity_button.pack(anchor='center', pady=2)
+        self.gravity_button: Radiobutton = Radiobutton(
+            self.root, text="False", variable=self.gravity_var, value=False)
+        self.gravity_button.pack(anchor='center', pady=2)
+
+        self.confirm: Button = Button(
+            self.root, command=self.confirm_callback, text='Confirm')
+        self.confirm.pack(anchor='center', pady=2)
+        for text in self.root.winfo_children():
+            if isinstance(text, Text):
+                text.bind("<Tab>", self.focus_next_widget)
+                text.bind("<Return>", self.confirm_callback)
