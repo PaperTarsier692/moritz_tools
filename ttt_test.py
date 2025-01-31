@@ -130,6 +130,7 @@ class InputGUI:
     def __init__(self, root: Frame, ttt: TTT, style: ThemedStyle) -> None:
         self.root: Frame = root
         self.ttt: TTT = ttt
+        self.logged_in: bool = False
         self.user_label: Label = Label(self.root, text="User:")
         self.user_label.pack(anchor='center', pady=2)
         self.user_text: Text = Text(self.root, height=1, width=20)
@@ -159,12 +160,17 @@ class InputGUI:
         self.update_games()
 
     def update_games(self) -> None:
+        if self.path_var.get() == '':
+            print('Neues Spiel ausgewählt')
         menu: Menu = self.path_menu['menu']
         menu.delete(0, 'end')
         for game in self.ttt.get_free_games():
             menu.add_command(
                 label=game, command=lambda value=game: self.path_var.set(value))
-        self.root.after(2500, self.update_games)
+        menu.add_command(label='Neues Spiel',
+                         command=lambda: self.path_var.set(''))
+        if not self.logged_in:
+            self.root.after(2500, self.update_games)
 
     def focus_next_widget(self, event: Event) -> str:
         event.widget.tk_focusNext().focus()
@@ -199,7 +205,7 @@ class InputGUI:
             return
         for child in self.root.winfo_children():
             child.pack_forget()
-        self.root.after_cancel(self.update_games)  # type: ignore
+        self.logged_in = True
         self.root.pack_forget()
         self.ttt.root_frame.pack(fill='both', expand=True)
         # self.ttt.login(self.get_values())

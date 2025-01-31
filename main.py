@@ -69,7 +69,7 @@ class GUI:
         self.apply_theme_widgets(self.root, bg_color, fg_color)
         self.set_name()
 
-    def apply_theme_widgets(self, widget, bg_color, fg_color):
+    def apply_theme_widgets(self, widget, bg_color, fg_color) -> None:
         try:
             widget.config(background=bg_color, foreground=fg_color)
         except:
