@@ -4,7 +4,7 @@ deprecated(__name__)
 
 from ttkthemes import ThemedTk, ThemedStyle
 from tkinter.ttk import Button, Frame, OptionMenu
-from tkinter import StringVar
+from tkinter import Menu, StringVar
 from papertools import File, Dir
 from typing import Union
 from tkinter import Text, Label, Event
@@ -156,6 +156,16 @@ class InputGUI:
             if isinstance(text, Text):
                 text.bind("<Tab>", self.focus_next_widget)
                 text.bind("<Return>", self.confirm_callback)
+        self.update_games()
+
+    def update_games(self) -> None:
+        menu: Menu = self.path_menu['menu']
+        print(type(menu))
+        menu.delete(0, 'end')
+        for game in self.ttt.get_free_games():
+            menu.add_command(
+                label=game, command=lambda value=game: self.path_var.set(value))
+        self.root.after(2500, self.update_games)
 
     def focus_next_widget(self, event: Event) -> str:
         event.widget.tk_focusNext().focus()
@@ -192,6 +202,7 @@ class InputGUI:
             return
         for child in self.root.winfo_children():
             child.pack_forget()
+        self.root.after_cancel(self.update_games)  # type: ignore
         self.root.pack_forget()
         self.ttt.root_frame.pack(fill='both', expand=True)
         # self.ttt.login(self.get_values())
