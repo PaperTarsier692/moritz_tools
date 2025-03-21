@@ -45,8 +45,10 @@ def check_sth_sc() -> None:
 def vsc() -> None:
     if os.path.exists(f'C:\\Users\\{getuser()}\\vsc\\'):
         print('VSC gefunden')
-        os.system(fr'''powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('Z:\Start Menu\Programs\Visual Studio Code\Visual Studio Code.lnk');$s.TargetPath='C:\Users\{
-                  getuser()}\vsc\code';$s.Save()"''')
+        subprocess.run(fr'''powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('Z:\Start Menu\Programs\Visual Studio Code\Visual Studio Code.lnk');$s.TargetPath='C:\Users\{
+                  getuser()}\vsc\code';$s.Save()"''',
+                       shell=True,
+                       creationflags=subprocess.CREATE_NO_WINDOW)  # type: ignore
 
 
 def log() -> None:
