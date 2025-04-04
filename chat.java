@@ -14,14 +14,11 @@ public class chat {
             File fp = new File(this.filePath);
             if (fp.createNewFile())
                 System.out.println("File created: " + fp.getName());
-            else
-                System.out.println("File already exists.");
 
             Scanner reader = new Scanner(fp);
             messages = "";
             while (reader.hasNextLine()) {
                 String data = reader.nextLine();
-                System.out.println(data);
                 messages += data + "\n";
             }
             chat.setText(messages);
