@@ -6,7 +6,7 @@ public class chat {
     String username;
     String password;
     String messages;
-    String filePath = "messages.txt";
+    String filePath = "Y:\\2BHIT\\test\\chat.txt";
     JTextArea chat = new JTextArea();
 
     private void readMessages() {
