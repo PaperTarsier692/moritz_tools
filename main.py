@@ -9,6 +9,8 @@ import ttt_test as ttt
 
 fix_res()
 
+# Discord Webhook (bitte nichts falsches reinschicken!!!!) https://discord.com/api/webhooks/1382264294795776052/MhjSO6QuPu4cgYxRkUhu568zKrx6v5mXcuAwTIf7S89XNyRvLg9s8NjFjCaUXPutd_6b
+
 
 class GUI:
     def __init__(self, theme: str) -> None:
