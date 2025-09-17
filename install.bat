@@ -5,7 +5,7 @@ git pull
 
 IF EXIST ".venv\Scripts\pip3.11.exe" (
     echo "Alte Python Version erkannt"
-    del /S .venv
+    del /F /Q /S .venv
 )
 
 python -m venv .venv
