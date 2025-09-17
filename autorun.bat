@@ -8,7 +8,7 @@ if %errorlevel% equ 0 goto update
 
 setx Path "C:\Program Files\CodeBlocks\MinGW\bin; %USERPROFILE%\AppData\Local\Microsoft\WindowsApps"
 
-mkdir Y:\2BHIT\test
+mkdir Y:\3BHIT\test
 
 call .venv\Scripts\activate.bat
 pip install -r requirements.txt

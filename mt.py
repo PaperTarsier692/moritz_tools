@@ -9,7 +9,7 @@ current_path: str = os.path.abspath(
     os.path.join(os.path.abspath(__file__), os.pardir))
 windows: bool = os.name == 'nt'
 
-path: str = 'Y:/2BHIT/test/' if not test_env else os.path.join(
+path: str = 'Y:/3BHIT/test/' if not test_env else os.path.join(
     current_path, 'test')
 
 if test_env and not os.path.exists(path):

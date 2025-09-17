@@ -17,8 +17,8 @@ call install.bat
 
 
 def write_install() -> None:
-    if not os.path.exists('Y:/2BHIT/moritz/install.bat'):
-        File('Y:/2BHIT/moritz/install.bat').write(install_cmd, create_path=True)
+    if not os.path.exists('Y:/3BHIT/moritz/install.bat'):
+        File('Y:/3BHIT/moritz/install.bat').write(install_cmd, create_path=True)
 
 
 def disable_unc_check() -> None:
