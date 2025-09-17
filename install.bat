@@ -3,6 +3,11 @@ Z:
 cd Z:\Documents\moritz_tools
 git pull
 
+IF EXIST ".venv\Scripts\pip3.11.exe" (
+    echo "Alte Python Version erkannt"
+    del /S .venv
+)
+
 python -m venv .venv
 call .venv\Scripts\activate.bat
 pip install --upgrade -r requirements.txt
