@@ -43,7 +43,7 @@ def check_sth_sc() -> None:
 
 
 def vsc() -> None:
-    if os.path.exists(f'C:\\Users\\{getuser()}\\vsc\\'):
+    if os.path.exists(f'C:\\Users\\Public\\vsc\\'):
         print('VSC gefunden')
         subprocess.run(fr'''powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('Z:\Start Menu\Programs\Visual Studio Code\Visual Studio Code.lnk');$s.TargetPath='C:\Users\{
                   getuser()}\vsc\code';$s.Save()"''',
