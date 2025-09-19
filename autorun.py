@@ -47,7 +47,7 @@ def vsc() -> None:
         print('VSC gefunden')
         os.makedirs(
             'Z:\\Start Menu\\Programs\\Visual Studio Code\\', exist_ok=True)
-        subprocess.run(fr'''powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('Z:\Start Menu\Programs\Visual Studio Code\Visual Studio Code.lnk');$s.TargetPath='C:\Users\Public\vsc\code';$s.Save()"''',
+        subprocess.run(fr'''powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('Z:\Start Menu\Programs\Visual Studio Code\Visual Studio Code Mt.lnk');$s.TargetPath='C:\Users\Public\vsc\code';$s.Save()"''',
                        shell=True,
                        creationflags=subprocess.CREATE_NO_WINDOW)  # type: ignore
 
