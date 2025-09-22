@@ -16,9 +16,8 @@ else:
 
 def apply_reg_file(reg_file_path: str) -> bool:
     if os.path.exists(reg_file_path):
-        Console.print_colour(
-            f"Registry-Datei wird angewendet: {reg_file_path}", 'yellow')
-        os.system(f'regedit /s "{reg_file_path}"')
+        out: int = os.system(f'regedit /s "{reg_file_path}"')
+        print(f'Code: {out}')
         return True
     else:
         Console.print_colour(
