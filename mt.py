@@ -211,18 +211,8 @@ class Config:
             self.write()
 
 
-def is_admin() -> bool:
-    import ctypes
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()  # type: ignore
-    except Exception as e:
-        print(e)
-        return False
-
-
 def run_as_admin() -> None:
-    if not is_admin():
-        import ctypes
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(  # type:ignore
-            ['"' + sys.argv[0] + '"'] + sys.argv[1:]), None, 1)
-        sys.exit()
+    import ctypes
+    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(  # type:ignore
+        ['"' + sys.argv[0] + '"'] + sys.argv[1:]), None, 1)
+    sys.exit()
