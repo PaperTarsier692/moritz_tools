@@ -209,3 +209,18 @@ class Config:
         d[keys[-1]] = value
         if save:
             self.write()
+
+
+def is_admin() -> bool:
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()  # type: ignore
+    except:
+        return False
+
+
+def run_as_admin() -> None:
+    if not is_admin():
+        import ctypes
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(  # type:ignore
+            ['"' + sys.argv[0] + '"'] + sys.argv[1:]), None, 1)
+        sys.exit()
