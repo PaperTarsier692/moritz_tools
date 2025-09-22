@@ -215,7 +215,8 @@ def is_admin() -> bool:
     import ctypes
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()  # type: ignore
-    except:
+    except Exception as e:
+        print(e)
         return False
 
 
