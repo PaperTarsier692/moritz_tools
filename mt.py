@@ -212,7 +212,10 @@ class Config:
 
 
 def run_as_admin() -> None:
+    import sys
+    if sys.argv[1].strip() == 'admin':
+        return
     import ctypes
-    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(  # type:ignore
-        ['"' + sys.argv[0] + '"'] + sys.argv[1:]), None, 1)
+    ctypes.windll.shell32.ShellExecuteW(None, "runas",  # type: ignore
+                                        sys.executable, f'"{sys.argv[0]}" admin', None, 1)
     sys.exit()
