@@ -13,5 +13,19 @@ else:
     os.system(
         'Z: && cd Z:/Documents/moritz_tools && git clone https://github.com/Raphire/Win11Debloat.git win11debloat')
 
+
+def apply_reg_file(reg_file_path: str) -> bool:
+    if os.path.exists(reg_file_path):
+        Console.print_colour(
+            f"Registry-Datei wird angewendet: {reg_file_path}", 'yellow')
+        os.system(f'regedit /s "{reg_file_path}"')
+        return True
+    else:
+        Console.print_colour(
+            f"Registry-Datei existiert nicht: {reg_file_path}", 'red')
+        return False
+
+
 for file in Dir.listfiles('Z:/Documents/moritz_tools/win11debloat/Regfiles/', abspath=True):
-    pass
+    Console.print_colour(f'Applying registry file {file}', 'yellow')
+    apply_reg_file(file)
