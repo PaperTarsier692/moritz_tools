@@ -213,7 +213,7 @@ class Config:
 
 def run_as_admin() -> None:
     import sys
-    if sys.argv[1].strip() == 'admin':
+    if len(sys.argv) >= 2 and sys.argv[1].strip() == 'admin':
         return
     import ctypes
     ctypes.windll.shell32.ShellExecuteW(None, "runas",  # type: ignore
