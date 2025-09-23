@@ -209,3 +209,13 @@ class Config:
         d[keys[-1]] = value
         if save:
             self.write()
+
+
+def run_as_admin() -> None:
+    import sys
+    if len(sys.argv) >= 2 and sys.argv[1].strip() == 'admin':
+        return
+    import ctypes
+    ctypes.windll.shell32.ShellExecuteW(None, "runas",  # type: ignore
+                                        sys.executable, f'"{sys.argv[0]}" admin', None, 1)
+    sys.exit()

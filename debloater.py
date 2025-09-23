@@ -1,5 +1,6 @@
-from mt import ensure_venv
+from mt import ensure_venv, run_as_admin
 ensure_venv(__file__)
+run_as_admin()
 
 from papertools import Console, Dir
 from getpass import getuser
