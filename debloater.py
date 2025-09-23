@@ -18,6 +18,7 @@ try:
         Console.print_colour('Lädt Win11Debloat herunter... ', 'green', end='')
         os.system(
             f'C: && cd {PATH} && git clone https://github.com/Raphire/Win11Debloat.git win11debloat')
+        Console.print_colour('    Done.', 'green')
 
     def apply_reg_file(reg_file_path: str) -> bool:
         if os.path.exists(reg_file_path):
@@ -29,6 +30,7 @@ try:
                 f"Registry-Datei existiert nicht: {reg_file_path}", 'red')
             return False
 
+    print(f'{PATH}\\regfiles')
     for file in Dir.listfiles(f'{PATH}\\regfiles', abspath=True):
         Console.print_colour(f'Applying registry file {file}', 'yellow')
         apply_reg_file(file)
