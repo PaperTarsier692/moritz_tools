@@ -16,10 +16,8 @@ try:
         os.system(f'C: && cd {PATH} && git pull')
     else:
         Console.print_colour('Lädt Win11Debloat herunter... ', 'green', end='')
-        print(
-            f'C: && cd {PATH} && git clone https://github.com/Raphire/Win11Debloat.git win11debloat')
         os.system(
-            f'C: && cd {PATH} && git clone https://github.com/Raphire/Win11Debloat.git win11debloat')
+            f'C: && cd {PAR_DIR} && git clone https://github.com/Raphire/Win11Debloat.git win11debloat')
         Console.print_colour('    Done.', 'green')
 
     def apply_reg_file(reg_file_path: str) -> bool:
