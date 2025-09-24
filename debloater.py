@@ -11,7 +11,7 @@ os.makedirs(PAR_DIR, exist_ok=True)
 PATH: str = f'{PAR_DIR}win11debloat'
 
 STANDARD: list[str] = ['Disable_AI_Recall.reg', 'Disable_Bing_Cortana_In_Search.reg', 'Disable_Chat_Taskbar.reg', 'Disable_Click_to_Do.reg', 'Disable_Copilot.reg', 'Disable_Desktop_Spotlight.reg', 'Disable_Edge_Ads_And_Suggestions.reg', 'Disable_Edge_AI_Features.reg', 'Disable_Give_access_to_context_menu.reg', 'Disable_Include_in_library_from_context_menu.reg', 'Disable_Lockscreen_Tips.reg', 'Disable_Notepad_AI_Features.reg', 'Disable_Paint_AI_Features.reg', 'Disable_Phone_Link_In_Start.reg', 'Disable_Settings_365_Ads.reg', 'Disable_Settings_Home.reg',
-                       'Disable_Share_from_context_menu.reg', 'Disable_Show_More_Options_Context_Menu.reg', 'Disable_Start_Recommended.reg', 'Disable_Sticky_Keys_Shortcut.reg', 'Disable_Telemetry.reg', 'Disable_Widgets_Service.reg', 'Disable_Windows_Suggestions.reg', 'Enable_End_Task.reg', 'Hide_3D_Objects_Folder.reg', 'Hide_Home_from_Explorer.reg', 'Hide_Music_Folder.reg', 'Hide_Taskview_Taskbar.reg', 'Launch_File_Explorer_To_Downloads.reg', 'Show_Extensions_For_Known_File_Types.reg', 'Show_Hidden_Folders.reg', 'Show_Search_Icon_And_Label.reg']
+                       'Show_Extensions_For_Known_File_Types.reg', 'Show_Hidden_Folders.reg']
 
 
 try:
@@ -45,4 +45,5 @@ try:
 
 
 finally:
+    Console.print_colour('Press any key to exit the program...', 'blue')
     input()
