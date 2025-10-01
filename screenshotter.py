@@ -22,7 +22,7 @@ wh: Webhook = Webhook(settings['sth']['url'], settings['sth']['username'])
 
 PATH: str = "Z:/Pictures/Screenshots/"
 
-prev: list[str] = []
+prev: list[str] = Dir.listfiles(PATH, False, True)
 new: list[str] = []
 
 while True:
