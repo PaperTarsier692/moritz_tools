@@ -33,4 +33,5 @@ while True:
     for file in new:
         Console.print_colour(f'Sending "{file}"', 'green')
         wh.send_file(file)
+    prev = new
     sleep(10)
