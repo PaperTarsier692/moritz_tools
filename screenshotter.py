@@ -33,5 +33,5 @@ while True:
     for file in new:
         Console.print_colour(f'Sending "{file}"', 'green')
         wh.send_file(file)
-    prev = new
+    prev = new.copy()
     sleep(10)
