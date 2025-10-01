@@ -27,11 +27,11 @@ new: list[str] = []
 
 while True:
     new = Dir.listfiles(PATH, False, True)
-    for file in prev:
-        if file in new:
-            new.remove(file)
-    for file in new:
+    files_to_send = [file for file in new if file not in prev]
+
+    for file in files_to_send:
         Console.print_colour(f'Sending "{file}"', 'green')
         wh.send_file(file)
+
     prev = new.copy()
     sleep(10)
