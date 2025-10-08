@@ -11,7 +11,7 @@ from papertools import Console
 
 
 def get_portable_link() -> Optional[str]:
-    api_url: str = f"https://gitlab.com/api/v4/projects/librewolf-community/browser/releases"
+    api_url: str = r"https://gitlab.com/api/v4/projects/librewolf-community%2Fbrowser%2Fbsys6/releases"
     response: requests.Response = requests.get(api_url)
 
     if response.status_code != 200:
