@@ -33,7 +33,7 @@ def get_portable_link() -> Optional[str]:
 
 
 try:
-    folder: str = 'C:\\Users\\Public\\librewolf\\'
+    folder: str = 'C:\\Users\\Public\\'
 
     Console.print_colour(
         'Lädt LibreWolf herunter...', 'red')
